@@ -91,7 +91,8 @@
     "prepublishOnly": "npm run build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
-    "test": "vitest"
+    "test": "vitest",
+    "postinstall": "if [ ! -d './core-vapor' ]; then git clone https://github.com/vuejs/core-vapor.git; cd core-vapor; pnpm i; pnpm build; pnpm build-dts; cd ..; pnpm add ./core-vapor/packages/vue; fi"
   },
   "peerDependencies": {
     "@nuxt/kit": "^3",
@@ -122,13 +123,15 @@
     }
   },
   "dependencies": {
-    "unplugin": "^1.5.1"
+    "@vue-macros/common": "^1.10.0",
+    "unplugin": "^1.5.1",
+    "vue": "link:core-vapor/packages/vue"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.2.2",
     "@nuxt/kit": "^3.8.2",
     "@nuxt/schema": "^3.8.2",
     "@types/node": "^20.10.3",
+    "@typescript-eslint/parser": "^6.18.1",
     "bumpp": "^9.2.0",
     "chalk": "^5.3.0",
     "eslint": "^8.55.0",
@@ -139,7 +142,7 @@
     "rollup": "^4.6.1",
     "tsup": "^8.0.1",
     "typescript": "^5.3.2",
-    "vite": "^5.0.4",
+    "vite": "^4.5.1",
     "vitest": "^0.34.6",
     "webpack": "^5.89.0"
   }

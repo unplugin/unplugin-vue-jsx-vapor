@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite'
 import Inspect from 'vite-plugin-inspect'
-import Unplugin from '../src/vite'
+import Vue from '@vitejs/plugin-vue'
+import defineRender from '@vue-macros/define-render/vite'
+import VueJsxVapor from 'unplugin-vue-jsx-vapor/vite'
 
 export default defineConfig({
-  plugins: [
-    Inspect(),
-    Unplugin(),
-  ],
+  plugins: [Vue(), defineRender(), VueJsxVapor(), Inspect()],
 })

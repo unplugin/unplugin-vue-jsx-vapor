@@ -2,22 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/unplugin-vue-jsx-vapor?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-vue-jsx-vapor)
 
-Starter template for [unplugin](https://github.com/unjs/unplugin).
-
-## Template Usage
-
-To use this template, clone it down using:
-
-```bash
-npx degit unplugin/unplugin-vue-jsx-vapor my-unplugin
-```
-
-And do a global replacement of `unplugin-vue-jsx-vapor` with your plugin name.
-
-Then you can start developing your unplugin 🔥
-
-To test your plugin, run: `pnpm run dev`
-To release a new version, run: `pnpm run release`
+Convert JSX to Template for compiler-vapor.
 
 ## Install
 
@@ -30,11 +15,13 @@ npm i unplugin-vue-jsx-vapor
 
 ```ts
 // vite.config.ts
-import Starter from 'unplugin-vue-jsx-vapor/vite'
+import VueJsxVapor from 'unplugin-vue-jsx-vapor/vite'
 
 export default defineConfig({
   plugins: [
-    Starter({ /* options */ }),
+    VueJsxVapor({
+      /* options */
+    }),
   ],
 })
 ```
@@ -48,17 +35,18 @@ Example: [`playground/`](./playground/)
 
 ```ts
 // rollup.config.js
-import Starter from 'unplugin-vue-jsx-vapor/rollup'
+import VueJsxVapor from 'unplugin-vue-jsx-vapor/rollup'
 
 export default {
   plugins: [
-    Starter({ /* options */ }),
+    VueJsxVapor({
+      /* options */
+    }),
   ],
 }
 ```
 
 <br></details>
-
 
 <details>
 <summary>Webpack</summary><br>
@@ -68,8 +56,10 @@ export default {
 module.exports = {
   /* ... */
   plugins: [
-    require('unplugin-vue-jsx-vapor/webpack')({ /* options */ })
-  ]
+    require('unplugin-vue-jsx-vapor/webpack')({
+      /* options */
+    }),
+  ],
 }
 ```
 
@@ -82,7 +72,12 @@ module.exports = {
 // nuxt.config.js
 export default defineNuxtConfig({
   modules: [
-    ['unplugin-vue-jsx-vapor/nuxt', { /* options */ }],
+    [
+      'unplugin-vue-jsx-vapor/nuxt',
+      {
+        /* options */
+      },
+    ],
   ],
 })
 ```
@@ -99,7 +94,9 @@ export default defineNuxtConfig({
 module.exports = {
   configureWebpack: {
     plugins: [
-      require('unplugin-vue-jsx-vapor/webpack')({ /* options */ }),
+      require('unplugin-vue-jsx-vapor/webpack')({
+        /* options */
+      }),
     ],
   },
 }
@@ -113,10 +110,10 @@ module.exports = {
 ```ts
 // esbuild.config.js
 import { build } from 'esbuild'
-import Starter from 'unplugin-vue-jsx-vapor/esbuild'
+import VueJsxVapor from 'unplugin-vue-jsx-vapor/esbuild'
 
 build({
-  plugins: [Starter()],
+  plugins: [VueJsxVapor()],
 })
 ```
 
