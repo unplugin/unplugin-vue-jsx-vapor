@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.1.2",
   "packageManager": "pnpm@8.6.12",
-  "description": "",
+  "description": "Convert JSX to Template for compiler-vapor",
   "license": "MIT",
   "homepage": "https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor#readme",
   "repository": {
@@ -103,7 +103,13 @@
     "webpack": "^4 || ^5"
   },
   "peerDependenciesMeta": {
-    "webpack": {
+    "@nuxt/kit": {
+      "optional": true
+    },
+    "@nuxt/schema": {
+      "optional": true
+    },
+    "esbuild": {
       "optional": true
     },
     "rollup": {
@@ -112,13 +118,7 @@
     "vite": {
       "optional": true
     },
-    "esbuild": {
-      "optional": true
-    },
-    "@nuxt/kit": {
-      "optional": true
-    },
-    "@nuxt/schema": {
+    "webpack": {
       "optional": true
     }
   },
@@ -128,10 +128,10 @@
     "vue": "link:core-vapor/packages/vue"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^2.6.2",
     "@nuxt/kit": "^3.8.2",
     "@nuxt/schema": "^3.8.2",
     "@types/node": "^20.10.3",
-    "@typescript-eslint/parser": "^6.18.1",
     "bumpp": "^9.2.0",
     "chalk": "^5.3.0",
     "eslint": "^8.55.0",

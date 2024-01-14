@@ -7,7 +7,7 @@ import {
   parseSFC,
   walkAST,
 } from '@vue-macros/common'
-import type { Node, Program, JSXElement, JSXFragment } from '@babel/types'
+import type { JSXElement, JSXFragment, Node, Program } from '@babel/types'
 import { compile } from 'vue/vapor'
 
 export function transformVueJsxVapor(code: string, id: string) {
@@ -26,45 +26,50 @@ export function transformVueJsxVapor(code: string, id: string) {
 
     if (scriptSetup)
       asts.push({ ast: getSetupAst()!, offset: scriptSetup.loc.start.offset })
-  } else if (['jsx', 'tsx'].includes(lang)) {
+  }
+  else if (['jsx', 'tsx'].includes(lang)) {
     asts = [{ ast: babelParse(code, lang), offset: 0 }]
-  } else {
+  }
+  else {
     return
   }
 
   const s = new MagicString(code)
   for (const { ast, offset } of asts) {
-    let rootElements: (JSXElement | JSXFragment)[] = []
+    const rootElements: (JSXElement | JSXFragment)[] = []
     walkAST<Node>(ast, {
       enter(node, parent) {
         if (node.type === 'JSXElement') {
           if (
-            parent?.type === 'VariableDeclarator' ||
-            parent?.type === 'ArrowFunctionExpression' ||
-            parent?.type === 'CallExpression' ||
-            parent?.type === 'ReturnStatement'
+            parent?.type === 'VariableDeclarator'
+            || parent?.type === 'ArrowFunctionExpression'
+            || parent?.type === 'CallExpression'
+            || parent?.type === 'ReturnStatement'
           )
             rootElements.push(node)
 
           if (
             node.openingElement.attributes.find(
-              (attr) =>
-                attr.type === 'JSXAttribute' &&
-                s.sliceNode(attr.name, { offset }) === 'v-pre',
+              attr =>
+                attr.type === 'JSXAttribute'
+                && s.sliceNode(attr.name, { offset }) === 'v-pre',
             )
           )
             return this.skip()
-        } else if (node.type === 'JSXFragment') {
+        }
+        else if (node.type === 'JSXFragment') {
           rootElements.push(node)
-        } else if (node.type === 'JSXAttribute') {
+        }
+        else if (node.type === 'JSXAttribute') {
           let name = s.sliceNode(node.name, { offset })
           if (/^on[A-Z]/.test(name)) {
             name = name.replace(
               /^(on)([A-Z])/,
-              (_, __, str) => '@' + str.toLowerCase(),
+              (_, __, str) => `@${str.toLowerCase()}`,
             )
-          } else if (!name.startsWith('v-')) {
-            name = ':' + name
+          }
+          else if (!name.startsWith('v-')) {
+            name = `:${name}`
           }
           s.overwriteNode(node.name, `${name.replaceAll('_', '.')}`, {
             offset,
@@ -73,18 +78,19 @@ export function transformVueJsxVapor(code: string, id: string) {
           if (node.value && node.value.type !== 'StringLiteral') {
             s.overwriteNode(
               node.value,
-              '"' +
+              `"${
                 s.slice(
                   node.value.start! + offset + 1,
                   node.value.end! + offset - 1,
-                ) +
-                '"',
+                )
+                }"`,
               { offset },
             )
           }
-        } else if (
-          node.type === 'JSXExpressionContainer' &&
-          parent?.type === 'JSXElement'
+        }
+        else if (
+          node.type === 'JSXExpressionContainer'
+          && parent?.type === 'JSXElement'
         ) {
           s.appendLeft(node.start! + offset, '{')
           s.appendRight(node.end! + offset, '}')
@@ -104,14 +110,14 @@ export function transformVueJsxVapor(code: string, id: string) {
       )
       s.overwriteNode(
         rootElement,
-        '(' +
+        `(${
           code
             .replace(/import\s{(.*)}.*;\n/, (_, str) => {
               str.split(',').map((s: string) => importSet.add(s.trim()))
               return ''
             })
-            .replace('export ', '') +
-          ')()',
+            .replace('export ', '')
+          })()`,
         { offset },
       )
       s.prepend(

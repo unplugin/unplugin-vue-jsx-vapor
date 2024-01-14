@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "lib": ["esnext", "DOM"],
-    "module": "esnext",
-    "jsxImportSource": "vue",
     "jsx": "preserve",
     "jsxFactory": "h",
+    "jsxImportSource": "vue",
+    "lib": ["esnext", "DOM"],
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "strict": true,
@@ -15,7 +15,7 @@
   "vueCompilerOptions": {
     "plugins": [
       "@vue-macros/volar/export-render",
-      "@vue-macros/volar/jsx-directive",
+      "@vue-macros/volar/jsx-directive"
     ]
   },
   "exclude": ["dist", "eslint.config.js"]
