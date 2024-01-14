@@ -72,6 +72,12 @@ export function transformVueJsxVapor(code: string, id: string) {
             return this.skip()
           }
           else if (
+            node.type === 'JSXOpeningFragment'
+            || node.type === 'JSXClosingFragment'
+          ) {
+            s.appendLeft(node.end! + offset - 1, 'template')
+          }
+          else if (
             node.type === 'JSXExpressionContainer'
             && parent?.type === 'JSXElement'
           ) {

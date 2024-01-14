@@ -1,5 +1,5 @@
 import type { MagicString } from '@vue-macros/common'
-import type { CallExpression, Expression, Node } from '@babel/types'
+import type { CallExpression } from '@babel/types'
 
 export function transformVFor(
   nodes: CallExpression[],
@@ -18,6 +18,7 @@ export function transformVFor(
       || argument.type === 'ArrowFunctionExpression'
     ) {
       left = s.sliceNode(argument.params, { offset })
+
       if (argument.body.type !== 'BlockStatement') {
         returnExpression = argument.body
       }
@@ -34,14 +35,15 @@ export function transformVFor(
     const right = node.callee.type === 'MemberExpression'
       ? s.sliceNode(node.callee.object, { offset })
       : null
-    if (!right)
-      return
 
-    const tagName = returnExpression.type === 'JSXElement' ? returnExpression.openingElement.name : returnExpression.type === 'JSXFragment' ? returnExpression.openingFragment : null
-    if (!tagName)
-      return
-    if (tagName.end)
-      s.appendRight(tagName.end, ` v-for="(${left}) in ${right}"`)
+    const end = returnExpression.type === 'JSXElement'
+      ? returnExpression.openingElement.name.end!
+      : returnExpression.type === 'JSXFragment'
+        ? returnExpression.openingFragment.end! - 1
+        : null
+    if (end)
+      s.appendRight(end + offset, ` v-for="(${left}) in ${right}"`)
+
     s.remove(node.start! + offset, returnExpression.start! + offset - 1)
     s.remove(returnExpression.end! + offset + 1, node.end! + offset)
   })
