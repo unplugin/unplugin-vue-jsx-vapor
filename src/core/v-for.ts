@@ -1,50 +1,43 @@
 import type { MagicString } from '@vue-macros/common'
-import type { CallExpression } from '@babel/types'
+import type { CallExpression, Node } from '@babel/types'
+import { addAttribute, getReturnExpression } from './common'
 
 export function transformVFor(
-  nodes: CallExpression[],
+  node: CallExpression,
+  parent: Node | null | undefined,
   s: MagicString,
-  offset: number,
 ) {
-  nodes.forEach((node) => {
-    const [argument] = node.arguments
-    if (!argument)
-      return
+  const { callee, arguments: [argument] } = node
+  if (
+    argument.type !== 'FunctionExpression'
+    && argument.type !== 'ArrowFunctionExpression'
+  )
+    return
 
-    let left
-    let returnExpression
-    if (
-      argument.type === 'FunctionExpression'
-      || argument.type === 'ArrowFunctionExpression'
-    ) {
-      left = s.sliceNode(argument.params, { offset })
+  const start = parent?.type === 'JSXExpressionContainer' ? parent.start! : node.start!
+  const end = parent?.type === 'JSXExpressionContainer' ? parent.end! : node.end!
 
-      if (argument.body.type !== 'BlockStatement') {
-        returnExpression = argument.body
-      }
-      else {
-        for (const statement of argument.body.body) {
-          if (statement.type === 'ReturnStatement' && statement.argument)
-            returnExpression = statement.argument
-        }
-      }
+  const left = s.sliceNode(argument.params)
+  const right = callee.type === 'MemberExpression'
+    ? s.sliceNode(callee.object)
+    : null
+  const directive = ` v-for="(${left}) in ${right}"`
+
+  const returnExpression = getReturnExpression(argument)
+  if (!returnExpression)
+    return
+
+  if (returnExpression.type === 'JSXElement' || returnExpression.type === 'JSXFragment') {
+    addAttribute(returnExpression, directive, s)
+
+    return () => {
+      s.remove(start, returnExpression.start!)
+      s.remove(returnExpression.end!, end)
     }
-    if (!returnExpression)
-      return
+  }
 
-    const right = node.callee.type === 'MemberExpression'
-      ? s.sliceNode(node.callee.object, { offset })
-      : null
-
-    const end = returnExpression.type === 'JSXElement'
-      ? returnExpression.openingElement.name.end!
-      : returnExpression.type === 'JSXFragment'
-        ? returnExpression.openingFragment.end! - 1
-        : null
-    if (end)
-      s.appendRight(end + offset, ` v-for="(${left}) in ${right}"`)
-
-    s.remove(node.start! + offset, returnExpression.start! + offset - 1)
-    s.remove(returnExpression.end! + offset + 1, node.end! + offset)
-  })
+  return () => {
+    s.overwrite(start, returnExpression.start!, `<template${directive}>`)
+    s.overwrite(returnExpression.end!, end, `</template>`)
+  }
 }

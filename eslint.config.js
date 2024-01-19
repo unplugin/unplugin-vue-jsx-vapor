@@ -1,7 +1,9 @@
 import antfu from '@antfu/eslint-config'
 
 export default antfu({
+  ignores: ['playground'],
   rules: {
+    'curly': 'off',
     'style/object-property-newline': 'off',
     'style/jsx-max-props-per-line': 'off',
     'style/jsx-curly-newline': 'off',

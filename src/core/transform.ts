@@ -7,9 +7,11 @@ import {
   parseSFC,
   walkAST,
 } from '@vue-macros/common'
-import type { CallExpression, JSXElement, JSXFragment, Node, Program } from '@babel/types'
+import type { Node, Program } from '@babel/types'
 import { compile } from 'vue/vapor'
+import { transformVIf } from './v-if'
 import { transformVFor } from './v-for'
+import { isConditionalExpression, isJSXElement, isLogicalExpression, isMapCallExpression } from './common'
 
 export function transformVueJsxVapor(code: string, id: string) {
   const lang = getLang(id)
@@ -38,64 +40,39 @@ export function transformVueJsxVapor(code: string, id: string) {
   const s = new MagicString(code)
   const importSet = new Set()
   for (const { ast, offset } of asts) {
-    const rootElements: (JSXElement | JSXFragment)[] = []
-    const vForNodes: CallExpression[] = []
+    s.offset = offset
+    const rootNodes: Node[] = []
     walkAST<Node>(ast, {
-      enter(node, parent) {
-        if (
-          (node.type === 'JSXElement'
-          && (
-            parent?.type === 'VariableDeclarator'
-            || parent?.type === 'ArrowFunctionExpression'
-            || parent?.type === 'CallExpression'
-            || parent?.type === 'ReturnStatement'
-          ))
-          || node.type === 'JSXFragment'
-        ) {
-          rootElements.push(node)
+      enter(node) {
+        if (isJSXElement(node)) {
+          rootNodes.push(node)
           this.skip()
         }
       },
     })
 
-    for (const rootElement of rootElements) {
-      walkAST<Node>(rootElement, {
+    for (const root of rootNodes) {
+      const postCallbacks: (Function | undefined)[] = []
+      walkAST<Node>(root, {
         enter(node, parent) {
           if (
             node.type === 'JSXElement'
             && node.openingElement.attributes.find(
               attr =>
                 attr.type === 'JSXAttribute'
-                && s.sliceNode(attr.name, { offset }) === 'v-pre',
+                && s.sliceNode(attr.name) === 'v-pre',
             )
           ) {
-            return this.skip()
+            this.skip()
           }
           else if (
             node.type === 'JSXOpeningFragment'
             || node.type === 'JSXClosingFragment'
           ) {
-            s.appendLeft(node.end! + offset - 1, 'template')
-          }
-          else if (
-            node.type === 'JSXExpressionContainer'
-            && parent?.type === 'JSXElement'
-          ) {
-            if (node.expression.type === 'CallExpression'
-              && node.expression.callee.type === 'MemberExpression'
-              && node.expression.callee.property.type === 'Identifier'
-              && node.expression.callee.property.name === 'map') {
-              vForNodes.push(node.expression)
-              s.remove(node.start! + offset, node.expression.start! + offset)
-              s.remove(node.expression.end! + offset, node.end! + offset)
-            }
-            else {
-              s.appendLeft(node.start! + offset, '{')
-              s.appendRight(node.end! + offset, '}')
-            }
+            s.appendLeft(node.end! - 1, 'template')
           }
           else if (node.type === 'JSXAttribute') {
-            let name = s.sliceNode(node.name, { offset })
+            let name = s.sliceNode(node.name)
             if (/^on[A-Z]/.test(name)) {
               name = name.replace(
                 /^(on)([A-Z])/,
@@ -105,53 +82,66 @@ export function transformVueJsxVapor(code: string, id: string) {
             else if (!name.startsWith('v-')) {
               name = `:${name}`
             }
-            s.overwriteNode(node.name, `${name.replaceAll('_', '.')}`, {
-              offset,
-            })
+
+            s.overwriteNode(node.name, name.replaceAll('_', '.'))
 
             if (node.value && node.value.type !== 'StringLiteral') {
-              s.overwriteNode(
-                node.value,
-              `"${
-                s.slice(
-                  node.value.start! + offset + 1,
-                  node.value.end! + offset - 1,
-                )
-                }"`,
-              { offset },
-              )
+              s.overwrite(node.value.start!, node.value.start! + 1, '"')
+              s.overwrite(node.value.end! - 1, node.value.end!, '"')
             }
+          }
+          else if (
+            isMapCallExpression(node)
+          ) {
+            postCallbacks.push(
+              transformVFor(node, parent, s),
+            )
+          }
+          else if (
+            isConditionalExpression(node)
+            || isLogicalExpression(node)
+          ) {
+            postCallbacks.push(
+              transformVIf(node, parent, s),
+            )
+          }
+          else if (
+            node.type === 'JSXExpressionContainer'
+            && parent?.type === 'JSXElement'
+          ) {
+            s.appendRight(node.start!, '{')
+            s.appendLeft(node.end!, '}')
+          }
+          else if (node.type === 'NullLiteral') {
+            postCallbacks.push(() => {
+              s.removeNode(node)
+            })
           }
         },
       })
 
-      transformVFor(vForNodes, s, offset)
+      postCallbacks.forEach(remove => remove?.())
 
       const { code } = compile(
-        s.sliceNode(
-          rootElement.type === 'JSXFragment'
-            ? rootElement.children
-            : rootElement,
-          { offset },
-        ),
+        root.type === 'JSXFragment'
+          ? s.sliceNode(root.children)
+          : s.slice(root.start!, root.end! + 1),
       )
-      s.overwriteNode(
-        rootElement,
-        `(${
-          code
-            .replace(/import\s{(.*)}.*;\n/, (_, str) => {
-              str.split(',').map((s: string) => importSet.add(s.trim()))
-              return ''
-            })
-            .replace('export ', '')
-          })()`,
-        { offset },
-      )
-      s.prepend(
-        `import { ${Array.from(importSet).join(', ')} } from 'vue/vapor';`,
-      )
+      const result = `(${
+      code
+        .replace(/import\s{(.*)}.*;\n/, (_, str) => {
+          str.split(',').map((s: string) => importSet.add(s.trim()))
+          return ''
+        })
+        .replace('export ', '')
+      })()`
+      s.overwrite(root.start!, root.end! + 1, `${result}${s.slice(root.end!, root.end! + 1).replace('</template>', '')}`)
     }
   }
+
+  s.prepend(
+    `import { ${Array.from(importSet).join(', ')} } from 'vue/vapor';`,
+  )
 
   return generateTransform(s, id)
 }
