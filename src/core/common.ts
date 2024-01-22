@@ -1,4 +1,4 @@
-import type { CallExpression, ConditionalExpression, LogicalExpression, Node } from '@babel/types'
+import type { CallExpression, ConditionalExpression, Expression, LogicalExpression, Node } from '@babel/types'
 import type { MagicString } from '@vue-macros/common'
 
 export function addAttribute(
@@ -31,7 +31,7 @@ export function overwrite(
 
 export function getReturnExpression(
   node: Node,
-) {
+): Expression | undefined {
   if (
     node.type === 'FunctionExpression'
     || node.type === 'ArrowFunctionExpression'

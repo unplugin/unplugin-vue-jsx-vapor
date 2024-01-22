@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent } from 'vue'
+import { defineComponent, h } from 'vue'
 import { ref } from 'vue/vapor'
 
 export default defineComponent({
@@ -51,14 +51,15 @@ export default defineComponent({
           )
     }
 
-    const Comp4 = () => {
+    function Comp4() {
       return count.value > 1
         ? (
           <span>
+            Comp4:
             {count.value}
           </span>
           )
-        : <div>null</div>
+        : null
     }
 
     return (
@@ -68,6 +69,7 @@ export default defineComponent({
             v-bind:value={count.value}
             onInput={count.value = $event.target.value}
           />
+          <Comp4 />
 
           <div>
             v-show:
@@ -116,35 +118,40 @@ export default defineComponent({
             v-for:
 
             {
-              count.value
-              && count.value > 1
-              && (count.value === 5
-                ? (
-                  <span>
-                    1
-                  </span>
-                  )
-                : count.value === 6
-                  ? (count.value && Array.from({ length: 10 }).map(() => (
-                    <span>
-                      2
-                    </span>
-                    )))
-                  : (
-                    <div>
-                      3
-                    </div>
-                    )
+          count.value
+          && count.value > 1
+          && (count.value === 5
+            ? (
+              <span>
+                1
+              </span>
               )
-            }
+            : count.value === 6
+              ? (
+                  count.value
+                  && Array.from({ length: 10 }).map((_, index) => (
+                    index && (
+                      <span>
+                        3
+                      </span>
+                    )
+                  ))
+                )
+              : (
+                <div>
+                  3
+                </div>
+                )
+          )
+        }
 
             {
-              Array.from({ length: 10 }).map(() => (
-                <span>
-                  1
-                </span>
-              ))
-            }
+          count.value && Array.from({ length: count.value }).map(() => (
+            <span>
+              1
+            </span>
+          ))
+        }
           </div>
 
           <div>
@@ -157,11 +164,6 @@ export default defineComponent({
                   : <span>lt 1</span>
             }
             {count.value && <span> 123 </span>}
-            {count.value && Array.from({ length: 10 }).map(() => (
-              <span>
-                1
-              </span>
-            ))}
             {
               count.value && count.value > 1 && count.value > 2
               && (count.value > 9

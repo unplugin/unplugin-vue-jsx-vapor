@@ -8,12 +8,18 @@ import {
   walkAST,
 } from '@vue-macros/common'
 import type { Node, Program } from '@babel/types'
-import { compile } from 'vue/vapor'
+import type { Options } from '../types'
 import { transformVIf } from './v-if'
 import { transformVFor } from './v-for'
 import { isConditionalExpression, isJSXElement, isLogicalExpression, isMapCallExpression } from './common'
 
-export function transformVueJsxVapor(code: string, id: string) {
+export function transformVueJsxVapor(
+  code: string,
+  id: string,
+  {
+    compile,
+  }: Options,
+) {
   const lang = getLang(id)
   let asts: {
     ast: Program
@@ -39,6 +45,7 @@ export function transformVueJsxVapor(code: string, id: string) {
 
   const s = new MagicString(code)
   const importSet = new Set()
+  let runtime = `'vue'`
   for (const { ast, offset } of asts) {
     s.offset = offset
     const rootNodes: Node[] = []
@@ -122,25 +129,29 @@ export function transformVueJsxVapor(code: string, id: string) {
 
       postCallbacks.forEach(remove => remove?.())
 
-      const { code } = compile(
-        root.type === 'JSXFragment'
-          ? s.sliceNode(root.children)
-          : s.slice(root.start!, root.end! + 1),
-      )
-      const result = `(${
-      code
-        .replace(/import\s{(.*)}.*;\n/, (_, str) => {
-          str.split(',').map((s: string) => importSet.add(s.trim()))
-          return ''
-        })
-        .replace('export ', '')
-      })()`
+      let result = root.type === 'JSXFragment'
+        ? s.sliceNode(root.children)
+        : s.slice(root.start!, root.end! + 1)
+      if (compile) {
+        const { code } = compile(result, { mode: 'module' })
+        result = `(${
+          code
+          .replace(/import {(.*)} from (.*)[\s\S]*export\s/, (_, $1, $2) => {
+            $1.split(',').map((s: string) => importSet.add(s.trim()))
+            runtime = $2
+            return ''
+          })
+          .replace('_cache', '_cache = []')
+          .replaceAll('_ctx.', '')
+          .replaceAll(/_resolveComponent\((.*)\)/g, ($0, $1) => `${$1.slice(1, -1)} || ${$0}`)
+        })()`
+      }
       s.overwrite(root.start!, root.end! + 1, `${result}${s.slice(root.end!, root.end! + 1).replace('</template>', '')}`)
     }
   }
 
   s.prepend(
-    `import { ${Array.from(importSet).join(', ')} } from 'vue/vapor';`,
+    `import { ${Array.from(importSet).join(', ')} } from ${runtime};`,
   )
 
   return generateTransform(s, id)

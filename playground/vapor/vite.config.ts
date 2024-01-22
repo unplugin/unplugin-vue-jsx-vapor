@@ -4,6 +4,15 @@ import Vue from '@vitejs/plugin-vue'
 import defineRender from '@vue-macros/define-render/vite'
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/vite'
 
+import { compile } from 'vue/vapor'
+
 export default defineConfig({
-  plugins: [Vue(), defineRender(), VueJsxVapor(), Inspect()],
+  plugins: [
+    Vue(),
+    VueJsxVapor({
+      compile: compile as any,
+    }),
+    defineRender(),
+    Inspect(),
+  ],
 })

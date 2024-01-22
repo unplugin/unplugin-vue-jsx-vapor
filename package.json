@@ -87,12 +87,12 @@
     "dev": "tsup --watch src",
     "build:fix": "esno scripts/postbuild.ts",
     "lint": "eslint .",
-    "play": "npm -C playground run dev",
+    "play": "npm -C playground/dom run dev",
+    "play:vapor": "npm -C playground/vapor run dev",
     "prepublishOnly": "npm run build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
-    "test": "vitest",
-    "postinstall": "if [ ! -d './core-vapor' ]; then git clone https://github.com/vuejs/core-vapor.git; cd core-vapor; pnpm i; pnpm build; pnpm build-dts; cd ..; pnpm add ./core-vapor/packages/vue; fi"
+    "test": "vitest"
   },
   "peerDependencies": {
     "@nuxt/kit": "^3",
@@ -124,8 +124,7 @@
   },
   "dependencies": {
     "@vue-macros/common": "^1.10.0",
-    "unplugin": "^1.5.1",
-    "vue": "link:core-vapor/packages/vue"
+    "unplugin": "^1.5.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.2",

@@ -16,11 +16,14 @@ npm i unplugin-vue-jsx-vapor
 ```ts
 // vite.config.ts
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/vite'
+import { compile } from 'vue/vapor'
+// or
+// import { compile } from '@vue/compiler-dom'
 
 export default defineConfig({
   plugins: [
     VueJsxVapor({
-      /* options */
+      compile
     }),
   ],
 })
@@ -36,11 +39,14 @@ Example: [`playground/`](./playground/)
 ```ts
 // rollup.config.js
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/rollup'
+import { compile } from 'vue/vapor'
+// or
+// import { compile } from '@vue/compiler-dom'
 
 export default {
   plugins: [
     VueJsxVapor({
-      /* options */
+      compile
     }),
   ],
 }
@@ -57,7 +63,9 @@ module.exports = {
   /* ... */
   plugins: [
     require('unplugin-vue-jsx-vapor/webpack')({
-      /* options */
+      compile: require('vue/vapor')
+      // or
+      // compile: require('@vue/compiler-dom')
     }),
   ],
 }
@@ -70,12 +78,15 @@ module.exports = {
 
 ```ts
 // nuxt.config.js
+import { compile } from 'vue/vapor'
+// or
+// import { compile } from '@vue/compiler-dom'
 export default defineNuxtConfig({
   modules: [
     [
       'unplugin-vue-jsx-vapor/nuxt',
       {
-        /* options */
+        compile
       },
     ],
   ],
@@ -95,7 +106,9 @@ module.exports = {
   configureWebpack: {
     plugins: [
       require('unplugin-vue-jsx-vapor/webpack')({
-        /* options */
+        compile: require('vue/vapor')
+        // or
+        // compile: require('@vue/compiler-dom')
       }),
     ],
   },
@@ -111,9 +124,16 @@ module.exports = {
 // esbuild.config.js
 import { build } from 'esbuild'
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/esbuild'
+import { compile } from 'vue/vapor'
+// or
+// import { compile } from '@vue/compiler-dom'
 
 build({
-  plugins: [VueJsxVapor()],
+  plugins: [
+    VueJsxVapor({
+      compile
+    })
+  ],
 })
 ```
 
