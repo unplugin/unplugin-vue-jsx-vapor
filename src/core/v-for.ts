@@ -1,6 +1,6 @@
 import type { MagicString } from '@vue-macros/common'
 import type { CallExpression, Node } from '@babel/types'
-import { addAttribute, getReturnExpression } from './common'
+import { addAttribute, getReturnExpression, isJSXElement, overwrite } from './common'
 
 export function transformVFor(
   node: CallExpression,
@@ -27,12 +27,12 @@ export function transformVFor(
   if (!returnExpression)
     return
 
-  if (returnExpression.type === 'JSXElement' || returnExpression.type === 'JSXFragment') {
+  if (isJSXElement(returnExpression)) {
     addAttribute(returnExpression, directive, s)
 
     return () => {
-      s.remove(start, returnExpression.start!)
-      s.remove(returnExpression.end!, end)
+      s.update(start, returnExpression.start!, '')
+      s.update(returnExpression.end!, end, '')
     }
   }
 

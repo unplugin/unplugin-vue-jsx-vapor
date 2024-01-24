@@ -20,12 +20,23 @@ export function overwrite(
   end: number | undefined,
   content: string,
   s: MagicString,
+  parent?: Node | null,
 ) {
   if (start === end) {
-    s.appendRight(start!, content)
+    if (parent) {
+      s.appendRight(start!, content)
+    }
+    else {
+      s.prependLeft(start!, content)
+    }
   }
   else {
-    s.overwrite(start!, end!, content)
+    if (parent) {
+      s.overwrite(start!, end!, content)
+    }
+    else {
+      s.update(start!, end!, content)
+    }
   }
 }
 
@@ -48,12 +59,19 @@ export function getReturnExpression(
   }
 }
 
-export function isJSXElement(node?: Node): boolean {
-  return !!node && (node.type === 'JSXElement'
-    || node.type === 'JSXFragment'
+export function isJSXExpression(node?: Node | null): boolean {
+  return !!node && (
+    isJSXElement(node)
     || isConditionalExpression(node)
     || isLogicalExpression(node)
     || isMapCallExpression(node)
+  )
+}
+
+export function isJSXElement(node?: Node | null): boolean {
+  return !!node && (
+    node.type === 'JSXElement'
+    || node.type === 'JSXFragment'
   )
 }
 
@@ -62,19 +80,19 @@ export function isMapCallExpression(node: Node): node is CallExpression {
     && node.callee.type === 'MemberExpression'
     && node.callee.property.type === 'Identifier'
     && node.callee.property.name === 'map'
-    && isJSXElement(
+    && isJSXExpression(
       getReturnExpression(node.arguments[0]),
     )
 }
 
 export function isConditionalExpression(node: Node): node is ConditionalExpression {
   return node.type === 'ConditionalExpression' && (
-    isJSXElement(node.consequent)
-    || isJSXElement(node.alternate)
+    isJSXExpression(node.consequent)
+    || isJSXExpression(node.alternate)
   )
 }
 
 export function isLogicalExpression(node: Node): node is LogicalExpression {
   return node.type === 'LogicalExpression'
-    && isJSXElement(node.right)
+    && isJSXExpression(node.right)
 }

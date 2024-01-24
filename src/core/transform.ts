@@ -11,7 +11,7 @@ import type { Node, Program } from '@babel/types'
 import type { Options } from '../types'
 import { transformVIf } from './v-if'
 import { transformVFor } from './v-for'
-import { isConditionalExpression, isJSXElement, isLogicalExpression, isMapCallExpression } from './common'
+import { isConditionalExpression, isJSXElement, isJSXExpression, isLogicalExpression, isMapCallExpression } from './common'
 
 export function transformVueJsxVapor(
   code: string,
@@ -45,13 +45,13 @@ export function transformVueJsxVapor(
 
   const s = new MagicString(code)
   const importSet = new Set()
-  let runtime = `'vue'`
+  let runtime = '"vue"'
   for (const { ast, offset } of asts) {
     s.offset = offset
     const rootNodes: Node[] = []
     walkAST<Node>(ast, {
       enter(node) {
-        if (isJSXElement(node)) {
+        if (isJSXExpression(node)) {
           rootNodes.push(node)
           this.skip()
         }
@@ -114,24 +114,26 @@ export function transformVueJsxVapor(
           }
           else if (
             node.type === 'JSXExpressionContainer'
-            && parent?.type === 'JSXElement'
+            && isJSXElement(parent)
           ) {
-            s.appendRight(node.start!, '{')
-            s.appendLeft(node.end!, '}')
-          }
-          else if (node.type === 'NullLiteral') {
-            postCallbacks.push(() => {
+            if (node.expression.type === 'JSXEmptyExpression') {
               s.removeNode(node)
-            })
+            }
+            else {
+              s.appendRight(node.start!, '{')
+              s.appendLeft(node.end!, '}')
+            }
           }
         },
       })
 
       postCallbacks.forEach(remove => remove?.())
 
-      let result = root.type === 'JSXFragment'
-        ? s.sliceNode(root.children)
-        : s.slice(root.start!, root.end! + 1)
+      let result = s.sliceNode(
+        root.type === 'JSXFragment'
+          ? root.children
+          : root,
+      )
       if (compile) {
         const { code } = compile(result, { mode: 'module' })
         result = `(${
@@ -143,10 +145,10 @@ export function transformVueJsxVapor(
           })
           .replace('_cache', '_cache = []')
           .replaceAll('_ctx.', '')
-          .replaceAll(/_resolveComponent\((.*)\)/g, ($0, $1) => `${$1.slice(1, -1)} || ${$0}`)
+          .replaceAll(/_resolveComponent\("(.*)"\)/g, ($0, $1) => `${$1} || ${$0}`)
         })()`
       }
-      s.overwrite(root.start!, root.end! + 1, `${result}${s.slice(root.end!, root.end! + 1).replace('</template>', '')}`)
+      s.overwriteNode(root, result)
     }
   }
 

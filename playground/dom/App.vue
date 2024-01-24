@@ -1,124 +1,123 @@
-<script lang="tsx">
-import { defineComponent, h } from 'vue'
-import { ref } from 'vue/vapor'
+<script lang="tsx" setup>
+import { ref } from 'vue'
+import For from './for.vue'
 
-export default defineComponent({
-  setup() {
-    const count = ref(1)
+const count = ref(1)
 
-    const Comp = () => count.value
-      ? count.value && <div>2</div>
-      : (<div>1</div>)
-
-    const Comp1 = () => {
-      return (count.value
-        ? (Array.from({ length: count.value }).map((_, index) => (
-            index && (
-              <span>
-                {index}
-              </span>
-            )
-          )))
-        : null
+function Comp() {
+  return count.value
+    ? (
+      <div>
+        Comp1: 1
+      </div>
       )
-    }
+    : 2
+}
 
-    const Comp2 = () => {
-      return (count.value && (
-        count.value > 9
-          ? count.value > 2 && <div>null</div>
-          : (
-            <div>
-              12333
-            </div>
-            )
-      ))
-    }
+function Comp1() {
+  return count.value
+    ? null
+    : Array.from({ length: count.value }).map((_, index) => (
+      <span>
+        {index}
+      </span>
+    ))
+}
 
-    const Comp3 = () => {
-      return count.value > 1
-        ? count.value
-          ? (
-            <div>
-              1
-            </div>
-            )
-          : <div>null</div>
-        : (
-          <div>
-            2
-          </div>
-          )
-    }
+function Comp2() {
+  return (count.value && (
+    count.value > 9
+      ? (count.value > 2 && <div>null</div>)
+      : (
+        <div>
+          Comp2: 2
+        </div>
+        )
+  ))
+}
 
-    function Comp4() {
-      return count.value > 1
-        ? (
-          <span>
-            Comp4:
-            {count.value}
-          </span>
-          )
-        : null
-    }
+function Comp3() {
+  return (count.value > 1
+    ? count.value
+      ? (
+        <div>
+          1
+        </div>
+        )
+      : null
+    : <div>Comp3: 2</div>)
+}
 
-    return () => (
-      <>
-        <form onSubmit_prevent>
-          <input
-            v-bind:value={count.value}
-            onInput={count.value = $event.target.value}
-          />
-          <Comp3 />
-          <Comp4 />
+function Comp4() {
+  return count.value && (
+    <span>
+      Comp4:
+      {count.value}
+    </span>
+  )
+}
 
-          <div>
-            v-show:
-            <span v-show={count.value}>
-              {count.value > 1 ? 2 : 3}
-            </span>
-          </div>
+defineRender(() => (
+  <>
+    <form onSubmit_prevent>
+      <input
+        v-bind:value={count.value}
+        onInput={count.value = $event.target.value}
+      />
+      {/* Function Components */}
+      <Comp />
+      <Comp1 />
+      <Comp2 />
+      <Comp3 />
+      <Comp4 />
 
-          <div>
-            v-text:
-            <span v-text={count.value} />
-          </div>
+      <div>
+        v-show:
+        <span v-show={count.value}>
+          {count.value > 1 ? 2 : 3}
+        </span>
+      </div>
 
-          <div>
-            v-text:
-            <span v-text={count.value} />
-          </div>
+      <div>
+        v-text:
+        <span v-text={count.value} />
+      </div>
 
-          <div>
-            v-html:
-            <span v-html={count.value} />
-          </div>
+      <div>
+        v-text:
+        <span v-text={count.value} />
+      </div>
 
-          <div>
-            v-once:
-            <span v-once>
-              {count.value}
-            </span>
-          </div>
+      <div>
+        v-html:
+        <span v-html={count.value} />
+      </div>
 
-          <div>
-            v-pre:
-            <span v-pre>
-              {count.value}
-            </span>
-          </div>
+      <div>
+        v-once:
+        <span v-once>
+          {count.value}
+        </span>
+      </div>
 
-          <div>
-            v-cloak:
-            <span v-cloak>
-              {count.value}
-            </span>
-          </div>
+      <div>
+        v-pre:
+        <span v-pre>
+          {count.value}
+        </span>
+      </div>
 
-          <div>
-            v-for:
+      <div>
+        v-cloak:
+        <span v-cloak>
+          {count.value}
+        </span>
+      </div>
 
-            {
+      <div>
+        v-for:
+
+        {
           count.value
           && count.value > 1
           && (count.value === 5
@@ -145,38 +144,37 @@ export default defineComponent({
                 )
           )
         }
-
-            {
+        {
           count.value && Array.from({ length: count.value }).map(() => (
             <span>
               1
             </span>
           ))
         }
-          </div>
+        <For />
+      </div>
 
-          <div>
-            v-if:
-            {
-              count.value > 1
-                ? <span>lg 1</span>
-                : count.value > 2
-                  ? <span>lg 2</span>
-                  : <span>lt 1</span>
-            }
-            {count.value && <span> 123 </span>}
-            {
+      <div>
+        v-if:
+        {
+          count.value > 1
+            ? <span>lg 1</span>
+            : count.value > 2
+              ? <span>lg 2</span>
+              : <span>lt 1</span>
+        }
+        {count.value && <span> 123 </span>}
+        {
               count.value && count.value > 1 && count.value > 2
               && (count.value > 9
                 ? (<div>123</div>)
                 : null)
             }
-          </div>
-        </form>
-      </>
-    )
-  },
-})
+      </div>
+    </form>
+  </>
+),
+)
 </script>
 
 <style>

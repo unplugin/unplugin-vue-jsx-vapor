@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev": "nodemon -w '../src/**/*.ts' -e .ts -x vite"
+    "dev": "nodemon -w '../../src/**/*.ts' -e .ts -x vite"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.2",

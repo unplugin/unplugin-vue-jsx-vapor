@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev": "nodemon -w '../src/**/*.ts' -e .ts -x vite",
+    "dev": "nodemon -w '../../src/**/*.ts' -e .ts -x vite",
     "postinstall": "if [ ! -d './core-vapor' ]; then git clone https://github.com/vuejs/core-vapor.git; cd core-vapor; pnpm i; pnpm build; pnpm build-dts; cd ..; pnpm add ./core-vapor/packages/vue; fi"
   },
   "dependencies": {

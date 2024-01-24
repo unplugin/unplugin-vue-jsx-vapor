@@ -1,6 +1,6 @@
 import type { MagicString } from '@vue-macros/common'
 import type { Node } from '@babel/types'
-import { addAttribute, overwrite } from './common'
+import { addAttribute, isJSXElement, isJSXExpression, overwrite } from './common'
 
 export function transformVIf(
   node: Node,
@@ -20,25 +20,24 @@ export function transformVIf(
 
     const directive = ` ${name}="${s.sliceNode(test)}"`
     return () => {
-      const isConditionalElement = consequent.type === 'JSXElement' || consequent.type === 'JSXFragment'
-      if (isConditionalElement) {
+      const isJSXElementConsequent = isJSXElement(consequent)
+      const isJSXExpressionConsequent = isJSXExpression(consequent)
+      const isJSXExpressionAlternate = isJSXExpression(alternate)
+      if (isJSXElementConsequent) {
         addAttribute(consequent, directive, s)
         s.remove(start!, consequent.start!)
       }
       else {
-        overwrite(start, consequent.start!, `<template${directive}>`, s)
+        overwrite(start, consequent.start!, `<template${directive}>${isJSXExpressionConsequent ? '' : '{{'}`, s, parent)
       }
 
-      if (
-        alternate.type === 'JSXElement'
-        || alternate.type === 'JSXFragment'
-      ) {
+      if (isJSXElement(alternate)) {
         addAttribute(alternate, ` v-else`, s)
-        if (isConditionalElement) {
+        if (isJSXElementConsequent) {
           s.remove(consequent.end!, alternate.start!)
         }
         else {
-          overwrite(consequent.end!, alternate.start!, '</template>', s)
+          overwrite(consequent.end!, alternate.start!, `${isJSXExpressionConsequent ? '' : '}}'}</template>`, s, parent)
         }
         s.remove(alternate.end!, end)
       }
@@ -49,10 +48,14 @@ export function transformVIf(
         overwrite(
           consequent.end!,
           alternate.start!,
-          `${isConditionalElement ? '' : '</template>'}<template v-else>`,
-          s,
+            `${isJSXElementConsequent
+                ? ''
+                : `${isJSXExpressionConsequent ? '' : '}}'
+              }</template>`}<template v-else>${isJSXExpressionAlternate ? '' : '{{'}`,
+            s,
+            parent,
         )
-        overwrite(alternate.end!, end, '</template>', s)
+        overwrite(alternate.end!, end, `${isJSXExpressionAlternate ? '' : '}}'}</template>`, s, parent)
       }
       else {
         s.remove(consequent.end!, alternate.start!)
@@ -65,7 +68,7 @@ export function transformVIf(
     const prefix = operator === '&&' ? '' : '!'
     const directive = ` ${name}="${prefix}${s.sliceNode(left)}"`
 
-    if (right.type === 'JSXElement' || right.type === 'JSXFragment') {
+    if (isJSXElement(right)) {
       addAttribute(right, directive, s)
 
       return () => {
@@ -75,8 +78,8 @@ export function transformVIf(
     }
 
     return () => {
-      overwrite(start, right.start!, `<template${directive}>`, s)
-      overwrite(right.end!, end, '</template>', s)
+      overwrite(start, right.start!, `<template${directive}>`, s, parent)
+      overwrite(right.end!, end, '</template>', s, parent)
     }
   }
 }
