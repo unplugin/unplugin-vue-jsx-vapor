@@ -20,23 +20,12 @@ export function overwrite(
   end: number | undefined,
   content: string,
   s: MagicString,
-  parent?: Node | null,
 ) {
   if (start === end) {
-    if (parent) {
-      s.appendRight(start!, content)
-    }
-    else {
-      s.prependLeft(start!, content)
-    }
+    s.prependLeft(start!, content)
   }
   else {
-    if (parent) {
-      s.overwrite(start!, end!, content)
-    }
-    else {
-      s.update(start!, end!, content)
-    }
+    s.overwrite(start!, end!, content)
   }
 }
 
@@ -75,14 +64,16 @@ export function isJSXElement(node?: Node | null): boolean {
   )
 }
 
-export function isMapCallExpression(node: Node): node is CallExpression {
-  return node.type === 'CallExpression'
+export function isMapCallExpression(node?: Node | null): node is CallExpression {
+  return !!node && (
+    node.type === 'CallExpression'
     && node.callee.type === 'MemberExpression'
     && node.callee.property.type === 'Identifier'
     && node.callee.property.name === 'map'
     && isJSXExpression(
       getReturnExpression(node.arguments[0]),
     )
+  )
 }
 
 export function isConditionalExpression(node: Node): node is ConditionalExpression {

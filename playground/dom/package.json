@@ -9,6 +9,7 @@
     "@vue-macros/reactivity-transform": "^0.4.2",
     "@vue-macros/volar": "^0.18.10",
     "unplugin-vue-jsx-vapor": "workspace:*",
+    "unplugin-vue-macros": "^2.7.10",
     "vite": "^5.0.4",
     "vite-plugin-inspect": "^0.8.1"
   }

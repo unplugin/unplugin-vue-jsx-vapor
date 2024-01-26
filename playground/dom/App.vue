@@ -3,25 +3,29 @@ import { ref } from 'vue'
 import For from './for.vue'
 
 const count = ref(1)
-
-function Comp() {
-  return count.value
-    ? (
-      <div>
-        Comp1: 1
-      </div>
-      )
-    : 2
+function Comp({ icon, getChildren }: any, { slots }: any) {
+  const Children = getChildren?.()
+  return (
+    <div>
+      Comp:
+      <icon />
+      <Children />
+      <slot />
+      <slots.bottom />
+    </div>
+  )
 }
 
 function Comp1() {
-  return count.value
-    ? null
-    : Array.from({ length: count.value }).map((_, index) => (
-      <span>
-        {index}
-      </span>
-    ))
+  return (
+    !count.value
+      ? null
+      : Array.from({ length: count.value }).map((_, index) => (
+        <span>
+          {index}
+        </span>
+      ))
+  )
 }
 
 function Comp2() {
@@ -57,15 +61,45 @@ function Comp4() {
   )
 }
 
-defineRender(() => (
+const Component = <div>Component</div>
+
+defineRender((
   <>
-    <form onSubmit_prevent>
+    <form onSubmit_prevent class="flex items-center">
       <input
-        v-bind:value={count.value}
+        {...{
+          ...{ value: count.value },
+          ...count.value ? { for: 'id' } : {},
+        }}
         onInput={count.value = $event.target.value}
       />
       {/* Function Components */}
-      <Comp />
+      <component is={Component} />
+      <Comp
+        v-permission="post"
+        v-model_number={count.value}
+        icon={(
+          <i id="id">
+            {count.value
+              ? (
+                <span>
+                  {count.value}
+                </span>
+                )
+              : null}
+            +
+          </i>
+        )}
+        getChildren={() => {
+          const A = <div>A</div>
+          return A
+        }}
+      >
+        "default slot"
+        <template v-slot:bottom>
+          <div>"bottom slot"</div>
+        </template>
+      </Comp>
       <Comp1 />
       <Comp2 />
       <Comp3 />

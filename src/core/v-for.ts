@@ -31,8 +31,8 @@ export function transformVFor(
     addAttribute(returnExpression, directive, s)
 
     return () => {
-      s.update(start, returnExpression.start!, '')
-      s.update(returnExpression.end!, end, '')
+      s.overwrite(start, returnExpression.start!, '')
+      s.overwrite(returnExpression.end!, end, '')
     }
   }
 

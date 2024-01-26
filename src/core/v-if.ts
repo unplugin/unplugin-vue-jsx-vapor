@@ -28,7 +28,7 @@ export function transformVIf(
         s.remove(start!, consequent.start!)
       }
       else {
-        overwrite(start, consequent.start!, `<template${directive}>${isJSXExpressionConsequent ? '' : '{{'}`, s, parent)
+        overwrite(start, consequent.start!, `<template${directive}>${isJSXExpressionConsequent ? '' : '{{'}`, s)
       }
 
       if (isJSXElement(alternate)) {
@@ -37,7 +37,7 @@ export function transformVIf(
           s.remove(consequent.end!, alternate.start!)
         }
         else {
-          overwrite(consequent.end!, alternate.start!, `${isJSXExpressionConsequent ? '' : '}}'}</template>`, s, parent)
+          overwrite(consequent.end!, alternate.start!, `${isJSXExpressionConsequent ? '' : '}}'}</template>`, s)
         }
         s.remove(alternate.end!, end)
       }
@@ -53,9 +53,8 @@ export function transformVIf(
                 : `${isJSXExpressionConsequent ? '' : '}}'
               }</template>`}<template v-else>${isJSXExpressionAlternate ? '' : '{{'}`,
             s,
-            parent,
         )
-        overwrite(alternate.end!, end, `${isJSXExpressionAlternate ? '' : '}}'}</template>`, s, parent)
+        overwrite(alternate.end!, end, `${isJSXExpressionAlternate ? '' : '}}'}</template>`, s)
       }
       else {
         s.remove(consequent.end!, alternate.start!)
@@ -78,8 +77,8 @@ export function transformVIf(
     }
 
     return () => {
-      overwrite(start, right.start!, `<template${directive}>`, s, parent)
-      overwrite(right.end!, end, '</template>', s, parent)
+      overwrite(start, right.start!, `<template${directive}>`, s)
+      overwrite(right.end!, end, '</template>', s)
     }
   }
 }
