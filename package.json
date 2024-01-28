@@ -87,7 +87,7 @@
     "dev": "tsup --watch src",
     "build:fix": "esno scripts/postbuild.ts",
     "lint": "eslint .",
-    "play": "npm -C playground/dom run dev",
+    "play": "npm -C playground/virtual-dom run dev",
     "play:vapor": "npm -C playground/vapor run dev",
     "prepublishOnly": "npm run build",
     "release": "bumpp && npm publish",
