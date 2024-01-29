@@ -17,42 +17,11 @@ export function transformVueJsxVapor(
   options: Options,
 ) {
   const s = new MagicString(code)
-  const importSet = new Set()
-  let runtime = '"vue"'
-  function compile(node: Node) {
-    const content = s.sliceNode(
-      node.type === 'JSXFragment'
-        ? node.children
-        : node,
-    )
-    if (options?.compile) {
-      let { code } = options.compile(content, { mode: 'module' })
-      if (content.includes('<slot ')) {
-        code = code.replace('_ctx', '_ctx = _getCurrentInstance().ctx')
-        importSet.add('getCurrentInstance as _getCurrentInstance')
-      }
-      return `(${
-        code
-        .replace('_cache', '_cache = []')
-        .replaceAll(/_ctx\.(?!\$slots)/g, '')
-        .replaceAll(/_resolveComponent\("(.*)"\)/g, ($0, $1) => `(() => { try { return ${$1} } catch { return ${$0} } })()`)
-        .replaceAll(/(?<!\\)"/g, `'`)
-        .replace(/import {(.*)} from (.*)[\s\S]*export\s/, (_, $1, $2) => {
-          $1.split(',').map((s: string) => importSet.add(s.trim()))
-          runtime = $2
-          return ''
-        })
-      })()`
-    }
-    else {
-      return content
-    }
-  }
-
   const exclude: Node[] = []
   const rootNodes: {
     node: Node
     postCallbacks: ((() => void) | undefined)[]
+    isAttributeValue?: boolean
   }[] = []
   let postCallbacks: ((() => void) | undefined)[] = []
   walkAST<Node>(babelParse(code, getLang(id)), {
@@ -60,13 +29,24 @@ export function transformVueJsxVapor(
       if (
         parent?.type === 'JSXAttribute'
         && node.type === 'JSXExpressionContainer'
-        && isJSXExpression(node.expression)
       ) {
-        rootNodes.unshift({
-          node: node.expression,
-          postCallbacks: [],
-        })
-        postCallbacks = rootNodes[0].postCallbacks
+        if (isJSXExpression(node.expression)) {
+          rootNodes.unshift({
+            node: node.expression,
+            postCallbacks: [],
+            isAttributeValue: true,
+          })
+          postCallbacks = rootNodes[0].postCallbacks
+        }
+        else if (
+          /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
+        ) {
+          rootNodes.unshift({
+            node: node.expression,
+            postCallbacks: [],
+            isAttributeValue: true,
+          })
+        }
       }
       else if (
         parent?.type !== 'JSXExpressionContainer'
@@ -158,9 +138,48 @@ export function transformVueJsxVapor(
     },
   })
 
-  for (const { node, postCallbacks } of rootNodes) {
+  const importSet = new Set()
+  let runtime = '"vue"'
+  function compile(node: Node) {
+    const content = s.sliceNode(
+      node.type === 'JSXFragment'
+        ? node.children
+        : node,
+    )
+    if (options?.compile && isJSXExpression(node)) {
+      let { code } = options.compile(content, { mode: 'module' })
+      if (content.includes('<slot ')) {
+        code = code.replace('_ctx', '_ctx = _getCurrentInstance().ctx')
+        importSet.add('getCurrentInstance as _getCurrentInstance')
+      }
+      return `(${
+        code
+        .replace('_cache', '_cache = []')
+        .replaceAll(/_ctx\.(?!\$slots)/g, '')
+        .replaceAll(/_resolveComponent\("(.*)"\)/g, ($0, $1) => `(() => { try { return ${$1} } catch { return ${$0} } })()`)
+        .replace(/(?:import {(.*)} from (.*))?[\s\S]*export\s/, (_, $1, $2) => {
+          $1?.split(',').map((s: string) => importSet.add(s.trim()))
+          runtime = $2
+          return ''
+        })
+      })()`
+    }
+    else {
+      return content
+    }
+  }
+  const placeholders: string[] = []
+  for (const { node, postCallbacks, isAttributeValue } of rootNodes) {
     postCallbacks.forEach(callback => callback?.())
-    s.overwriteNode(node, compile(node))
+
+    const result = compile(node)
+      .replaceAll(/__PLACEHOLDER_(\d)/g, (_, $1) => placeholders[$1])
+    if (isAttributeValue) {
+      s.overwriteNode(node, `__PLACEHOLDER_${placeholders.push(result) - 1}`)
+    }
+    else {
+      s.overwriteNode(node, result)
+    }
   }
 
   s.prepend(

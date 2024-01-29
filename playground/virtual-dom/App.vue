@@ -76,8 +76,9 @@ defineRender((
       {/* Function Components */}
       <component is={Component} />
       <Comp
-        v-permission="post"
+        v-permission={`"post"`}
         v-model_number={count.value}
+        icon1={`"icon1"`}
         icon={(
           <i id="id">
             {count.value
@@ -87,11 +88,13 @@ defineRender((
                 </span>
                 )
               : null}
-            +
+            "+"
           </i>
         )}
         getChildren={() => {
-          const A = <div>A</div>
+          const A = (
+            <Comp icon={<i>"-"</i>} />
+          )
           return A
         }}
       >

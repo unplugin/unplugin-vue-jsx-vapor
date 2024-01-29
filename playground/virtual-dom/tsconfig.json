@@ -8,6 +8,9 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "types": [
+      "unplugin-vue-macros/macros-global"
+    ],
     "strict": true,
     "strictNullChecks": true,
     "esModuleInterop": true
