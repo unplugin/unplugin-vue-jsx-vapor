@@ -9,7 +9,13 @@ import type { Node } from '@babel/types'
 import type { Options } from '../types'
 import { transformVIf } from './v-if'
 import { transformVFor } from './v-for'
-import { getReturnExpression, isConditionalExpression, isJSXElement, isJSXExpression, isLogicalExpression, isMapCallExpression } from './common'
+import { isConditionalExpression, isJSXElement, isJSXExpression, isLogicalExpression, isMapCallExpression } from './common'
+
+export type RootNodes = {
+  node: Node
+  postCallbacks?: ((() => void) | undefined)[]
+  isAttributeValue?: boolean
+}[]
 
 export function transformVueJsxVapor(
   code: string,
@@ -17,13 +23,8 @@ export function transformVueJsxVapor(
   options: Options,
 ) {
   const s = new MagicString(code)
-  const exclude: Node[] = []
   let hasTextNode = false
-  const rootNodes: {
-    node: Node
-    postCallbacks: ((() => void) | undefined)[]
-    isAttributeValue?: boolean
-  }[] = []
+  const rootNodes: RootNodes = []
   let postCallbacks: ((() => void) | undefined)[] = []
   walkAST<Node>(babelParse(code, getLang(id)), {
     enter(node, parent) {
@@ -31,16 +32,15 @@ export function transformVueJsxVapor(
         parent?.type !== 'JSXExpressionContainer'
         && !isJSXExpression(parent)
         && isJSXExpression(node)
-        && !exclude.includes(node)
       ) {
         rootNodes.unshift({
           node,
           postCallbacks: [],
         })
-        postCallbacks = rootNodes[0].postCallbacks
+        postCallbacks = rootNodes[0].postCallbacks!
       }
       else if (
-        (parent?.type === 'JSXAttribute')
+        parent?.type === 'JSXAttribute'
         && node.type === 'JSXExpressionContainer'
         && /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
       ) {
@@ -49,7 +49,7 @@ export function transformVueJsxVapor(
           postCallbacks: [],
           isAttributeValue: true,
         })
-        postCallbacks = rootNodes[0].postCallbacks
+        postCallbacks = rootNodes[0].postCallbacks!
       }
 
       if (
@@ -102,9 +102,8 @@ export function transformVueJsxVapor(
         isMapCallExpression(node)
       ) {
         postCallbacks.unshift(
-          transformVFor(node, parent, s),
+          transformVFor(node, parent, rootNodes, s),
         )
-        exclude.unshift(getReturnExpression(node.arguments[0])!)
       }
       else if (
         isConditionalExpression(node)
@@ -126,12 +125,12 @@ export function transformVueJsxVapor(
         else if (!isJSXExpression(node.expression)) {
           s.overwrite(node.start!, node.start! + 1, '<component :is="__createTextVNode(')
           s.overwrite(node.end! - 1, node.end!, ')" />')
+
           if (
             /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
           ) {
             rootNodes.unshift({
               node: node.expression,
-              postCallbacks: [],
               isAttributeValue: true,
             })
           }
@@ -171,9 +170,10 @@ export function transformVueJsxVapor(
       return content
     }
   }
+
   const placeholders: string[] = []
   for (const { node, postCallbacks, isAttributeValue } of rootNodes) {
-    postCallbacks.forEach(callback => callback?.())
+    postCallbacks?.forEach(callback => callback?.())
 
     const result = compile(node)
       .replaceAll(/__PLACEHOLDER_(\d)/g, (_, $1) => placeholders[$1])
@@ -189,7 +189,7 @@ export function transformVueJsxVapor(
     importSet.add('createTextVNode as _createTextVNode')
     importSet.add('toDisplayString as _toDisplayString')
     s.prepend(
-     `const __createTextVNode = (node) => node?.__v_isVNode || typeof node ==='function' ? node: _createTextVNode(_toDisplayString(node));`,
+     `const __createTextVNode = (node) => node?.__v_isVNode || typeof node === 'function' || (Array.isArray(node) && node[0]?.__v_isVNode) ? node : _createTextVNode(_toDisplayString(node));`,
     )
   }
 

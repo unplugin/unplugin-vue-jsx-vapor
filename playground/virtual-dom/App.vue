@@ -82,7 +82,6 @@ defineRender((
       <Comp
         v-permission={`"post"`}
         v-model_number={count.value}
-        icon1={`"icon1"`}
         icon={(
           <i id="id">
             {count.value
@@ -95,6 +94,7 @@ defineRender((
             "+"
           </i>
         )}
+        icon1={`"icon1"`}
         getChildren={() => {
           const A = (
             <Comp icon={<i>"-"</i>} />

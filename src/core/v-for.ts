@@ -1,10 +1,11 @@
 import type { MagicString } from '@vue-macros/common'
 import type { CallExpression, Node } from '@babel/types'
-import { addAttribute, getReturnExpression, isJSXElement, overwrite } from './common'
+import type { RootNodes } from './transform'
 
 export function transformVFor(
   node: CallExpression,
   parent: Node | null | undefined,
+  rootNodes: RootNodes,
   s: MagicString,
 ) {
   const { callee, arguments: [argument] } = node
@@ -23,21 +24,15 @@ export function transformVFor(
     : null
   const directive = ` v-for="(${left}) in ${right}"`
 
-  const returnExpression = getReturnExpression(argument)
-  if (!returnExpression)
-    return
-
-  if (isJSXElement(returnExpression)) {
-    addAttribute(returnExpression, directive, s)
-
-    return () => {
-      s.overwrite(start, returnExpression.start!, '')
-      s.overwrite(returnExpression.end!, end, '')
-    }
-  }
-
+  rootNodes.unshift({
+    node: {
+      ...argument.body,
+      type: 'ReturnStatement',
+    },
+    isAttributeValue: true,
+  })
   return () => {
-    s.overwrite(start, returnExpression.start!, `<template${directive}>`)
-    s.overwrite(returnExpression.end!, end, `</template>`)
+    s.overwrite(start, argument.body.start!, `<template${directive}><component :is="()=>`)
+    s.overwrite(argument.body.end!, end, `"/></template>`)
   }
 }
