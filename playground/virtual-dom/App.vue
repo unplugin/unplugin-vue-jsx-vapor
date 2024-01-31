@@ -62,6 +62,10 @@ function Comp4() {
 }
 
 const Component = <div>Component</div>
+const slots = {
+  default: () => <div>"default slot"</div>,
+  bottom: () => <div>'bottom slot'</div>,
+}
 
 defineRender((
   <>
@@ -98,9 +102,8 @@ defineRender((
           return A
         }}
       >
-        "default slot"
-        <template v-slot:bottom>
-          <div>"bottom slot"</div>
+        <template v-for={(slot, slotName) in slots} v-slot:$slotName$>
+          {slot}
         </template>
       </Comp>
       <Comp1 />

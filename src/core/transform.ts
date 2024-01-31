@@ -93,7 +93,9 @@ export function transformVueJsxVapor(
         }
 
         postCallbacks.unshift(() =>
-          s.overwriteNode(node.name, name.replaceAll('_', '.')),
+          s.overwriteNode(node.name, name
+            .replaceAll('_', '.')
+            .replaceAll(/\$(\w+)\$/g, '[$1]')),
         )
       }
       else if (
