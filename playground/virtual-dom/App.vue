@@ -74,7 +74,7 @@ defineRender((
         onInput={count.value = $event.target.value}
       />
       {/* Function Components */}
-      <component is={Component} />
+      {Component}
       <Comp
         v-permission={`"post"`}
         v-model_number={count.value}

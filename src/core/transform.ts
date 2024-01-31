@@ -18,6 +18,7 @@ export function transformVueJsxVapor(
 ) {
   const s = new MagicString(code)
   const exclude: Node[] = []
+  let hasTextNode = false
   const rootNodes: {
     node: Node
     postCallbacks: ((() => void) | undefined)[]
@@ -27,28 +28,6 @@ export function transformVueJsxVapor(
   walkAST<Node>(babelParse(code, getLang(id)), {
     enter(node, parent) {
       if (
-        parent?.type === 'JSXAttribute'
-        && node.type === 'JSXExpressionContainer'
-      ) {
-        if (isJSXExpression(node.expression)) {
-          rootNodes.unshift({
-            node: node.expression,
-            postCallbacks: [],
-            isAttributeValue: true,
-          })
-          postCallbacks = rootNodes[0].postCallbacks
-        }
-        else if (
-          /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
-        ) {
-          rootNodes.unshift({
-            node: node.expression,
-            postCallbacks: [],
-            isAttributeValue: true,
-          })
-        }
-      }
-      else if (
         parent?.type !== 'JSXExpressionContainer'
         && !isJSXExpression(parent)
         && isJSXExpression(node)
@@ -57,6 +36,18 @@ export function transformVueJsxVapor(
         rootNodes.unshift({
           node,
           postCallbacks: [],
+        })
+        postCallbacks = rootNodes[0].postCallbacks
+      }
+      else if (
+        (parent?.type === 'JSXAttribute')
+        && node.type === 'JSXExpressionContainer'
+        && /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
+      ) {
+        rootNodes.unshift({
+          node: node.expression,
+          postCallbacks: [],
+          isAttributeValue: true,
         })
         postCallbacks = rootNodes[0].postCallbacks
       }
@@ -130,9 +121,19 @@ export function transformVueJsxVapor(
             s.removeNode(node),
           )
         }
-        else {
-          s.appendRight(node.start!, '{')
-          s.appendLeft(node.end!, '}')
+        else if (!isJSXExpression(node.expression)) {
+          s.overwrite(node.start!, node.start! + 1, '<component :is="__createTextVNode(')
+          s.overwrite(node.end! - 1, node.end!, ')" />')
+          if (
+            /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
+          ) {
+            rootNodes.unshift({
+              node: node.expression,
+              postCallbacks: [],
+              isAttributeValue: true,
+            })
+          }
+          hasTextNode = true
         }
       }
     },
@@ -180,6 +181,14 @@ export function transformVueJsxVapor(
     else {
       s.overwriteNode(node, result)
     }
+  }
+
+  if (hasTextNode) {
+    importSet.add('createTextVNode as _createTextVNode')
+    importSet.add('toDisplayString as _toDisplayString')
+    s.prepend(
+     `const __createTextVNode = (node) => node?.__v_isVNode || typeof node ==='function' ? node: _createTextVNode(_toDisplayString(node));`,
+    )
   }
 
   s.prepend(
