@@ -156,10 +156,10 @@ export function transformVueJsxVapor(
       }
       return `(${
         code
-        .replace('_cache', '_cache = []')
+        .replace('_cache)', '_cache = []) => ')
         .replaceAll(/_ctx\.(?!\$slots)/g, '')
         .replaceAll(/_resolveComponent\("(.*)"\)/g, ($0, $1) => `(() => { try { return ${$1} } catch { return ${$0} } })()`)
-        .replace(/(?:import {(.*)} from (.*))?[\s\S]*export\s/, (_, $1, $2) => {
+        .replace(/(?:import {(.*)} from (.*))?[\s\S]*export function render/, (_, $1, $2) => {
           $1?.split(',').map((s: string) => importSet.add(s.trim()))
           runtime = $2
           return ''
