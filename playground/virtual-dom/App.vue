@@ -1,6 +1,7 @@
 <script lang="tsx" setup>
 import { ref } from 'vue'
 import For from './for.vue'
+import Bind from './bind.vue'
 
 const count = ref(1)
 function Comp({ icon, getChildren }: any, { slots }: any) {
@@ -110,6 +111,11 @@ defineRender((
       <Comp2 />
       <Comp3 />
       <Comp4 />
+
+      <div>
+        v-bind:
+        <Bind />
+      </div>
 
       <div>
         v-show:

@@ -68,8 +68,11 @@ export function transformVueJsxVapor(
       ) {
         s.appendLeft(node.end! - 1, 'template')
       }
-      else if (node.type === 'JSXSpreadAttribute') {
-        s.appendLeft(node.start!, 'v-bind=')
+      else if (node.type === 'JSXSpreadAttribute' && parent?.type === 'JSXOpeningElement') {
+        const index = parent.attributes
+          .filter(attr => attr.type === 'JSXSpreadAttribute')
+          .findIndex(attr => attr === node)
+        s.appendLeft(node.start!, `${index ? `:v${index}` : 'v'}-bind=`)
         s.overwrite(node.start!, node.argument.start!, '"')
         s.overwrite(node.end! - 1, node.end!, '"')
       }
@@ -159,6 +162,7 @@ export function transformVueJsxVapor(
       code = code
         .replace('_cache', '_cache = []')
         .replaceAll(/_ctx\.(?!\$slots)/g, '')
+        .replaceAll(/{ "v\d+\-bind": ([\s\S]*) }/g, '$1')
         .replaceAll(/_resolveComponent\("(.*)"\)/g, ($0, $1) => `(() => { try { return ${$1} } catch { return ${$0} } })()`)
       return runtime === '"vue"' ? `(${code})()` : code
     }
