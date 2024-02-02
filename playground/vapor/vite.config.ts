@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [
     Vue(),
     VueJsxVapor({
-      compile: compile as any,
+      compile,
     }),
     defineRender(),
     Inspect(),

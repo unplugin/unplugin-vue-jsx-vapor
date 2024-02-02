@@ -149,22 +149,18 @@ export function transformVueJsxVapor(
         : node,
     )
     if (options?.compile && isJSXExpression(node)) {
-      let { code } = options.compile(content, { mode: 'module' })
+      let { code, preamble } = options.compile(content, { mode: 'module', inline: true })
+      preamble.match(/(\w+ as \w+)/g)?.forEach(s => importSet.add(s))
+      runtime = preamble.match(/(["'].*["'])/)![1]
       if (content.includes('<slot ')) {
         code = code.replace('_ctx', '_ctx = _getCurrentInstance().ctx')
         importSet.add('getCurrentInstance as _getCurrentInstance')
       }
-      return `(${
-        code
-        .replace('_cache)', '_cache = []) => ')
+      code = code
+        .replace('_cache', '_cache = []')
         .replaceAll(/_ctx\.(?!\$slots)/g, '')
         .replaceAll(/_resolveComponent\("(.*)"\)/g, ($0, $1) => `(() => { try { return ${$1} } catch { return ${$0} } })()`)
-        .replace(/(?:import {(.*)} from (.*))?[\s\S]*export function render/, (_, $1, $2) => {
-          $1?.split(',').map((s: string) => importSet.add(s.trim()))
-          runtime = $2
-          return ''
-        })
-      })()`
+      return runtime === '"vue"' ? `(${code})()` : code
     }
     else {
       return content
