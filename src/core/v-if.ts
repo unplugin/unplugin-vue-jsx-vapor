@@ -28,7 +28,7 @@ export function transformVIf(
         s.remove(start!, consequent.start!)
       }
       else {
-        overwrite(start, consequent.start!, `<template${directive}>${isJSXExpressionConsequent ? '' : '{{'}`, s)
+        overwrite(start, consequent.start!, `<template${directive}>${isJSXExpressionConsequent ? '' : '<component :is="__createTextVNode('}`, s)
       }
 
       if (isJSXElement(alternate)) {
@@ -37,7 +37,7 @@ export function transformVIf(
           s.remove(consequent.end!, alternate.start!)
         }
         else {
-          overwrite(consequent.end!, alternate.start!, `${isJSXExpressionConsequent ? '' : '}}'}</template>`, s)
+          overwrite(consequent.end!, alternate.start!, `${isJSXExpressionConsequent ? '' : ')" />'}</template>`, s)
         }
         s.remove(alternate.end!, end)
       }
@@ -50,11 +50,11 @@ export function transformVIf(
           alternate.start!,
             `${isJSXElementConsequent
                 ? ''
-                : `${isJSXExpressionConsequent ? '' : '}}'
-              }</template>`}<template v-else>${isJSXExpressionAlternate ? '' : '{{'}`,
+                : `${isJSXExpressionConsequent ? '' : ')" />'
+              }</template>`}<template v-else>${isJSXExpressionAlternate ? '' : '<component :is="__createTextVNode('}`,
             s,
         )
-        overwrite(alternate.end!, end, `${isJSXExpressionAlternate ? '' : '}}'}</template>`, s)
+        overwrite(alternate.end!, end, `${isJSXExpressionAlternate ? '' : ')" />'}</template>`, s)
       }
       else {
         s.remove(consequent.end!, alternate.start!)
