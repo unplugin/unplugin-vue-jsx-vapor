@@ -1,7 +1,7 @@
 import type { MagicString } from '@vue-macros/common'
 import type { CallExpression, Node } from '@babel/types'
 import type { RootNodes } from './transform'
-import { overwrite } from './common'
+import { isFunctionExpression, overwrite } from './common'
 
 export function transformVFor(
   node: CallExpression,
@@ -11,8 +11,7 @@ export function transformVFor(
 ) {
   const { callee, arguments: [argument] } = node
   if (
-    argument.type !== 'FunctionExpression'
-    && argument.type !== 'ArrowFunctionExpression'
+    !isFunctionExpression(argument)
     || callee.type !== 'MemberExpression'
   )
     return

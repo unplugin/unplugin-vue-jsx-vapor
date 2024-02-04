@@ -1,4 +1,4 @@
-import type { CallExpression, ConditionalExpression, Expression, LogicalExpression, Node } from '@babel/types'
+import type { ArrowFunctionExpression, CallExpression, ConditionalExpression, Expression, FunctionExpression, LogicalExpression, Node } from '@babel/types'
 import type { MagicString } from '@vue-macros/common'
 
 export function addAttribute(
@@ -87,4 +87,9 @@ export function isConditionalExpression(node: Node): node is ConditionalExpressi
 export function isLogicalExpression(node: Node): node is LogicalExpression {
   return node.type === 'LogicalExpression'
     && isJSXExpression(node.right)
+}
+
+export function isFunctionExpression(node: Node): node is FunctionExpression | ArrowFunctionExpression {
+  return node.type === 'FunctionExpression'
+    || node.type === 'ArrowFunctionExpression'
 }

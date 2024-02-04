@@ -9,7 +9,7 @@ import type { Node } from '@babel/types'
 import type { Options } from '../types'
 import { transformVIf } from './v-if'
 import { transformVFor } from './v-for'
-import { isConditionalExpression, isJSXElement, isJSXExpression, isLogicalExpression, isMapCallExpression } from './common'
+import { isConditionalExpression, isFunctionExpression, isJSXElement, isJSXExpression, isLogicalExpression, isMapCallExpression } from './common'
 
 export type RootNodes = {
   node: Node
@@ -36,20 +36,6 @@ export function transformVueJsxVapor(
         rootNodes.unshift({
           node,
           postCallbacks: [],
-        })
-        postCallbacks = rootNodes[0].postCallbacks!
-      }
-      else if (
-        parent?.type === 'JSXAttribute'
-        && node.type === 'JSXExpressionContainer'
-        && /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
-      ) {
-        rootNodes.unshift({
-          node: parent.name.name === 'v-for' && node.expression.type === 'BinaryExpression'
-            ? node.expression.right
-            : node.expression,
-          postCallbacks: [],
-          isAttributeValue: true,
         })
         postCallbacks = rootNodes[0].postCallbacks!
       }
@@ -80,21 +66,32 @@ export function transformVueJsxVapor(
       }
       else if (node.type === 'JSXAttribute') {
         let name = s.sliceNode(node.name)
-        if (/^on[A-Z]/.test(name)) {
-          name = name.replace(/^(?:on)([A-Z])/, (_, $1) => `@${$1.toLowerCase()}`)
-        }
-        else if (!name.startsWith('v-') && node.value?.type === 'JSXExpressionContainer') {
-          name = `:${name}`
-        }
-
-        if (name.startsWith('v-') && node.value?.type === 'StringLiteral') {
-          s.overwrite(node.value.start!, node.value.start! + 1, `"'`)
-          s.overwrite(node.value.end! - 1, node.value.end!, `'"`)
-        }
-
         if (node.value?.type === 'JSXExpressionContainer') {
+          if (/^on[A-Z]/.test(name)) {
+            name = name.replace(/^(?:on)([A-Z])/, (_, $1) => `@${$1.toLowerCase()}`)
+
+            if (!isFunctionExpression(node.value.expression))
+              s.appendRight(node.value.expression.start!, '($event) =>')
+          }
+          else if (!name.startsWith('v-')) {
+            name = `:${name}`
+          }
+
           s.overwrite(node.value.start!, node.value.start! + 1, '"')
           s.overwrite(node.value.end! - 1, node.value.end!, '"')
+
+          rootNodes.unshift({
+            node: name === 'v-for' && node.value.expression.type === 'BinaryExpression'
+              ? node.value.expression.right
+              : node.value.expression,
+            postCallbacks: [],
+            isAttributeValue: true,
+          })
+          postCallbacks = rootNodes[0].postCallbacks!
+        }
+        else if (node.value?.type === 'StringLiteral' && name.startsWith('v-')) {
+          s.overwrite(node.value.start!, node.value.start! + 1, `"'`)
+          s.overwrite(node.value.end! - 1, node.value.end!, `'"`)
         }
 
         postCallbacks.unshift(() =>
@@ -131,14 +128,10 @@ export function transformVueJsxVapor(
           s.overwrite(node.start!, node.start! + 1, '<component :is="__createTextVNode(')
           s.overwrite(node.end! - 1, node.end!, ')" />')
 
-          if (
-            /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
-          ) {
-            rootNodes.unshift({
-              node: node.expression,
-              isAttributeValue: true,
-            })
-          }
+          rootNodes.unshift({
+            node: node.expression,
+            isAttributeValue: true,
+          })
           hasTextNode = true
         }
       }
