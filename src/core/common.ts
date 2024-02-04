@@ -20,9 +20,10 @@ export function overwrite(
   end: number | undefined,
   content: string,
   s: MagicString,
+  method: 'prependLeft' | 'prependRight' | 'appendLeft' | 'appendRight' = 'prependLeft',
 ) {
   if (start === end) {
-    s.prependLeft(start!, content)
+    s[method](start!, content)
   }
   else {
     s.overwrite(start!, end!, content)

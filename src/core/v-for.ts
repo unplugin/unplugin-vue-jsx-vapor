@@ -1,6 +1,7 @@
 import type { MagicString } from '@vue-macros/common'
 import type { CallExpression, Node } from '@babel/types'
 import type { RootNodes } from './transform'
+import { overwrite } from './common'
 
 export function transformVFor(
   node: CallExpression,
@@ -12,27 +13,28 @@ export function transformVFor(
   if (
     argument.type !== 'FunctionExpression'
     && argument.type !== 'ArrowFunctionExpression'
+    || callee.type !== 'MemberExpression'
   )
     return
+  rootNodes.unshift(
+    {
+      node: callee.object,
+      isAttributeValue: true,
+    },
+    {
+      node: {
+        ...argument.body,
+        type: 'ReturnStatement',
+      },
+      isAttributeValue: true,
+    },
+  )
 
   const start = parent?.type === 'JSXExpressionContainer' ? parent.start! : node.start!
   const end = parent?.type === 'JSXExpressionContainer' ? parent.end! : node.end!
-
-  const left = s.sliceNode(argument.params)
-  const right = callee.type === 'MemberExpression'
-    ? s.sliceNode(callee.object)
-    : null
-  const directive = ` v-for="(${left}) in ${right}"`
-
-  rootNodes.unshift({
-    node: {
-      ...argument.body,
-      type: 'ReturnStatement',
-    },
-    isAttributeValue: true,
-  })
   return () => {
-    s.overwrite(start, argument.body.start!, `<template${directive}><component :is="()=>`)
+    overwrite(start, callee.object.start!, `<template v-for="(${s.sliceNode(argument.params)}) in `, s, 'appendRight')
+    s.overwrite(callee.object.end!, argument.body.start!, `"><component :is="()=>`)
     s.overwrite(argument.body.end!, end, `"/></template>`)
   }
 }

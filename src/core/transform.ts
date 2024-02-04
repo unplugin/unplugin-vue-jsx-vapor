@@ -45,7 +45,9 @@ export function transformVueJsxVapor(
         && /("|<.*?\/.*?>)/.test(s.sliceNode(node.expression))
       ) {
         rootNodes.unshift({
-          node: node.expression,
+          node: parent.name.name === 'v-for' && node.expression.type === 'BinaryExpression'
+            ? node.expression.right
+            : node.expression,
           postCallbacks: [],
           isAttributeValue: true,
         })
@@ -176,7 +178,7 @@ export function transformVueJsxVapor(
     postCallbacks?.forEach(callback => callback?.())
 
     const result = compile(node)
-      .replaceAll(/__PLACEHOLDER_(\d)/g, (_, $1) => placeholders[$1])
+      .replaceAll(/__PLACEHOLDER_(\d+)/g, (_, $1) => placeholders[$1])
     if (isAttributeValue) {
       s.overwriteNode(node, `__PLACEHOLDER_${placeholders.push(result) - 1}`)
     }
