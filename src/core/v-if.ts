@@ -28,7 +28,7 @@ export function transformVIf(
         s.remove(start!, consequent.start!)
       }
       else {
-        overwrite(start, consequent.start!, `<template${directive}>${isJSXExpressionConsequent ? '' : '<component :is="__createTextVNode('}`, s)
+        overwrite(start, consequent.start!, `<template${directive}>${isJSXExpressionConsequent ? '' : '<component :is="_resolveJSXExpression('}`, s)
       }
 
       if (isJSXElement(alternate)) {
@@ -51,7 +51,7 @@ export function transformVIf(
             `${isJSXElementConsequent
                 ? ''
                 : `${isJSXExpressionConsequent ? '' : ')" />'
-              }</template>`}<template v-else>${isJSXExpressionAlternate ? '' : '<component :is="__createTextVNode('}`,
+              }</template>`}<template v-else>${isJSXExpressionAlternate ? '' : '<component :is="_resolveJSXExpression('}`,
             s,
         )
         overwrite(alternate.end!, end, `${isJSXExpressionAlternate ? '' : ')" />'}</template>`, s)

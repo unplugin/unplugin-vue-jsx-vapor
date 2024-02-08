@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import For from './for.vue'
 import Bind from './bind.vue'
+import Slot from './slot.vue'
 
 const count = ref(1)
 function Comp({ icon, getChildren }: any, { slots }: any) {
@@ -216,6 +217,14 @@ defineRender((
                 ? (<div>123</div>)
                 : null)
             }
+      </div>
+
+      <div>
+        v-slot:
+        <Slot v-slot={scope}>
+          default slot:
+          {scope}
+        </Slot>
       </div>
     </form>
   </>

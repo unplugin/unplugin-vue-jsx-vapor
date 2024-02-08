@@ -1,5 +1,20 @@
-import type { ArrowFunctionExpression, CallExpression, ConditionalExpression, Expression, FunctionExpression, LogicalExpression, Node } from '@babel/types'
+import type { ArrowFunctionExpression, CallExpression, ConditionalExpression, Expression, FunctionExpression, JSXElement, JSXFragment, JSXOpeningElement, LogicalExpression, Node } from '@babel/types'
 import type { MagicString } from '@vue-macros/common'
+import htmlTags from 'html-tags'
+import svgTags from 'svg-tags'
+
+export function isComponent(node: JSXOpeningElement) {
+  if (node.name.type === 'JSXIdentifier') {
+    const name = node.name.name
+    return (
+      !htmlTags.includes(name as htmlTags.htmlTags)
+      && !svgTags.includes(name)
+    )
+  }
+  else {
+    return node.name.type === 'JSXMemberExpression'
+  }
+}
 
 export function addAttribute(
   node: Node,
@@ -58,7 +73,7 @@ export function isJSXExpression(node?: Node | null): boolean {
   )
 }
 
-export function isJSXElement(node?: Node | null): boolean {
+export function isJSXElement(node?: Node | null): node is JSXElement | JSXFragment {
   return !!node && (
     node.type === 'JSXElement'
     || node.type === 'JSXFragment'

@@ -9,7 +9,7 @@ import type { Node } from '@babel/types'
 import type { Options } from '../types'
 import { transformVIf } from './v-if'
 import { transformVFor } from './v-for'
-import { isConditionalExpression, isFunctionExpression, isJSXElement, isJSXExpression, isLogicalExpression, isMapCallExpression } from './common'
+import { isComponent, isConditionalExpression, isFunctionExpression, isJSXElement, isJSXExpression, isLogicalExpression, isMapCallExpression } from './common'
 
 export type RootNodes = {
   node: Node
@@ -124,8 +124,20 @@ export function transformVueJsxVapor(
             s.removeNode(node),
           )
         }
+        else if (parent?.type === 'JSXElement'
+          && isComponent(parent.openingElement)
+          && parent.children.filter(child => s.sliceNode(child).trim()).length === 1
+        ) {
+          rootNodes.unshift({
+            node: node.expression,
+            isAttributeValue: true,
+          })
+          s.prepend(`const _toSlots = s => (Object.prototype.toString.call(s) === '[object Object]' && !s?.__v_isVNode) ? s : { default: typeof s === 'function' ? s: () => s };`)
+          s.overwrite(node.start!, node.expression.start!, `<template v-for="(slot, slotName) in _toSlots(`)
+          s.overwrite(node.expression.end!, node.end!, `)" v-slot:[slotName]="scope" :key="slotName"><component :is="slot" v-bind="scope" /></template>`)
+        }
         else if (!isJSXExpression(node.expression)) {
-          s.overwrite(node.start!, node.start! + 1, '<component :is="__createTextVNode(')
+          s.overwrite(node.start!, node.start! + 1, '<component :is="_resolveJSXExpression(')
           s.overwrite(node.end! - 1, node.end!, ')" />')
 
           rootNodes.unshift({
@@ -158,7 +170,7 @@ export function transformVueJsxVapor(
         .replace('_cache', '_cache = []')
         .replaceAll(/_ctx\.(?!\$slots)/g, '')
         .replaceAll(/{ "v\d+\-bind": ([\s\S]*) }/g, '$1')
-        .replaceAll(/_resolveComponent\("(.*)"\)/g, ($0, $1) => `(() => { try { return ${$1} } catch { return ${$0} } })()`)
+        .replaceAll(/(?<!const )_component_(\w*)/g, ($0, $1) => `(() => { try { return ${$1.replaceAll(/(?<=\w)46(?=\w)/g, '.')} } catch { return ${$0} } })()`)
       return runtime === '"vue"' ? `(${code})()` : code
     }
     else {
@@ -184,7 +196,7 @@ export function transformVueJsxVapor(
     importSet.add('createTextVNode as _createTextVNode')
     importSet.add('toDisplayString as _toDisplayString')
     s.prepend(
-     `const __createTextVNode = (node) => node?.__v_isVNode || typeof node === 'function' || (Array.isArray(node) && node[0]?.__v_isVNode) ? node : _createTextVNode(_toDisplayString(node));`,
+     `const _resolveJSXExpression = (node) => node?.__v_isVNode || typeof node === 'function' || (Array.isArray(node) && node[0]?.__v_isVNode) ? node : _createTextVNode(_toDisplayString(node));`,
     )
   }
 
