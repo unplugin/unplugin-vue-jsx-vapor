@@ -73,10 +73,8 @@ defineRender((
   <>
     <form onSubmit_prevent class="flex items-center">
       <input
-        {...{
-          ...{ value: count.value },
-          ...count.value ? { for: 'id' } : {},
-        }}
+        {...{ value: count.value }}
+        {...count.value ? { for: 'id' } : {}}
         onInput={count.value = $event.target.value}
       />
       {/* Function Components */}

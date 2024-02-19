@@ -71,7 +71,7 @@ export function transformVueJsxVapor(
             name = name.replace(/^(?:on)([A-Z])/, (_, $1) => `@${$1.toLowerCase()}`)
 
             if (!isFunctionExpression(node.value.expression))
-              s.appendRight(node.value.expression.start!, '($event) =>')
+              s.appendRight(node.value.expression.start!, '($event) => ')
           }
           else if (!name.startsWith('v-')) {
             name = `:${name}`
@@ -169,7 +169,7 @@ export function transformVueJsxVapor(
       code = code
         .replace('_cache', '_cache = []')
         .replaceAll(/_ctx\.(?!\$slots)/g, '')
-        .replaceAll(/{ "v\d+\-bind": ([\s\S]*) }/g, '$1')
+        .replaceAll(/"v\d+\-bind": /g, '...')
         .replaceAll(/(?<!const )_component_(\w*)/g, ($0, $1) => `(() => { try { return ${$1.replaceAll(/(?<=\w)46(?=\w)/g, '.')} } catch { return ${$0} } })()`)
       return runtime === '"vue"' ? `(${code})()` : code
     }
