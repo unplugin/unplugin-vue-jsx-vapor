@@ -75,7 +75,7 @@ defineRender((
       <input
         {...{ value: count.value }}
         {...count.value ? { for: 'id' } : {}}
-        onInput={count.value = $event.target.value}
+        onInput={($event: any) => count.value = $event.target.value}
       />
       {/* Function Components */}
       {Component}

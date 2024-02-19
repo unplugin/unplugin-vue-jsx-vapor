@@ -69,9 +69,6 @@ export function transformVueJsxVapor(
         if (node.value?.type === 'JSXExpressionContainer') {
           if (/^on[A-Z]/.test(name)) {
             name = name.replace(/^(?:on)([A-Z])/, (_, $1) => `@${$1.toLowerCase()}`)
-
-            if (!isFunctionExpression(node.value.expression))
-              s.appendRight(node.value.expression.start!, '($event) => ')
           }
           else if (!name.startsWith('v-')) {
             name = `:${name}`
