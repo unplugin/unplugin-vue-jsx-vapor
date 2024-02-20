@@ -158,7 +158,7 @@ export function transformVueJsxVapor(
     if (options?.compile && isJSXExpression(node)) {
       let { code, preamble } = options.compile(content, { mode: 'module', inline: true })
       preamble.match(/(\w+ as \w+)/g)?.forEach(s => importSet.add(s))
-      runtime = preamble.match(/(["'].*["'])/)![1]
+      runtime = preamble.match(/(["'].*["'])/)?.[1] || '"vue"'
       if (content.includes('<slot ')) {
         code = code.replace('_ctx', '_ctx = _getCurrentInstance().ctx')
         importSet.add('getCurrentInstance as _getCurrentInstance')
