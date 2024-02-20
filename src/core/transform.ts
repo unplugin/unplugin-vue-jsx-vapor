@@ -24,6 +24,7 @@ export function transformVueJsxVapor(
 ) {
   const s = new MagicString(code)
   let hasTextNode = false
+  let hasSlots = false
   const rootNodes: RootNodes = []
   let postCallbacks: ((() => void) | undefined)[] = []
   walkAST<Node>(babelParse(code, getLang(id)), {
@@ -124,12 +125,15 @@ export function transformVueJsxVapor(
         else if (parent?.type === 'JSXElement'
           && isComponent(parent.openingElement)
           && parent.children.filter(child => s.sliceNode(child).trim()).length === 1
+          && !(isMapCallExpression(node.expression)
+          || isConditionalExpression(node)
+          || isLogicalExpression(node))
         ) {
           rootNodes.unshift({
             node: node.expression,
             isAttributeValue: true,
           })
-          s.prepend(`const _toSlots = s => (Object.prototype.toString.call(s) === '[object Object]' && !s?.__v_isVNode) ? s : { default: typeof s === 'function' ? s: () => s };`)
+          hasSlots = true
           s.overwrite(node.start!, node.expression.start!, `<template v-for="(slot, slotName) in _toSlots(`)
           s.overwrite(node.expression.end!, node.end!, `)" v-slot:[slotName]="scope" :key="slotName"><component :is="slot" v-bind="scope" /></template>`)
         }
@@ -195,6 +199,10 @@ export function transformVueJsxVapor(
     s.prepend(
      `const _resolveJSXExpression = (node) => node?.__v_isVNode || typeof node === 'function' || (Array.isArray(node) && node[0]?.__v_isVNode) ? node : _createTextVNode(_toDisplayString(node));`,
     )
+  }
+
+  if (hasSlots) {
+    s.prepend(`const _toSlots = s => (Object.prototype.toString.call(s) === '[object Object]' && !s?.__v_isVNode) ? s : { default: typeof s === 'function' ? s: () => s };`)
   }
 
   s.prepend(

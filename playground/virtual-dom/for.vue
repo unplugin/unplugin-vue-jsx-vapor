@@ -19,14 +19,15 @@ defineRender(
     <div>
       {count.value}
     </div>
-    {
-      Array.from({ length: 3 }).map((_, index) => (
-        <span>
-          {index}
-        </span>
-      ))
-    }
-    {' '}
+    <Comp>
+      {
+        Array.from({ length: 3 }).map((_, index) => (
+          <span>
+            {index}
+          </span>
+        ))
+      }
+    </Comp>
     {
       Array.from({ length: 3 }).map((_, index) => {
         const idx = index + 1
