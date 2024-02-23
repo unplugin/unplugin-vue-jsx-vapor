@@ -23,8 +23,6 @@ export function transformVueJsxVapor(
   options: Options,
 ) {
   const s = new MagicString(code)
-  let hasTextNode = false
-  let hasSlots = false
   const rootNodes: RootNodes = []
   let postCallbacks: ((() => void) | undefined)[] = []
   walkAST<Node>(babelParse(code, getLang(id)), {
@@ -133,8 +131,7 @@ export function transformVueJsxVapor(
             node: node.expression,
             isAttributeValue: true,
           })
-          hasSlots = true
-          s.overwrite(node.start!, node.expression.start!, `<template v-for="(slot, slotName) in _toSlots(`)
+          s.overwrite(node.start!, node.expression.start!, `<template v-for="(slot, slotName) in _resolveSlots(`)
           s.overwrite(node.expression.end!, node.end!, `)" v-slot:[slotName]="scope" :key="slotName"><component :is="slot" v-bind="scope" /></template>`)
         }
         else if (!isJSXExpression(node.expression)) {
@@ -145,7 +142,6 @@ export function transformVueJsxVapor(
             node: node.expression,
             isAttributeValue: true,
           })
-          hasTextNode = true
         }
       }
     },
@@ -193,16 +189,16 @@ export function transformVueJsxVapor(
     }
   }
 
-  if (hasTextNode) {
+  const result = s.toString()
+  if (result.includes('_resolveJSXExpression')) {
     importSet.add('createTextVNode as _createTextVNode')
     importSet.add('toDisplayString as _toDisplayString')
     s.prepend(
-     `const _resolveJSXExpression = (node) => node?.__v_isVNode || typeof node === 'function' || (Array.isArray(node) && node[0]?.__v_isVNode) ? node : _createTextVNode(_toDisplayString(node));`,
+     `const _resolveJSXExpression = node => node?.__v_isVNode || typeof node === 'function' || (Array.isArray(node) && node[0]?.__v_isVNode) ? node : _createTextVNode(_toDisplayString(node));`,
     )
   }
-
-  if (hasSlots) {
-    s.prepend(`const _toSlots = s => (Object.prototype.toString.call(s) === '[object Object]' && !s?.__v_isVNode) ? s : { default: typeof s === 'function' ? s: () => s };`)
+  if (result.includes('_resolveSlots')) {
+    s.prepend(`const _resolveSlots = s => (Object.prototype.toString.call(s) === '[object Object]' && !s?.__v_isVNode) ? s : { default: typeof s === 'function' ? s: () => s };`)
   }
 
   s.prepend(
