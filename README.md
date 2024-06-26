@@ -2,7 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/unplugin-vue-jsx-vapor?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-vue-jsx-vapor)
 
-Convert JSX to Template for compiler-vapor.
+Convert JSX to Vapor.
 
 ## Install
 
@@ -16,15 +16,10 @@ npm i unplugin-vue-jsx-vapor
 ```ts
 // vite.config.ts
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/vite'
-import { compile } from 'vue/vapor'
-// or
-// import { compile } from '@vue/compiler-dom'
 
 export default defineConfig({
   plugins: [
-    VueJsxVapor({
-      compile
-    }),
+    VueJsxVapor(),
   ],
 })
 ```
@@ -39,15 +34,10 @@ Example: [`playground/`](./playground/)
 ```ts
 // rollup.config.js
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/rollup'
-import { compile } from 'vue/vapor'
-// or
-// import { compile } from '@vue/compiler-dom'
 
 export default {
   plugins: [
-    VueJsxVapor({
-      compile
-    }),
+    VueJsxVapor(),
   ],
 }
 ```
@@ -62,11 +52,7 @@ export default {
 module.exports = {
   /* ... */
   plugins: [
-    require('unplugin-vue-jsx-vapor/webpack')({
-      compile: require('vue/vapor')
-      // or
-      // compile: require('@vue/compiler-dom')
-    }),
+    require('unplugin-vue-jsx-vapor/webpack')(),
   ],
 }
 ```
@@ -78,16 +64,10 @@ module.exports = {
 
 ```ts
 // nuxt.config.js
-import { compile } from 'vue/vapor'
-// or
-// import { compile } from '@vue/compiler-dom'
 export default defineNuxtConfig({
   modules: [
     [
       'unplugin-vue-jsx-vapor/nuxt',
-      {
-        compile
-      },
     ],
   ],
 })
@@ -105,11 +85,7 @@ export default defineNuxtConfig({
 module.exports = {
   configureWebpack: {
     plugins: [
-      require('unplugin-vue-jsx-vapor/webpack')({
-        compile: require('vue/vapor')
-        // or
-        // compile: require('@vue/compiler-dom')
-      }),
+      require('unplugin-vue-jsx-vapor/webpack')(),
     ],
   },
 }
@@ -124,15 +100,10 @@ module.exports = {
 // esbuild.config.js
 import { build } from 'esbuild'
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/esbuild'
-import { compile } from 'vue/vapor'
-// or
-// import { compile } from '@vue/compiler-dom'
 
 build({
   plugins: [
-    VueJsxVapor({
-      compile
-    })
+    VueJsxVapor()
   ],
 })
 ```

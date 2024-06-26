@@ -1,18 +1,9 @@
 {
   "name": "unplugin-vue-jsx-vapor",
-  "type": "module",
   "version": "0.1.20",
   "packageManager": "pnpm@8.6.12",
-  "description": "Convert JSX to Template for compiler-vapor",
-  "license": "MIT",
-  "homepage": "https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor.git"
-  },
-  "bugs": {
-    "url": "https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor/issues"
-  },
+  "description": "Convert JSX to Vapor",
+  "type": "module",
   "keywords": [
     "unplugin",
     "vite",
@@ -20,57 +11,69 @@
     "rollup",
     "transform"
   ],
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./astro": {
-      "types": "./dist/astro.d.ts",
-      "import": "./dist/astro.js",
-      "require": "./dist/astro.cjs"
-    },
-    "./rspack": {
-      "types": "./dist/rspack.d.ts",
-      "import": "./dist/rspack.js",
-      "require": "./dist/rspack.cjs"
-    },
-    "./vite": {
-      "types": "./dist/vite.d.ts",
-      "import": "./dist/vite.js",
-      "require": "./dist/vite.cjs"
-    },
-    "./webpack": {
-      "types": "./dist/webpack.d.ts",
-      "import": "./dist/webpack.js",
-      "require": "./dist/webpack.cjs"
-    },
-    "./rollup": {
-      "types": "./dist/rollup.d.ts",
-      "import": "./dist/rollup.js",
-      "require": "./dist/rollup.cjs"
-    },
-    "./esbuild": {
-      "types": "./dist/esbuild.d.ts",
-      "import": "./dist/esbuild.js",
-      "require": "./dist/esbuild.cjs"
-    },
-    "./nuxt": {
-      "types": "./dist/nuxt.d.ts",
-      "import": "./dist/nuxt.js",
-      "require": "./dist/nuxt.cjs"
-    },
-    "./types": {
-      "types": "./dist/types.d.ts",
-      "import": "./dist/types.js",
-      "require": "./dist/types.cjs"
-    },
-    "./*": "./*"
+  "license": "MIT",
+  "homepage": "https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor#readme",
+  "bugs": {
+    "url": "https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor.git"
+  },
+  "files": [
+    "dist"
+  ],
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    },
+    "./astro": {
+      "types": "./dist/astro.d.ts",
+      "require": "./dist/astro.cjs",
+      "import": "./dist/astro.js"
+    },
+    "./rspack": {
+      "types": "./dist/rspack.d.ts",
+      "require": "./dist/rspack.cjs",
+      "import": "./dist/rspack.js"
+    },
+    "./vite": {
+      "types": "./dist/vite.d.ts",
+      "require": "./dist/vite.cjs",
+      "import": "./dist/vite.js"
+    },
+    "./webpack": {
+      "types": "./dist/webpack.d.ts",
+      "require": "./dist/webpack.cjs",
+      "import": "./dist/webpack.js"
+    },
+    "./rollup": {
+      "types": "./dist/rollup.d.ts",
+      "require": "./dist/rollup.cjs",
+      "import": "./dist/rollup.js"
+    },
+    "./esbuild": {
+      "types": "./dist/esbuild.d.ts",
+      "require": "./dist/esbuild.cjs",
+      "import": "./dist/esbuild.js"
+    },
+    "./nuxt": {
+      "types": "./dist/nuxt.d.ts",
+      "require": "./dist/nuxt.cjs",
+      "import": "./dist/nuxt.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "require": "./dist/types.cjs",
+      "import": "./dist/types.js"
+    },
+    "./*": "./*"
+  },
   "typesVersions": {
     "*": {
       "*": [
@@ -79,16 +82,12 @@
       ]
     }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch src",
     "build:fix": "esno scripts/postbuild.ts",
     "lint": "eslint .",
-    "play": "npm -C playground/virtual-dom run dev",
-    "play:vapor": "npm -C playground/vapor run dev",
+    "play": "npm -C playground run dev",
     "prepublishOnly": "npm run build",
     "release": "bumpp && npm publish",
     "start": "esno src/index.ts",
@@ -123,29 +122,33 @@
     }
   },
   "dependencies": {
-    "@vue-macros/common": "^1.10.0",
-    "html-tags": "^3.3.1",
+    "@vue-macros/common": "^1.10.4",
+    "@vue-vapor/compiler-vapor": "3.2024.0-63dbc26",
+    "@vue-vapor/vue": "3.2024.0-63dbc26",
+    "html-tags": "^4.0.0",
     "svg-tags": "^1.0.0",
-    "unplugin": "^1.5.1"
+    "unplugin": "^1.10.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.6.2",
-    "@nuxt/kit": "^3.8.2",
-    "@nuxt/schema": "^3.8.2",
-    "@types/node": "^20.10.3",
+    "@antfu/eslint-config": "^2.21.1",
+    "@babel/types": "^7.24.7",
+    "@nuxt/kit": "^3.12.2",
+    "@nuxt/schema": "^3.12.2",
+    "@sxzz/eslint-config": "^3.13.0",
+    "@types/node": "^20.14.9",
     "@types/svg-tags": "^1.0.2",
-    "bumpp": "^9.2.0",
+    "bumpp": "^9.4.1",
     "chalk": "^5.3.0",
-    "eslint": "^8.55.0",
-    "esno": "^4.0.0",
+    "eslint": "^9.5.0",
+    "esno": "^4.7.0",
     "fast-glob": "^3.3.2",
-    "nodemon": "^3.0.2",
-    "rimraf": "^5.0.5",
-    "rollup": "^4.6.1",
-    "tsup": "^8.0.1",
-    "typescript": "^5.3.2",
-    "vite": "^4.5.1",
-    "vitest": "^0.34.6",
-    "webpack": "^5.89.0"
+    "nodemon": "^3.1.4",
+    "rimraf": "^5.0.7",
+    "rollup": "^4.18.0",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.2",
+    "vite": "^5.3.1",
+    "vitest": "^1.6.0",
+    "webpack": "^5.92.1"
   }
 }
