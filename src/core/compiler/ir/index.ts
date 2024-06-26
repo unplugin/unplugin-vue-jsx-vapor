@@ -1,7 +1,3 @@
-import type {
-  BlockIRNode as _BlockIRNode,
-  RootIRNode as _RootIRNode,
-} from '@vue-vapor/compiler-vapor'
 import type { JSXFragment, Node } from '@babel/types'
 import type {
   BindingTypes,
