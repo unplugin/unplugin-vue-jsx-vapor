@@ -6,11 +6,11 @@ import {
 } from '@vue/compiler-dom'
 import { extend, isString } from '@vue/shared'
 import {
+  type VaporCodegenResult as BaseVaporCodegenResult,
   type HackOptions,
-  type VaporCodegenResult,
   generate,
 } from '@vue-vapor/compiler-vapor'
-import { babelParse } from '@vue-macros/common'
+import { type Overwrite, babelParse } from '@vue-macros/common'
 import {
   type DirectiveTransform,
   type NodeTransform,
@@ -19,9 +19,14 @@ import {
 
 import { transformElement } from './transforms/transformElement'
 import { transformChildren } from './transforms/transformChildren'
-import { IRNodeTypes, type RootNode } from './ir'
+import { IRNodeTypes, type RootIRNode, type RootNode } from './ir'
 import { transformText } from './transforms/transformText'
 import type { JSXElement, JSXFragment, Program } from '@babel/types'
+
+export interface VaporCodegenResult
+  extends Omit<BaseVaporCodegenResult, 'ast'> {
+  ast: RootIRNode
+}
 
 // code/AST -> IR (transform) -> JS (generate)
 export function compile(
@@ -100,10 +105,15 @@ export function compile(
     }),
   )
 
-  return generate(ir as any, resolvedOptions)
+  return generate(ir as any, resolvedOptions) as unknown as VaporCodegenResult
 }
 
-export type CompilerOptions = HackOptions<BaseCompilerOptions>
+export type CompilerOptions = Overwrite<
+  HackOptions<BaseCompilerOptions>,
+  {
+    nodeTransforms?: NodeTransform[]
+  }
+>
 export type TransformPreset = [
   NodeTransform[],
   Record<string, DirectiveTransform>,

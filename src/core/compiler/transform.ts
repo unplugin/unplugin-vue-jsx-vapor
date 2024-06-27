@@ -1,5 +1,4 @@
 import {
-  type TransformOptions as BaseTransformOptions,
   type CommentNode,
   type CompilerCompatOptions,
   type SimpleExpressionNode,
@@ -9,7 +8,6 @@ import {
 import { EMPTY_OBJ, NOOP, extend, isArray } from '@vue/shared'
 import {
   DynamicFlag,
-  type HackOptions,
   type IRDynamicInfo,
   IRNodeTypes,
   type IRSlots,
@@ -18,6 +16,7 @@ import {
 } from '@vue-vapor/compiler-vapor'
 import { newBlock, newDynamic } from './transforms/utils'
 import { isConstantExpression } from './utils'
+import type { CompilerOptions } from './compile'
 import type { JSXAttribute, JSXElement } from '@babel/types'
 import type { BlockIRNode, RootIRNode, RootNode } from './ir/index'
 
@@ -42,7 +41,7 @@ export interface DirectiveTransformResult {
   modelModifiers?: string[]
 }
 
-export type TransformOptions = HackOptions<BaseTransformOptions>
+export type TransformOptions = CompilerOptions
 
 const defaultOptions = {
   filename: '',
@@ -212,7 +211,7 @@ export function transform(
   return ir
 }
 
-export function transformNode(context: TransformContext<JSXElement>) {
+export function transformNode(context: TransformContext<BlockIRNode['node']>) {
   let { node } = context
 
   // apply transform plugins
@@ -243,7 +242,7 @@ export function transformNode(context: TransformContext<JSXElement>) {
     exitFns[i]()
   }
 
-  if (!context.node.start) {
+  if (context.node.type === IRNodeTypes.ROOT) {
     context.registerTemplate()
   }
 }

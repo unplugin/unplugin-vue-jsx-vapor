@@ -9,7 +9,7 @@ import {
   createSimpleExpression,
   isLiteralWhitelisted,
 } from '@vue/compiler-dom'
-import htmlTags from 'html-tags'
+import htmlTags, { type HtmlTags } from 'html-tags'
 import svgTags from 'svg-tags'
 import { EMPTY_EXPRESSION } from './transforms/utils'
 import type { VaporDirectiveNode } from './ir'
@@ -106,9 +106,7 @@ export function resolveSimpleExpression(
 export function isComponent(node: Node) {
   if (node.type === 'JSXIdentifier') {
     const name = node.name
-    return (
-      !htmlTags.includes(name as htmlTags.htmlTags) && !svgTags.includes(name)
-    )
+    return !htmlTags.includes(name as HtmlTags) && !svgTags.includes(name)
   } else {
     return node.type === 'JSXMemberExpression'
   }

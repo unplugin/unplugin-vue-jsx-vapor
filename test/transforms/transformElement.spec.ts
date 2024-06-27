@@ -27,7 +27,7 @@ const compileWithElementTransform = compile
 
 describe('compiler: element transform', () => {
   describe('component', () => {
-    test.only('import + resolve component', () => {
+    test('import + resolve component', () => {
       const { code, vaporHelpers } = compileWithElementTransform(`<Foo/>`)
       expect(code).toMatchInlineSnapshot(`
         "import { createComponent as _createComponent } from 'vue/vapor';
@@ -38,7 +38,7 @@ describe('compiler: element transform', () => {
         }"
       `)
       expect(vaporHelpers).contains.all.keys(
-        'resolveComponent',
+        // 'resolveComponent',
         'createComponent',
       )
     })

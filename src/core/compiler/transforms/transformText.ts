@@ -1,3 +1,4 @@
+import { type ParseResult, parseExpression } from '@babel/parser'
 import {
   type BlockIRNode,
   DynamicFlag,
@@ -11,6 +12,7 @@ import {
   resolveSimpleExpression,
 } from '../utils'
 import type {
+  Expression,
   JSXElement,
   JSXExpressionContainer,
   JSXText,
@@ -89,14 +91,21 @@ function createTextLikeExpression(node: TextLike, context: TransformContext) {
   if (node.type === 'JSXText') {
     return resolveSimpleExpression(node.value, true, node.loc!)
   } else {
-    return {
-      ...resolveSimpleExpression(
-        context.ir.source.slice(node.expression.start!, node.expression.end!),
-        false,
-        node.loc!,
-      ),
-      ast: node.expression,
+    const source = context.ir.source.slice(
+      node.expression.start!,
+      node.expression.end!,
+    )
+    let ast: false | ParseResult<Expression> = false
+    if (context.options.prefixIdentifiers) {
+      ast = parseExpression(` ${source}`, {
+        sourceType: 'module',
+        plugins: context.options.expressionPlugins,
+      })
     }
+
+    const result = resolveSimpleExpression(source, false, node.loc!)
+    result.ast = ast
+    return result
   }
 }
 
