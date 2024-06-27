@@ -20,7 +20,7 @@ const compileWithElementTransform = makeCompile({
 describe('compiler: children transform', () => {
   test.todo('basic')
 
-  test.only('children & sibling references', () => {
+  test('children & sibling references', () => {
     const { code, vaporHelpers } = compileWithElementTransform(
       `<div id>
         <p>{ first }</p> 
