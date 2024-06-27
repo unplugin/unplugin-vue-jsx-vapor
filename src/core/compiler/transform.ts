@@ -1,4 +1,5 @@
 import {
+  type TransformOptions as BaseTransformOptions,
   type CommentNode,
   type CompilerCompatOptions,
   type SimpleExpressionNode,
@@ -6,19 +7,21 @@ import {
   defaultOnWarn,
 } from '@vue/compiler-dom'
 import { EMPTY_OBJ, NOOP, extend, isArray } from '@vue/shared'
+import { newBlock, newDynamic } from './transforms/utils'
+import { isConstantExpression } from './utils'
 import {
+  type BlockIRNode,
   DynamicFlag,
+  type HackOptions,
   type IRDynamicInfo,
   IRNodeTypes,
   type IRSlots,
   type OperationNode,
+  type RootIRNode,
+  type RootNode,
   type VaporDirectiveNode,
-} from '@vue-vapor/compiler-vapor'
-import { newBlock, newDynamic } from './transforms/utils'
-import { isConstantExpression } from './utils'
-import type { CompilerOptions } from './compile'
-import type { JSXAttribute, JSXElement } from '@babel/types'
-import type { BlockIRNode, RootIRNode, RootNode } from './ir/index'
+} from './ir/index'
+import type { JSXElement, JSXFragment } from '@babel/types'
 
 export type NodeTransform = (
   node: BlockIRNode['node'],
@@ -32,8 +35,8 @@ export type DirectiveTransform = (
 ) => DirectiveTransformResult | void
 
 export interface DirectiveTransformResult {
-  key: JSXAttribute['name']
-  value: JSXAttribute['value']
+  key: SimpleExpressionNode
+  value: SimpleExpressionNode
   modifier?: '.' | '^'
   runtimeCamelize?: boolean
   handler?: boolean
@@ -41,8 +44,7 @@ export interface DirectiveTransformResult {
   modelModifiers?: string[]
 }
 
-export type TransformOptions = CompilerOptions
-
+export type TransformOptions = HackOptions<BaseTransformOptions>
 const defaultOptions = {
   filename: '',
   prefixIdentifiers: false,
@@ -70,7 +72,7 @@ const defaultOptions = {
 export class TransformContext<
   T extends BlockIRNode['node'] = BlockIRNode['node'],
 > {
-  parent: TransformContext<RootNode> | null = null
+  parent: TransformContext<RootNode | JSXElement | JSXFragment> | null = null
   root: TransformContext<RootNode>
   index: number = 0
 
@@ -100,7 +102,7 @@ export class TransformContext<
     options: TransformOptions = {},
   ) {
     this.options = extend({}, defaultOptions, options)
-    this.root = this as TransformContext<T>
+    this.root = this as TransformContext<RootNode>
   }
 
   enterBlock(ir: BlockIRNode, isVFor: boolean = false): () => void {

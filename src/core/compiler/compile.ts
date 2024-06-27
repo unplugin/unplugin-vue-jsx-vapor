@@ -7,10 +7,9 @@ import {
 import { extend, isString } from '@vue/shared'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
-  type HackOptions,
   generate,
 } from '@vue-vapor/compiler-vapor'
-import { type Overwrite, babelParse } from '@vue-macros/common'
+import { babelParse } from '@vue-macros/common'
 import {
   type DirectiveTransform,
   type NodeTransform,
@@ -19,7 +18,12 @@ import {
 
 import { transformElement } from './transforms/transformElement'
 import { transformChildren } from './transforms/transformChildren'
-import { IRNodeTypes, type RootIRNode, type RootNode } from './ir'
+import {
+  type HackOptions,
+  IRNodeTypes,
+  type RootIRNode,
+  type RootNode,
+} from './ir'
 import { transformText } from './transforms/transformText'
 import type { JSXElement, JSXFragment, Program } from '@babel/types'
 
@@ -108,12 +112,7 @@ export function compile(
   return generate(ir as any, resolvedOptions) as unknown as VaporCodegenResult
 }
 
-export type CompilerOptions = Overwrite<
-  HackOptions<BaseCompilerOptions>,
-  {
-    nodeTransforms?: NodeTransform[]
-  }
->
+export type CompilerOptions = HackOptions<BaseCompilerOptions>
 export type TransformPreset = [
   NodeTransform[],
   Record<string, DirectiveTransform>,

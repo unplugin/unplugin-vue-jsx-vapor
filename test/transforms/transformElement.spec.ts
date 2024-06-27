@@ -30,10 +30,11 @@ describe('compiler: element transform', () => {
     test('import + resolve component', () => {
       const { code, vaporHelpers } = compileWithElementTransform(`<Foo/>`)
       expect(code).toMatchInlineSnapshot(`
-        "import { createComponent as _createComponent } from 'vue/vapor';
+        "import { resolveComponent as _resolveComponent, createComponent as _createComponent } from 'vue/vapor';
 
         export function render(_ctx) {
-          const n0 = _createComponent(_ctx.Foo, null, null, true)
+          const _component_Foo = _resolveComponent("Foo")
+          const n0 = _createComponent(_component_Foo, null, null, true)
           return n0
         }"
       `)

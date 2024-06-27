@@ -1,12 +1,11 @@
 import type { SimpleExpressionNode } from '@vue/compiler-dom'
 import type { IRFor } from '@vue-vapor/compiler-vapor'
-import type { JSXAttribute } from '@babel/types'
 import type { DirectiveTransformResult } from '../transform'
 import type { BlockIRNode } from './index'
 
 // props
 export interface IRProp extends Omit<DirectiveTransformResult, 'value'> {
-  values: JSXAttribute['value'][]
+  values: SimpleExpressionNode[]
 }
 
 export enum IRDynamicPropsKind {

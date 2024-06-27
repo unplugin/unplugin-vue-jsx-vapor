@@ -17,7 +17,7 @@ export type RootNodes = {
 export function transformVueJsxVapor(
   code: string,
   id: string,
-  options?: Options,
+  _options?: Options,
 ) {
   const s = new MagicStringAST(code)
   const rootNodes: RootNodes = []
@@ -43,7 +43,6 @@ export function transformVueJsxVapor(
         mode: 'module',
         prefixIdentifiers: false,
         inline: true,
-        source: s.sliceNode(node),
       })
       vaporHelpers.forEach((i) => importSet.add(`${i} as _${i}`))
       preamble = preamble.replace(/^[^\n]*;\n?/, '')

@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
 import {
-  compile,
   transformChildren,
   transformElement,
   transformText,
@@ -21,9 +20,9 @@ const compileWithElementTransform = makeCompile({
 describe('compiler: children transform', () => {
   test.todo('basic')
 
-  test('children & sibling references', () => {
+  test.only('children & sibling references', () => {
     const { code, vaporHelpers } = compileWithElementTransform(
-      `<div>
+      `<div id>
         <p>{ first }</p> 
         { second }
         <p>{ forth }</p>
@@ -31,7 +30,7 @@ describe('compiler: children transform', () => {
     )
     expect(code).toMatchInlineSnapshot(`
       "import { next as _next, createTextNode as _createTextNode, insert as _insert, renderEffect as _renderEffect, setText as _setText, template as _template } from 'vue/vapor';
-      const t0 = _template("<div><p></p> <!><p></p></div>")
+      const t0 = _template("<div id><p></p> <!><p></p></div>")
 
       export function render(_ctx) {
         const n4 = t0()

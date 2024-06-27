@@ -16,7 +16,8 @@ import {
   type IRPropsDynamicAttribute,
   type IRPropsStatic,
 } from '../ir'
-import { isComponent as _isComponent } from '../utils'
+import { isComponent as _isComponent, resolveSimpleExpression } from '../utils'
+import { EMPTY_EXPRESSION } from './utils'
 import type { SimpleExpressionNode } from '@vue/compiler-dom'
 import type { JSXAttribute, JSXElement, JSXSpreadAttribute } from '@babel/types'
 import type {
@@ -61,7 +62,7 @@ export const transformElement: NodeTransform = (node, context) => {
 function transformComponentElement(
   tag: string,
   propsResult: PropsResult,
-  context: TransformContext,
+  context: TransformContext<JSXElement>,
 ) {
   let asset = true
 
@@ -104,7 +105,7 @@ function transformComponentElement(
 function resolveSetupReference(name: string, context: TransformContext) {
   const bindings = context.options.bindingMetadata
   // TODO
-  if (bindings) return name
+  if (!context.options.prefixIdentifiers) return name
   if (!bindings || bindings.__isScriptSetup === false) {
     return
   }
@@ -164,6 +165,7 @@ function transformNativeElement(
   if (
     context.parent &&
     context.parent.node.type === 'JSXElement' &&
+    context.parent.node.openingElement.name.type === 'JSXIdentifier' &&
     !isValidHTMLNesting(context.parent.node.openingElement.name.name, tag)
   ) {
     context.reference()
@@ -234,13 +236,17 @@ function transformProp(
 ): DirectiveTransformResult | void {
   if (prop.type === 'JSXSpreadAttribute') return
 
-  let { name, value } = prop
+  let name = prop.name.type === 'JSXIdentifier' ? prop.name.name : ''
+  const value = prop.value?.type === 'StringLiteral' ? prop.value.value : ''
 
   if (prop.type === 'JSXAttribute') {
-    if (isReservedProp(name.name)) return
+    if (isReservedProp(name)) return
     return {
-      key: name,
-      value: prop.value ? value : null,
+      key: resolveSimpleExpression(name, true, prop.name.loc!),
+      value:
+        prop.value && prop.value.type === 'StringLiteral'
+          ? resolveSimpleExpression(value, true, prop.value.loc!)
+          : EMPTY_EXPRESSION,
     }
   }
 

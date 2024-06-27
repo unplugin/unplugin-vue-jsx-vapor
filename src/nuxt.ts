@@ -11,7 +11,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-unplugin-vue-jsx-vapor',
     configKey: 'unpluginStarter',
   },
-  setup(options, _nuxt) {
+  setup(options) {
     addVitePlugin(() => vite(options))
     addWebpackPlugin(() => webpack(options))
 
