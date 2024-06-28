@@ -2,7 +2,9 @@
 
 [![NPM version](https://img.shields.io/npm/v/unplugin-vue-jsx-vapor?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-vue-jsx-vapor)
 
-Convert JSX to Vapor.
+Convert Vue JSX to Vapor.
+
+[Playground](https://stackblitz.com/github/zhiyuanzmj/unplugin-vue-jsx-vapor?file=playground%2FApp.vue)
 
 ## Install
 
