@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 0.2.2
+
+### Patch Changes
+
+- [`0c2232a`](https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor/commit/0c2232a3668ad6c76ddd1944e8141d62335fc060) Thanks [@zhiyuanzmj](https://github.com/zhiyuanzmj)! - remove shamefully-hoist
+
 ## 0.2.0
 
 ### Minor Changes
