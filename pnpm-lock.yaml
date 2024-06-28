@@ -20,6 +20,9 @@ importers:
       '@vue-vapor/vue':
         specifier: 3.2024.0-63dbc26
         version: 3.2024.0-63dbc26(typescript@5.5.2)(vue@3.4.30(typescript@5.5.2))
+      '@vue/shared':
+        specifier: ^3.4.31
+        version: 3.4.31
       esbuild:
         specifier: '*'
         version: 0.21.5
@@ -1061,6 +1064,9 @@ packages:
 
   '@vue/shared@3.4.30':
     resolution: {integrity: sha512-CLg+f8RQCHQnKvuHY9adMsMaQOcqclh6Z5V9TaoMgy0ut0tz848joZ7/CYFFyF/yZ5i2yaw7Fn498C+CNZVHIg==}
+
+  '@vue/shared@3.4.31':
+    resolution: {integrity: sha512-Yp3wtJk//8cO4NItOPpi3QkLExAr/aLBGZMmTtW9WpdwBCJpRM6zj9WgWktXAl8IDIozwNMByT45JP3tO3ACWA==}
 
   '@webassemblyjs/ast@1.12.1':
     resolution: {integrity: sha512-EKfMUOPRRUTy5UII4qJDGPpqfwjOmZ5jeGFwid9mnoqIFK+e0vqoi1qH56JpmZSzEL53jKnNzScdmftJyG5xWg==}
@@ -4400,6 +4406,8 @@ snapshots:
       vue: 3.4.30(typescript@5.5.2)
 
   '@vue/shared@3.4.30': {}
+
+  '@vue/shared@3.4.31': {}
 
   '@webassemblyjs/ast@1.12.1':
     dependencies:

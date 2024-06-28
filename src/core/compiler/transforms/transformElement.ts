@@ -16,7 +16,7 @@ import {
   type IRPropsDynamicAttribute,
   type IRPropsStatic,
 } from '../ir'
-import { isComponent as _isComponent, resolveSimpleExpression } from '../utils'
+import { isComponentNode, resolveSimpleExpression } from '../utils'
 import { EMPTY_EXPRESSION } from './utils'
 import type { SimpleExpressionNode } from '@vue/compiler-dom'
 import type { JSXAttribute, JSXElement, JSXSpreadAttribute } from '@babel/types'
@@ -44,7 +44,7 @@ export const transformElement: NodeTransform = (node, context) => {
       openingElement: { name },
     } = node
     const tag = name.type === 'JSXIdentifier' ? name.name : ''
-    const isComponent = _isComponent(node.openingElement.name)
+    const isComponent = isComponentNode(node)
     const propsResult = buildProps(
       node,
       context as TransformContext<JSXElement>,

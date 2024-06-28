@@ -5,13 +5,12 @@ import {
   IRNodeTypes,
   transformChildren,
   transformElement,
-  transformText,
   transformVBind,
 } from '../../src/core/compiler'
 import { makeCompile } from './_utils'
 
 const compileWithVBind = makeCompile({
-  nodeTransforms: [transformText, transformElement, transformChildren],
+  nodeTransforms: [transformElement, transformChildren],
   directiveTransforms: {
     bind: transformVBind,
   },
@@ -45,7 +44,7 @@ describe('compiler v-bind', () => {
           "element": 0,
           "prop": {
             "key": {
-              "ast": false,
+              "ast": null,
               "constType": 3,
               "content": "id",
               "isStatic": true,

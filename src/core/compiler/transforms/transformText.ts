@@ -6,7 +6,7 @@ import {
 } from '../ir'
 import {
   getLiteralExpressionValue,
-  isComponent,
+  isComponentNode,
   isConstantExpression,
   resolveExpression,
 } from '../utils'
@@ -33,7 +33,7 @@ export const transformText: NodeTransform = (node, context) => {
 
   if (
     node.type === 'JSXElement' &&
-    !isComponent(node.openingElement) &&
+    !isComponentNode(node) &&
     isAllTextLike(node.children)
   ) {
     processTextLikeContainer(

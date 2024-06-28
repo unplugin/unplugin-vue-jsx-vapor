@@ -26,6 +26,7 @@ import {
 } from './ir'
 import { transformText } from './transforms/transformText'
 import { transformVBind } from './transforms/vBind'
+import { transformVOn } from './transforms/vOn'
 import type { JSXElement, JSXFragment, Program } from '@babel/types'
 
 export interface VaporCodegenResult
@@ -50,8 +51,7 @@ export function compile(
     }
   }
 
-  const prefixIdentifiers =
-    !__BROWSER__ && (options.prefixIdentifiers === true || isModuleMode)
+  const prefixIdentifiers = !__BROWSER__ && options.prefixIdentifiers === true
 
   if (options.scopeId && !isModuleMode) {
     onError(createCompilerError(ErrorCodes.X_SCOPE_ID_NOT_SUPPORTED))
@@ -126,6 +126,7 @@ export function getBaseTransformPreset(
     [transformText, transformElement, transformChildren],
     {
       bind: transformVBind,
+      on: transformVOn,
     },
   ]
 }

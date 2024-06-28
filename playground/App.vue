@@ -1,18 +1,29 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue'
+import Count2 from './Count.vue'
 
 export default defineComponent({
   setup() {
-    const count = ref(0)
-    setInterval(() => {
-      count.value++
-    }, 1000)
+    const count = ref(1)
 
-    const Count = () => <div>{count.value * 2}</div>
+    const Count = (props) => {
+      return <div>{props.value}</div>
+    }
+
+    const Count1 = ({ value }) => {
+      return <div>{value}</div>
+    }
 
     return (
       <>
-        <Count />
+        <input
+          value_prop={count.value}
+          onInput={(e) => (count.value = e.target.value)}
+        />
+
+        <Count value={count.value} />
+        <Count1 value={count.value} />
+        <Count2 value={count.value} />
       </>
     )
   },

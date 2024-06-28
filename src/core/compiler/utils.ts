@@ -1,4 +1,4 @@
-import { isGloballyAllowed } from '@vue/shared'
+import { isGloballyAllowed, isString } from '@vue/shared'
 import {
   type AttributeNode,
   type ElementNode,
@@ -19,9 +19,9 @@ import type {
   BigIntLiteral,
   Expression,
   JSXAttribute,
+  JSXElement,
   JSXIdentifier,
   JSXText,
-  Node,
   NumericLiteral,
   SourceLocation,
   StringLiteral,
@@ -128,31 +128,39 @@ export function resolveSimpleExpression(
   return result
 }
 
-export function resolveLocation(location?: SourceLocation | null, source = '') {
-  return {
-    start: location
-      ? {
+export function resolveLocation(
+  location: SourceLocation | null | undefined,
+  context: TransformContext | string,
+) {
+  return location
+    ? {
+        start: {
           line: location.start.line,
           column: location.start.column + 1,
           offset: location.start.index,
-        }
-      : { line: 1, column: 1, offset: 0 },
-    end: location
-      ? {
+        },
+        end: {
           line: location.end.line,
           column: location.end.column + 1,
           offset: location.end.index,
-        }
-      : { line: 1, column: 1, offset: 0 },
-    source,
-  }
+        },
+        source: isString(context)
+          ? context
+          : context.ir.source.slice(location.start.index, location.end.index),
+      }
+    : {
+        start: { line: 1, column: 1, offset: 0 },
+        end: { line: 1, column: 1, offset: 0 },
+        source: '',
+      }
 }
 
-export function isComponent(node: Node) {
-  if (node.type === 'JSXIdentifier') {
-    const name = node.name
+export function isComponentNode(node: JSXElement) {
+  const { openingElement } = node
+  if (openingElement.name.type === 'JSXIdentifier') {
+    const name = openingElement.name.name
     return !htmlTags.includes(name as HtmlTags) && !svgTags.includes(name)
   } else {
-    return node.type === 'JSXMemberExpression'
+    return openingElement.name.type === 'JSXMemberExpression'
   }
 }

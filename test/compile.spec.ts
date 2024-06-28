@@ -6,7 +6,7 @@ export function compile(template: string, options: CompilerOptions = {}) {
   return _compile(template, {
     ...options,
     mode: 'module',
-    prefixIdentifiers: false,
+    prefixIdentifiers: true,
   })
 }
 
