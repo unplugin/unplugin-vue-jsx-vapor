@@ -263,13 +263,14 @@ function transformProp(
       context.directive.add(name)
     }
 
-    context.registerOperation({
-      type: IRNodeTypes.WITH_DIRECTIVE,
-      element: context.reference(),
-      dir: prop,
-      name,
-      asset: !fromSetup,
-    })
+    // TODO
+    // context.registerOperation({
+    //   type: IRNodeTypes.WITH_DIRECTIVE,
+    //   element: context.reference(),
+    //   dir: prop,
+    //   name,
+    //   asset: !fromSetup,
+    // })
   }
 }
 
