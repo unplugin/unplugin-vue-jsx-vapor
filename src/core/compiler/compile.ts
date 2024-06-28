@@ -3,8 +3,8 @@ import {
   ErrorCodes,
   createCompilerError,
   defaultOnError,
-} from '@vue/compiler-dom'
-import { extend, isString } from '@vue/shared'
+} from '@vue-vapor/compiler-dom'
+import { extend, isString } from '@vue-vapor/shared'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
   generate,

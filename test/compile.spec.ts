@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { BindingTypes } from '@vue/compiler-dom'
+import { BindingTypes } from '@vue-vapor/compiler-dom'
 import { type CompilerOptions, compile as _compile } from '../src/core/compiler'
 
 export function compile(template: string, options: CompilerOptions = {}) {

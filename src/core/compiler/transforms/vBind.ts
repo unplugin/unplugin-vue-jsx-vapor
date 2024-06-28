@@ -1,4 +1,4 @@
-import { camelize, extend } from '@vue/shared'
+import { camelize, extend } from '@vue-vapor/shared'
 import { resolveExpression, resolveSimpleExpression } from '../utils'
 import { isReservedProp } from './transformElement'
 import type { DirectiveTransform } from '../transform'

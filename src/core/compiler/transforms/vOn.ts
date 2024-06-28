@@ -2,8 +2,8 @@ import {
   ErrorCodes,
   createCompilerError,
   resolveModifiers,
-} from '@vue/compiler-dom'
-import { extend, makeMap } from '@vue/shared'
+} from '@vue-vapor/compiler-dom'
+import { extend, makeMap } from '@vue-vapor/shared'
 import { IRNodeTypes, type KeyOverride, type SetEventIRNode } from '../ir'
 import {
   isComponentNode,

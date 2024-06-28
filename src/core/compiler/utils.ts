@@ -1,4 +1,4 @@
-import { isGloballyAllowed, isString } from '@vue/shared'
+import { isGloballyAllowed, isString } from '@vue-vapor/shared'
 import {
   type AttributeNode,
   type ElementNode,
@@ -8,7 +8,7 @@ import {
   findProp as _findProp,
   createSimpleExpression,
   isLiteralWhitelisted,
-} from '@vue/compiler-dom'
+} from '@vue-vapor/compiler-dom'
 import htmlTags, { type HtmlTags } from 'html-tags'
 import svgTags from 'svg-tags'
 import { type ParseResult, parseExpression } from '@babel/parser'

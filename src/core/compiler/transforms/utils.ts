@@ -3,7 +3,7 @@ import {
   type IRDynamicInfo,
   IRNodeTypes,
 } from '@vue-vapor/compiler-vapor'
-import { createSimpleExpression } from '@vue/compiler-dom'
+import { createSimpleExpression } from '@vue-vapor/compiler-dom'
 import type { BlockIRNode } from '../ir/index'
 
 export function newDynamic(): IRDynamicInfo {
