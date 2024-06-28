@@ -128,6 +128,7 @@
     "@vue-macros/common": "^1.10.4",
     "@vue-vapor/compiler-dom": "3.2024.0-63dbc26",
     "@vue-vapor/compiler-vapor": "3.2024.0-63dbc26",
+    "@vue-vapor/runtime-vapor": "3.2024.0-63dbc26",
     "@vue-vapor/shared": "3.2024.0-4c28469",
     "@vue-vapor/vue": "3.2024.0-63dbc26",
     "html-tags": "^4.0.0",

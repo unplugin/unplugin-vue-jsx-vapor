@@ -42,7 +42,7 @@ export interface BaseIRNode {
   type: IRNodeTypes
 }
 
-export type VaporHelper = keyof typeof import('@vue/runtime-vapor')
+export type VaporHelper = keyof typeof import('@vue-vapor/runtime-vapor')
 
 export interface RootNode {
   type: IRNodeTypes.ROOT
