@@ -19,9 +19,8 @@ import {
   type OperationNode,
   type RootIRNode,
   type RootNode,
-  type VaporDirectiveNode,
 } from './ir/index'
-import type { JSXElement, JSXFragment } from '@babel/types'
+import type { JSXAttribute, JSXElement, JSXFragment } from '@babel/types'
 
 export type NodeTransform = (
   node: BlockIRNode['node'],
@@ -29,7 +28,7 @@ export type NodeTransform = (
 ) => void | (() => void) | (() => void)[]
 
 export type DirectiveTransform = (
-  dir: VaporDirectiveNode,
+  dir: JSXAttribute,
   node: JSXElement,
   context: TransformContext<JSXElement>,
 ) => DirectiveTransformResult | void

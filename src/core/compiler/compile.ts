@@ -25,6 +25,7 @@ import {
   type RootNode,
 } from './ir'
 import { transformText } from './transforms/transformText'
+import { transformVBind } from './transforms/vBind'
 import type { JSXElement, JSXFragment, Program } from '@babel/types'
 
 export interface VaporCodegenResult
@@ -121,5 +122,10 @@ export type TransformPreset = [
 export function getBaseTransformPreset(
   prefixIdentifiers?: boolean,
 ): TransformPreset {
-  return [[transformText, transformElement, transformChildren], {}]
+  return [
+    [transformText, transformElement, transformChildren],
+    {
+      bind: transformVBind,
+    },
+  ]
 }

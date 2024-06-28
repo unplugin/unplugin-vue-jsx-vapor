@@ -11,10 +11,16 @@ import {
 } from '@vue/compiler-dom'
 import htmlTags, { type HtmlTags } from 'html-tags'
 import svgTags from 'svg-tags'
+import { type ParseResult, parseExpression } from '@babel/parser'
 import { EMPTY_EXPRESSION } from './transforms/utils'
+import type { TransformContext } from './transform'
 import type { VaporDirectiveNode } from './ir'
 import type {
   BigIntLiteral,
+  Expression,
+  JSXAttribute,
+  JSXIdentifier,
+  JSXText,
   Node,
   NumericLiteral,
   SourceLocation,
@@ -53,16 +59,6 @@ export function isConstantExpression(exp: SimpleExpressionNode) {
   )
 }
 
-export function resolveExpression(exp: SimpleExpressionNode) {
-  if (!exp.isStatic) {
-    const value = getLiteralExpressionValue(exp)
-    if (value !== null) {
-      return createSimpleExpression(`${value}`, true, exp.loc)
-    }
-  }
-  return exp
-}
-
 export function getLiteralExpressionValue(
   exp: SimpleExpressionNode,
 ): number | string | boolean | null {
@@ -83,24 +79,73 @@ export function getLiteralExpressionValue(
   return exp.isStatic ? exp.content : null
 }
 
+export function resolveExpression(
+  node: JSXAttribute['value'] | JSXText | JSXIdentifier,
+  context: TransformContext,
+) {
+  const isStatic =
+    !!node &&
+    (node.type === 'StringLiteral' ||
+      node.type === 'JSXText' ||
+      node.type === 'JSXIdentifier')
+  const source = !node
+    ? ''
+    : node.type === 'JSXIdentifier'
+      ? node.name
+      : isStatic
+        ? node.value
+        : node.type === 'JSXExpressionContainer'
+          ? node.expression.type === 'Identifier'
+            ? node.expression.name
+            : context.ir.source.slice(
+                node.expression.start!,
+                node.expression.end!,
+              )
+          : ''
+  const location = node ? node.loc : null
+  let ast: false | ParseResult<Expression> = false
+  if (!isStatic && context.options.prefixIdentifiers) {
+    ast = parseExpression(` ${source}`, {
+      sourceType: 'module',
+      plugins: context.options.expressionPlugins,
+    })
+  }
+  return resolveSimpleExpression(source, isStatic, location, ast)
+}
+
 export function resolveSimpleExpression(
   source: string,
   isStatic: boolean,
-  location: SourceLocation,
+  location?: SourceLocation | null,
+  ast?: false | ParseResult<Expression>,
 ) {
-  return createSimpleExpression(source, isStatic, {
-    start: {
-      line: location.start.line,
-      column: location.start.column,
-      offset: location.start.index,
-    },
-    end: {
-      line: location.end.line,
-      column: location.end.column,
-      offset: location.end.index,
-    },
+  const result = createSimpleExpression(
     source,
-  })
+    isStatic,
+    resolveLocation(location, source),
+  )
+  result.ast = ast ?? null
+  return result
+}
+
+export function resolveLocation(location?: SourceLocation | null, source = '') {
+  return {
+    start: location
+      ? {
+          line: location.start.line,
+          column: location.start.column + 1,
+          offset: location.start.index,
+        }
+      : { line: 1, column: 1, offset: 0 },
+    end: location
+      ? {
+          line: location.end.line,
+          column: location.end.column + 1,
+          offset: location.end.index,
+        }
+      : { line: 1, column: 1, offset: 0 },
+    source,
+  }
 }
 
 export function isComponent(node: Node) {

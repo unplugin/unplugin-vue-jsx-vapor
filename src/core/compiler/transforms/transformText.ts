@@ -9,7 +9,7 @@ import {
   getLiteralExpressionValue,
   isComponent,
   isConstantExpression,
-  resolveSimpleExpression,
+  resolveExpression,
 } from '../utils'
 import type {
   Expression,
@@ -88,25 +88,7 @@ function processTextLikeContainer(
 
 function createTextLikeExpression(node: TextLike, context: TransformContext) {
   seen.get(context.root)!.add(node)
-  if (node.type === 'JSXText') {
-    return resolveSimpleExpression(node.value, true, node.loc!)
-  } else {
-    const source = context.ir.source.slice(
-      node.expression.start!,
-      node.expression.end!,
-    )
-    let ast: false | ParseResult<Expression> = false
-    if (context.options.prefixIdentifiers) {
-      ast = parseExpression(` ${source}`, {
-        sourceType: 'module',
-        plugins: context.options.expressionPlugins,
-      })
-    }
-
-    const result = resolveSimpleExpression(source, false, node.loc!)
-    result.ast = ast
-    return result
-  }
+  return resolveExpression(node, context)
 }
 
 function isAllTextLike(children: Node[]): children is TextLike[] {

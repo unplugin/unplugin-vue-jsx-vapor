@@ -70,7 +70,7 @@ describe('compile', () => {
           return n0
         })()"
       `)
-      // expect(code).contains('a + b.value')
+      expect(code).contains('a + b.value')
     })
   })
 })

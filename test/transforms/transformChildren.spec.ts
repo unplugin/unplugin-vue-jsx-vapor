@@ -22,7 +22,7 @@ describe('compiler: children transform', () => {
 
   test('children & sibling references', () => {
     const { code, vaporHelpers } = compileWithElementTransform(
-      `<div id>
+      `<div>
         <p>{ first }</p> 
         { second }
         <p>{ forth }</p>
@@ -30,7 +30,7 @@ describe('compiler: children transform', () => {
     )
     expect(code).toMatchInlineSnapshot(`
       "import { next as _next, createTextNode as _createTextNode, insert as _insert, renderEffect as _renderEffect, setText as _setText, template as _template } from 'vue/vapor';
-      const t0 = _template("<div id><p></p> <!><p></p></div>")
+      const t0 = _template("<div><p></p> <!><p></p></div>")
 
       export function render(_ctx) {
         const n4 = t0()

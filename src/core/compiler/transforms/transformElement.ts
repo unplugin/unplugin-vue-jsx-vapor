@@ -235,21 +235,20 @@ function transformProp(
   context: TransformContext<JSXElement>,
 ): DirectiveTransformResult | void {
   if (prop.type === 'JSXSpreadAttribute') return
-
   let name = prop.name.type === 'JSXIdentifier' ? prop.name.name : ''
-  const value = prop.value?.type === 'StringLiteral' ? prop.value.value : ''
 
-  if (prop.type === 'JSXAttribute') {
+  if (!prop.value || prop.value.type === 'StringLiteral') {
     if (isReservedProp(name)) return
     return {
       key: resolveSimpleExpression(name, true, prop.name.loc!),
       value:
         prop.value && prop.value.type === 'StringLiteral'
-          ? resolveSimpleExpression(value, true, prop.value.loc!)
+          ? resolveSimpleExpression(prop.value.value, true, prop.value.loc!)
           : EMPTY_EXPRESSION,
     }
   }
 
+  name = /^on[A-Z]/.test(name) ? 'on' : 'bind'
   const directiveTransform = context.options.directiveTransforms[name]
   if (directiveTransform) {
     return directiveTransform(prop, node, context)
