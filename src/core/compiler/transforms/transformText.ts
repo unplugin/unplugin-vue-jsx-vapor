@@ -1,4 +1,3 @@
-import { type ParseResult, parseExpression } from '@babel/parser'
 import {
   type BlockIRNode,
   DynamicFlag,
@@ -12,7 +11,6 @@ import {
   resolveExpression,
 } from '../utils'
 import type {
-  Expression,
   JSXElement,
   JSXExpressionContainer,
   JSXText,

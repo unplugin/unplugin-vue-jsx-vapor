@@ -1,5 +1,5 @@
-import { describe, expect, test, vi } from 'vitest'
-import { ErrorCodes, NodeTypes } from '@vue/compiler-dom'
+import { describe, expect, test } from 'vitest'
+import { NodeTypes } from '@vue/compiler-dom'
 import {
   DynamicFlag,
   IRNodeTypes,
