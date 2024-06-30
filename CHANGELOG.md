@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 0.2.3
+
+### Patch Changes
+
+- [`e45feb7`](https://github.com/zhiyuanzmj/unplugin-vue-jsx-vapor/commit/e45feb70f5ecf99ef4f76fc8fa3a55b5248b051a) Thanks [@zhiyuanzmj](https://github.com/zhiyuanzmj)! - support conditional & logical expression
+
 ## 0.2.2
 
 ### Patch Changes
