@@ -44,7 +44,7 @@ export function transformVueJsxVapor(
         prefixIdentifiers: false,
         inline: true,
       })
-      vaporHelpers.forEach((i) => importSet.add(`${i} as _${i}`))
+      vaporHelpers.forEach((i) => importSet.add(i))
       preamble = preamble.replace(/^[^\n]*;\n?/, '')
       if (preambles.length) {
         preamble = preamble.replaceAll(
@@ -59,7 +59,7 @@ export function transformVueJsxVapor(
   }
 
   s.prepend(
-    `import { ${Array.from(importSet).join(', ')} } from 'vue/vapor';\n${preambles.join(';\n')}`,
+    `import { ${Array.from(importSet).map((i) => `${i} as _${i}`)} } from 'vue/vapor';\n${preambles.join('\n')}`,
   )
 
   return generateTransform(s, id)

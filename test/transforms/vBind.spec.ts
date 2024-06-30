@@ -20,15 +20,15 @@ describe('compiler v-bind', () => {
   test('basic', () => {
     const { ir, code } = compileWithVBind(`<div id={id}/>`)
     expect(code).toMatchInlineSnapshot(`
-        "import { renderEffect as _renderEffect, setDynamicProp as _setDynamicProp, template as _template } from 'vue/vapor';
-        const t0 = _template("<div></div>")
+      "import { renderEffect as _renderEffect, setDynamicProp as _setDynamicProp, template as _template } from 'vue/vapor';
+      const t0 = _template("<div></div>")
 
-        export function render(_ctx) {
-          const n0 = t0()
-          _renderEffect(() => _setDynamicProp(n0, "id", _ctx.id))
-          return n0
-        }"
-      `)
+      export function render(_ctx) {
+        const n0 = t0()
+        _renderEffect(() => _setDynamicProp(n0, "id", _ctx.id))
+        return n0
+      }"
+    `)
 
     expect(ir.block.dynamic.children[0]).toMatchObject({
       id: 0,

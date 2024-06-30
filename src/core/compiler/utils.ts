@@ -18,10 +18,8 @@ import type { VaporDirectiveNode } from './ir'
 import type {
   BigIntLiteral,
   Expression,
-  JSXAttribute,
   JSXElement,
-  JSXIdentifier,
-  JSXText,
+  Node,
   NumericLiteral,
   SourceLocation,
   StringLiteral,
@@ -80,7 +78,7 @@ export function getLiteralExpressionValue(
 }
 
 export function resolveExpression(
-  node: JSXAttribute['value'] | JSXText | JSXIdentifier,
+  node: Node | undefined | null,
   context: TransformContext,
 ) {
   const isStatic =
@@ -101,7 +99,7 @@ export function resolveExpression(
                 node.expression.start!,
                 node.expression.end!,
               )
-          : ''
+          : context.ir.source.slice(node.start!, node.end!)
   const location = node ? node.loc : null
   let ast: false | ParseResult<Expression> = false
   if (!isStatic && context.options.prefixIdentifiers) {

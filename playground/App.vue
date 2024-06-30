@@ -1,10 +1,11 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue'
 import Count2 from './Count.vue'
+import If from './if.vue'
 
 export default defineComponent({
   setup() {
-    const count = ref(1)
+    const count = ref('1')
 
     const Count = (props) => {
       return <div>{props.value}</div>
@@ -16,14 +17,22 @@ export default defineComponent({
 
     return (
       <>
-        <input
-          value_prop={count.value}
-          onInput={(e) => (count.value = e.target.value)}
-        />
+        <fieldset>
+          <legend>Component</legend>
+          <input
+            value_prop={count.value}
+            onInput={(e) => (count.value = e.target.value)}
+          />
 
-        <Count value={count.value} />
-        <Count1 value={count.value} />
-        <Count2 value={count.value} />
+          <Count value={count.value} />
+          <Count1 value={count.value} />
+          <Count2 value={count.value} />
+        </fieldset>
+
+        <fieldset>
+          <legend>v-if</legend>
+          <If></If>
+        </fieldset>
       </>
     )
   },

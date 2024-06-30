@@ -10,6 +10,7 @@ import {
   isConstantExpression,
   resolveExpression,
 } from '../utils'
+import { processConditionalExpression, processLogicalExpression } from './vIf'
 import type {
   JSXElement,
   JSXExpressionContainer,
@@ -41,7 +42,13 @@ export const transformText: NodeTransform = (node, context) => {
       context as TransformContext<JSXElement>,
     )
   } else if (node.type === 'JSXExpressionContainer') {
-    processTextLike(context as TransformContext<JSXExpressionContainer>)
+    if (node.expression.type === 'ConditionalExpression') {
+      return processConditionalExpression(node.expression, context)
+    } else if (node.expression.type === 'LogicalExpression') {
+      return processLogicalExpression(node.expression, context)
+    } else {
+      processTextLike(context as TransformContext<JSXExpressionContainer>)
+    }
   } else if (node.type === 'JSXText') {
     context.template += node.value
   }
@@ -99,5 +106,12 @@ function isAllTextLike(children: Node[]): children is TextLike[] {
 }
 
 function isTextLike(node: Node): node is TextLike {
-  return node.type === 'JSXExpressionContainer' || node.type === 'JSXText'
+  return (
+    (node.type === 'JSXExpressionContainer' &&
+      !(
+        node.expression.type === 'ConditionalExpression' ||
+        node.expression.type === 'LogicalExpression'
+      )) ||
+    node.type === 'JSXText'
+  )
 }

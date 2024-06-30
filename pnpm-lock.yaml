@@ -14,6 +14,9 @@ importers:
       '@vue-macros/common':
         specifier: ^1.10.4
         version: 1.10.4(rollup@4.18.0)(vue@3.4.31(typescript@5.5.2))
+      '@vue-vapor/compiler-core':
+        specifier: 3.2024.0-4c28469
+        version: 3.2024.0-4c28469
       '@vue-vapor/compiler-dom':
         specifier: 3.2024.0-63dbc26
         version: 3.2024.0-63dbc26
