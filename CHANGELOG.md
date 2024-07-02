@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 0.2.4
+
+### Patch Changes
+
+- [`19f1366`](https://github.com/unplugin/unplugin-vue-jsx-vapor/commit/19f1366fbd9612b7f4af1d28d5da13ef763a1ed4) Thanks [@zhiyuanzmj](https://github.com/zhiyuanzmj)! - support map call expression
+
 ## 0.2.3
 
 ### Patch Changes
