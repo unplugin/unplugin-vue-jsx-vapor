@@ -44,22 +44,20 @@ export function transformVueJsxVapor(
         prefixIdentifiers: false,
         inline: true,
       })
-      vaporHelpers.forEach((i) => importSet.add(i))
+      vaporHelpers.forEach((helper) => importSet.add(helper))
       preamble = preamble.replace(/^[^\n]*;\n?/, '')
-      if (preambles.length) {
-        preamble = preamble.replaceAll(
-          /(?<=const t)(?=\d)/g,
-          `${preambles.length}`,
-        )
-        code = code.replace(/(?<= t)(?=0)/, `${preambles.length}`)
-      }
+      preamble = preamble.replaceAll(
+        /(?<=const t)(?=\d)/g,
+        `_${preambles.length}`,
+      )
+      code = code.replace(/(?<= t)(?=\d)/, `_${preambles.length}`)
       preambles.push(preamble)
       s.overwriteNode(node, code)
     }
   }
 
   s.prepend(
-    `import { ${Array.from(importSet).map((i) => `${i} as _${i}`)} } from 'vue/vapor';\n${preambles.join('\n')}`,
+    `import { ${Array.from(importSet).map((i) => `${i} as _${i}`)} } from 'vue/vapor';\n${preambles.join('')}`,
   )
 
   return generateTransform(s, id)

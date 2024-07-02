@@ -8,16 +8,19 @@ import {
   getLiteralExpressionValue,
   isComponentNode,
   isConstantExpression,
+  isMapCallExpression,
   resolveExpression,
 } from '../utils'
 import { processConditionalExpression, processLogicalExpression } from './vIf'
+import { processMapCallExpression } from './vFor'
+import type { NodeTransform, TransformContext } from '../transform'
 import type {
+  CallExpression,
   JSXElement,
   JSXExpressionContainer,
   JSXText,
   Node,
 } from '@babel/types'
-import type { NodeTransform, TransformContext } from '../transform'
 
 type TextLike = JSXText | JSXExpressionContainer
 const seen = new WeakMap<
@@ -46,6 +49,12 @@ export const transformText: NodeTransform = (node, context) => {
       return processConditionalExpression(node.expression, context)
     } else if (node.expression.type === 'LogicalExpression') {
       return processLogicalExpression(node.expression, context)
+    } else if (node.expression.type === 'CallExpression') {
+      if (isMapCallExpression(node.expression)) {
+        return processMapCallExpression(node.expression, context)
+      } else {
+        processCallExpression(node.expression, context)
+      }
     } else {
       processTextLike(context as TransformContext<JSXExpressionContainer>)
     }
@@ -111,7 +120,29 @@ function isTextLike(node: Node): node is TextLike {
       !(
         node.expression.type === 'ConditionalExpression' ||
         node.expression.type === 'LogicalExpression'
-      )) ||
+      ) &&
+      node.expression.type !== 'CallExpression') ||
     node.type === 'JSXText'
   )
+}
+
+function processCallExpression(
+  node: CallExpression,
+  context: TransformContext,
+) {
+  context.dynamic.flags |= DynamicFlag.NON_TEMPLATE | DynamicFlag.INSERT
+  const root =
+    context.root === context.parent && context.parent.node.children.length === 1
+  const tag = `() => ${context.ir.source.slice(node.start!, node.end!)}`
+
+  context.registerOperation({
+    type: IRNodeTypes.CREATE_COMPONENT_NODE,
+    id: context.reference(),
+    tag,
+    props: [],
+    asset: false,
+    root,
+    slots: context.slots,
+    once: context.inVOnce,
+  })
 }

@@ -91,6 +91,7 @@ export function compile(
       resolvedOptions.expressionPlugins = [
         ...(expressionPlugins || []),
         'typescript',
+        'jsx',
       ]
     }
   }

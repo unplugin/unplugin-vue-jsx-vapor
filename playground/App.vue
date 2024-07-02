@@ -2,6 +2,7 @@
 import { defineComponent, ref } from 'vue'
 import Count2 from './Count.vue'
 import If from './if.vue'
+import For from './for.vue'
 
 export default defineComponent({
   setup() {
@@ -32,6 +33,11 @@ export default defineComponent({
         <fieldset>
           <legend>v-if</legend>
           <If></If>
+        </fieldset>
+
+        <fieldset>
+          <legend>v-for</legend>
+          <For></For>
         </fieldset>
       </>
     )

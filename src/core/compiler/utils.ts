@@ -17,6 +17,7 @@ import type { TransformContext } from './transform'
 import type { VaporDirectiveNode } from './ir'
 import type {
   BigIntLiteral,
+  CallExpression,
   Expression,
   JSXElement,
   Node,
@@ -161,4 +162,16 @@ export function isComponentNode(node: JSXElement) {
   } else {
     return openingElement.name.type === 'JSXMemberExpression'
   }
+}
+
+export function isMapCallExpression(
+  node?: Node | null,
+): node is CallExpression {
+  return (
+    !!node &&
+    node.type === 'CallExpression' &&
+    node.callee.type === 'MemberExpression' &&
+    node.callee.property.type === 'Identifier' &&
+    node.callee.property.name === 'map'
+  )
 }

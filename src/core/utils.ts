@@ -1,6 +1,6 @@
+import { isMapCallExpression } from './compiler/utils'
 import type {
   ArrowFunctionExpression,
-  CallExpression,
   ConditionalExpression,
   Expression,
   FunctionExpression,
@@ -69,19 +69,6 @@ export function isJSXElement(
   node?: Node | null,
 ): node is JSXElement | JSXFragment {
   return !!node && (node.type === 'JSXElement' || node.type === 'JSXFragment')
-}
-
-export function isMapCallExpression(
-  node?: Node | null,
-): node is CallExpression {
-  return (
-    !!node &&
-    node.type === 'CallExpression' &&
-    node.callee.type === 'MemberExpression' &&
-    node.callee.property.type === 'Identifier' &&
-    node.callee.property.name === 'map' &&
-    isJSXExpression(getReturnExpression(node.arguments[0]))
-  )
 }
 
 export function isConditionalExpression(

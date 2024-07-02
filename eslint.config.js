@@ -5,5 +5,6 @@ export default sxzz({
     'unicorn/filename-case': 'off',
     'import/no-default-export': 'off',
     'unused-imports/no-unused-vars': 'warn',
+    'unicorn/no-new-array': 'off',
   },
 })

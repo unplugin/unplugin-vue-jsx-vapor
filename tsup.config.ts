@@ -8,4 +8,8 @@ export default {
   cjsInterop: true,
   splitting: true,
   onSuccess: 'npm run build:fix',
+  define: {
+    __DEV__: 'true',
+    __BROWSER__: 'false',
+  },
 } satisfies Options
