@@ -50,9 +50,11 @@ export function transformVueJsxVapor(
         /(?<=const t)(?=\d)/g,
         `_${preambles.length}`,
       )
-      code = code.replace(/(?<= t)(?=\d)/, `_${preambles.length}`)
+      s.overwriteNode(
+        node,
+        code.replaceAll(/(?<= t)(?=\d)/g, `_${preambles.length}`),
+      )
       preambles.push(preamble)
-      s.overwriteNode(node, code)
     }
   }
 
