@@ -1,9 +1,4 @@
-import {
-  type BlockIRNode,
-  DynamicFlag,
-  IRNodeTypes,
-  type OperationNode,
-} from '../ir'
+import { DynamicFlag, IRNodeTypes, type OperationNode } from '../ir'
 import { resolveExpression } from '../utils'
 import { type TransformContext, transformNode } from '../transform'
 import { createBranch } from './utils'
