@@ -24,7 +24,7 @@ const compileWithVFor = makeCompile({
 })
 
 describe('compiler: v-for', () => {
-  test.only('basic v-for', () => {
+  test('basic v-for', () => {
     const { code, ir, vaporHelpers, helpers } = compileWithVFor(
       `<div>{items.map((item) => item)}</div>`,
     )
