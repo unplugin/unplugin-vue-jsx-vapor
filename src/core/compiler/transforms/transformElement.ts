@@ -43,7 +43,12 @@ export const transformElement: NodeTransform = (node, context) => {
     const {
       openingElement: { name },
     } = node
-    const tag = name.type === 'JSXIdentifier' ? name.name : ''
+    const tag =
+      name.type === 'JSXIdentifier'
+        ? name.name
+        : name.type === 'JSXMemberExpression'
+          ? context.ir.source.slice(name.start!, name.end!)
+          : ''
     const isComponent = isComponentNode(node)
     const propsResult = buildProps(
       node,

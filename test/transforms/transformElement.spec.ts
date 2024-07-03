@@ -4,6 +4,7 @@ import { describe, expect, test } from 'vitest'
 //   BindingTypes,
 //   NodeTypes,
 // } from '@vue/compiler-core'
+import { BindingTypes } from '@vue-vapor/compiler-core'
 import {
   // IRDynamicPropsKind,
   // IRNodeTypes,
@@ -41,5 +42,25 @@ describe('compiler: element transform', () => {
         'createComponent',
       )
     })
+  })
+
+  test('resolve namespaced component from setup bindings (inline const)', () => {
+    const { code, vaporHelpers } = compileWithElementTransform(
+      `<Foo.Example/>`,
+      {
+        inline: true,
+        bindingMetadata: {
+          Foo: BindingTypes.SETUP_CONST,
+        },
+      },
+    )
+    expect(code).toMatchInlineSnapshot(`
+      "(() => {
+        const n0 = _createComponent(Foo.Example, null, null, true)
+        return n0
+      })()"
+    `)
+    expect(code).contains(`Foo.Example`)
+    expect(vaporHelpers).not.toContain('resolveComponent')
   })
 })
