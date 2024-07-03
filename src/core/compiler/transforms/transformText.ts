@@ -37,7 +37,7 @@ export const transformText: NodeTransform = (node, context) => {
 
   if (
     node.type === 'JSXElement' &&
-    !isComponentNode(node) &&
+    !(isComponentNode(node) as boolean) &&
     isAllTextLike(node.children)
   ) {
     processTextLikeContainer(
