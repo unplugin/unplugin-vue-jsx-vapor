@@ -6,7 +6,7 @@ export default defineComponent({
     const count = ref(3)
 
     return (
-      <div style="text-align:center">
+      <div>
         <input value={count.value} onInput={e => count.value = e.target.value} type="number" />
 
         {Array.from({length: count.value}).map((item,index) =>{

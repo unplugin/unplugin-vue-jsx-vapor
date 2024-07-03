@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@vue-vapor/compiler-vapor@3.20240702.0-b44ca85':
+    hash: ekx5iltfphnme4zvdcz7o2rvze
+    path: patches/@vue-vapor__compiler-vapor@3.20240702.0-b44ca85.patch
+
 importers:
 
   .:
@@ -22,7 +27,7 @@ importers:
         version: 3.20240702.0-b44ca85
       '@vue-vapor/compiler-vapor':
         specifier: 3.20240702.0-b44ca85
-        version: 3.20240702.0-b44ca85
+        version: 3.20240702.0-b44ca85(patch_hash=ekx5iltfphnme4zvdcz7o2rvze)
       '@vue-vapor/runtime-vapor':
         specifier: 3.20240702.0-b44ca85
         version: 3.20240702.0-b44ca85
@@ -4645,7 +4650,7 @@ snapshots:
       '@vue/compiler-core': '@vue-vapor/compiler-core@3.20240702.0-b44ca85'
       '@vue/compiler-dom': '@vue-vapor/compiler-dom@3.20240702.0-b44ca85'
       '@vue/compiler-ssr': '@vue-vapor/compiler-ssr@3.20240702.0-b44ca85'
-      '@vue/compiler-vapor': '@vue-vapor/compiler-vapor@3.20240702.0-b44ca85'
+      '@vue/compiler-vapor': '@vue-vapor/compiler-vapor@3.20240702.0-b44ca85(patch_hash=ekx5iltfphnme4zvdcz7o2rvze)'
       '@vue/shared': '@vue-vapor/shared@3.20240702.0-b44ca85'
       estree-walker: 2.0.2
       magic-string: 0.30.10
@@ -4668,7 +4673,7 @@ snapshots:
       '@vue/shared': '@vue-vapor/shared@3.2024.0-4c28469'
       source-map-js: 1.2.0
 
-  '@vue-vapor/compiler-vapor@3.20240702.0-b44ca85':
+  '@vue-vapor/compiler-vapor@3.20240702.0-b44ca85(patch_hash=ekx5iltfphnme4zvdcz7o2rvze)':
     dependencies:
       '@vue/compiler-dom': '@vue-vapor/compiler-dom@3.20240702.0-b44ca85'
       '@vue/shared': '@vue-vapor/shared@3.20240702.0-b44ca85'
@@ -4747,7 +4752,7 @@ snapshots:
 
   '@vue-vapor/vapor@3.20240702.0-b44ca85':
     dependencies:
-      '@vue/compiler-vapor': '@vue-vapor/compiler-vapor@3.20240702.0-b44ca85'
+      '@vue/compiler-vapor': '@vue-vapor/compiler-vapor@3.20240702.0-b44ca85(patch_hash=ekx5iltfphnme4zvdcz7o2rvze)'
       '@vue/runtime-vapor': '@vue-vapor/runtime-vapor@3.20240702.0-b44ca85'
 
   '@vue-vapor/vue@3.2024.0-4c28469(@vue-vapor/vue@3.2024.0-4c28469)(typescript@5.5.3)':

@@ -5,11 +5,11 @@ import {
   defaultOnError,
 } from '@vue-vapor/compiler-dom'
 import { extend, isString } from '@vue-vapor/shared'
+import { babelParse } from '@vue-macros/common'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
   generate,
 } from '@vue-vapor/compiler-vapor'
-import { babelParse } from '@vue-macros/common'
 import {
   type DirectiveTransform,
   type NodeTransform,
@@ -27,6 +27,7 @@ import {
 import { transformText } from './transforms/transformText'
 import { transformVBind } from './transforms/vBind'
 import { transformVOn } from './transforms/vOn'
+import { transformVSlot } from './transforms/vSlot'
 import type { JSXElement, JSXFragment, Program } from '@babel/types'
 
 export interface VaporCodegenResult
@@ -124,7 +125,7 @@ export function getBaseTransformPreset(
   prefixIdentifiers?: boolean,
 ): TransformPreset {
   return [
-    [transformText, transformElement, transformChildren],
+    [transformText, transformElement, transformVSlot, transformChildren],
     {
       bind: transformVBind,
       on: transformVOn,

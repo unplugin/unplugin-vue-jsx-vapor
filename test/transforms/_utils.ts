@@ -32,6 +32,7 @@ export function makeCompile(options: CompilerOptions = {}) {
     }
     const ir = transform(ast, {
       prefixIdentifiers: true,
+      expressionPlugins: ['typescript', 'jsx'],
       ...options,
       ...overrideOptions,
     }) as any

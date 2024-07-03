@@ -1,0 +1,13 @@
+diff --git a/dist/compiler-vapor.cjs.js b/dist/compiler-vapor.cjs.js
+index 8f54d6d74f28eef89b0c9234de66fa02d95d477a..eb05dacd92822ab1b12e3025a0d97204f53fc530 100644
+--- a/dist/compiler-vapor.cjs.js
++++ b/dist/compiler-vapor.cjs.js
+@@ -1392,7 +1392,7 @@ function genRawSlots(slots, context) {
+   return genMulti(
+     DELIMITERS_ARRAY_NEWLINE,
+     ...slots.map(
+-      (slot) => slot.slotType === 0 ? genStaticSlots(slot, context) : genDynamicSlot(slot, context, true)
++      (slot) => slot.slotType === 0 ? genStaticSlots(slot, context) : slot.slotType === 4 ? slot.slots.content : genDynamicSlot(slot, context, true)
+     )
+   );
+ }

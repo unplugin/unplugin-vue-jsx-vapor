@@ -154,7 +154,9 @@ export function resolveLocation(
       }
 }
 
-export function isComponentNode(node: JSXElement) {
+export function isComponentNode(node: Node): node is JSXElement {
+  if (node.type !== 'JSXElement') return false
+
   const { openingElement } = node
   if (openingElement.name.type === 'JSXIdentifier') {
     const name = openingElement.name.name
