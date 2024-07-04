@@ -57,7 +57,7 @@ describe('compiler: children transform', () => {
     ])
   })
 
-  test.only('v-bind="obj"', () => {
+  test('{...obj}', () => {
     const { code, ir } = compileWithElementTransform(`<div {...obj} />`)
     expect(code).toMatchInlineSnapshot(`
       "import { renderEffect as _renderEffect, setDynamicProps as _setDynamicProps, template as _template } from 'vue/vapor';
