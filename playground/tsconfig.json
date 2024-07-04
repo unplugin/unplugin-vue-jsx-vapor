@@ -8,7 +8,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "unplugin-vue-macros/macros-global"],
     "strict": true,
     "strictNullChecks": true,
     "esModuleInterop": true

@@ -16,7 +16,11 @@ import {
   type IRPropsDynamicAttribute,
   type IRPropsStatic,
 } from '../ir'
-import { isComponentNode, resolveSimpleExpression } from '../utils'
+import {
+  isComponentNode,
+  resolveExpression,
+  resolveSimpleExpression,
+} from '../utils'
 import { EMPTY_EXPRESSION } from './utils'
 import type { SimpleExpressionNode } from '@vue-vapor/compiler-dom'
 import type { JSXAttribute, JSXElement, JSXSpreadAttribute } from '@babel/types'
@@ -205,6 +209,17 @@ export function buildProps(
   }
 
   for (const prop of props) {
+    if (prop.type === 'JSXSpreadAttribute' && prop.argument) {
+      const value = resolveExpression(prop.argument, context)
+      dynamicExpr.push(value)
+      pushMergeArg()
+      dynamicArgs.push({
+        kind: IRDynamicPropsKind.EXPRESSION,
+        value,
+      })
+      continue
+    }
+
     const result = transformProp(prop, node, context)
     if (result) {
       dynamicExpr.push(result.key, result.value)

@@ -1,9 +1,12 @@
 import { describe, expect, test } from 'vitest'
 
+import { NodeTypes } from '@vue-vapor/compiler-core'
+import { IRDynamicPropsKind, IRNodeTypes } from '@vue-vapor/compiler-vapor'
 import {
   transformChildren,
   transformElement,
   transformText,
+  transformVBind,
   // transformVIf,
 } from '../../src/core/compiler'
 import { makeCompile } from './_utils'
@@ -15,6 +18,7 @@ const compileWithElementTransform = makeCompile({
     transformElement,
     transformChildren,
   ],
+  directiveTransforms: { bind: transformVBind },
 })
 
 describe('compiler: children transform', () => {
@@ -51,5 +55,47 @@ describe('compiler: children transform', () => {
       'insert',
       'template',
     ])
+  })
+
+  test.only('v-bind="obj"', () => {
+    const { code, ir } = compileWithElementTransform(`<div {...obj} />`)
+    expect(code).toMatchInlineSnapshot(`
+      "import { renderEffect as _renderEffect, setDynamicProps as _setDynamicProps, template as _template } from 'vue/vapor';
+      const t0 = _template("<div></div>")
+
+      export function render(_ctx) {
+        const n0 = t0()
+        _renderEffect(() => _setDynamicProps(n0, _ctx.obj))
+        return n0
+      }"
+    `)
+    expect(ir.block.effect).toMatchObject([
+      {
+        expressions: [
+          {
+            type: NodeTypes.SIMPLE_EXPRESSION,
+            content: 'obj',
+            isStatic: false,
+          },
+        ],
+        operations: [
+          {
+            type: IRNodeTypes.SET_DYNAMIC_PROPS,
+            element: 0,
+            props: [
+              {
+                kind: IRDynamicPropsKind.EXPRESSION,
+                value: {
+                  type: NodeTypes.SIMPLE_EXPRESSION,
+                  content: 'obj',
+                  isStatic: false,
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ])
+    expect(code).contains('_setDynamicProps(n0, _ctx.obj)')
   })
 })

@@ -6,7 +6,7 @@
     "dev": "nodemon -w '../../src/**/*.ts' -e .ts -x vite --port 5174"
   },
   "dependencies": {
-    "@vue-macros/define-render": "^1.5.5",
+    "unplugin-vue-macros": "^2.9.5",
     "vite-plugin-vue-devtools": "^7.3.4",
     "vue": "npm:@vue-vapor/vue@3.2024.0-4c28469"
   },
