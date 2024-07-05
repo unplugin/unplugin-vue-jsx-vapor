@@ -4,6 +4,8 @@ import Count2 from './Count.vue'
 import If from './if.vue'
 import For from './for.vue'
 import Slot from './slot.vue'
+import Model from './model.vue'
+import Show from './show.vue'
 
 export default defineComponent({
   setup() {
@@ -33,17 +35,27 @@ export default defineComponent({
 
         <fieldset>
           <legend>v-if</legend>
-          <If></If>
+          <If />
         </fieldset>
 
         <fieldset>
           <legend>v-for</legend>
-          <For></For>
+          <For />
         </fieldset>
 
         <fieldset>
           <legend>v-slot</legend>
-          <Slot></Slot>
+          <Slot />
+        </fieldset>
+
+        <fieldset>
+          <legend>v-model</legend>
+          <Model />
+        </fieldset>
+
+        <fieldset>
+          <legend>v-show</legend>
+          <Show />
         </fieldset>
       </>
     )

@@ -1,9 +1,13 @@
 import { isGloballyAllowed, isString } from '@vue-vapor/shared'
 import {
   type AttributeNode,
+  type DirectiveNode,
   type ElementNode,
+  ElementTypes,
+  Namespaces,
   NodeTypes,
   type SimpleExpressionNode,
+  type TextNode,
   findDir as _findDir,
   findProp as _findProp,
   createSimpleExpression,
@@ -19,6 +23,7 @@ import type {
   BigIntLiteral,
   CallExpression,
   Expression,
+  JSXAttribute,
   JSXElement,
   Node,
   NumericLiteral,
@@ -81,7 +86,7 @@ export function getLiteralExpressionValue(
 export function resolveExpression(
   node: Node | undefined | null,
   context: TransformContext,
-) {
+): SimpleExpressionNode {
   const isStatic =
     !!node &&
     (node.type === 'StringLiteral' ||
@@ -152,6 +157,99 @@ export function resolveLocation(
         end: { line: 1, column: 1, offset: 0 },
         source: '',
       }
+}
+
+export function resolveValue(
+  value: JSXAttribute['value'],
+  context: TransformContext,
+): TextNode | undefined {
+  return value
+    ? {
+        type: NodeTypes.TEXT,
+        content:
+          value.type === 'StringLiteral'
+            ? value.value
+            : value.type === 'JSXExpressionContainer'
+              ? context.ir.source.slice(
+                  value.expression.start!,
+                  value.expression.end!,
+                )
+              : '',
+        loc: resolveLocation(value.loc, context),
+      }
+    : undefined
+}
+
+export function resolveNode(
+  node: JSXElement,
+  context: TransformContext,
+): ElementNode {
+  const tag =
+    node.openingElement.name.type === 'JSXIdentifier'
+      ? node.openingElement.name.name
+      : ''
+  const loc = resolveLocation(node.loc, context)
+  const tagType = isComponentNode(node)
+    ? ElementTypes.COMPONENT
+    : ElementTypes.ELEMENT
+  const props = node.openingElement.attributes.reduce(
+    (result, attr) => {
+      if (attr.type === 'JSXAttribute') {
+        if (tagType === ElementTypes.COMPONENT) {
+          result.push(resolveDirectiveNode(attr, context))
+        } else {
+          result.push({
+            type: NodeTypes.ATTRIBUTE,
+            name: `${attr.name.name}`,
+            nameLoc: resolveLocation(attr.name.loc, context),
+            value: resolveValue(attr.value, context),
+            loc: resolveLocation(attr.loc, context),
+          })
+        }
+      }
+      return result
+    },
+    [] as Array<AttributeNode | DirectiveNode>,
+  )
+
+  return {
+    type: NodeTypes.ELEMENT,
+    props,
+    children: [],
+    tag,
+    loc,
+    ns: Namespaces.HTML,
+    tagType,
+    isSelfClosing: !!node.selfClosing,
+    codegenNode: undefined,
+  }
+}
+
+export function resolveDirectiveNode(
+  node: JSXAttribute,
+  context: TransformContext,
+): VaporDirectiveNode {
+  const { value, name } = node
+  const nameString = name.type === 'JSXIdentifier' ? name.name : ''
+  const argString = name.type === 'JSXNamespacedName' ? name.namespace.name : ''
+
+  const arg =
+    name.type === 'JSXNamespacedName'
+      ? resolveSimpleExpression(argString, true, name.namespace.loc)
+      : undefined
+  const exp = value ? resolveExpression(value, context) : undefined
+
+  const [tag, ...modifiers] = argString.split('_')
+
+  return {
+    type: NodeTypes.DIRECTIVE,
+    name: nameString,
+    rawName: `${name}:${tag}`,
+    exp,
+    arg,
+    loc: resolveLocation(node.loc, context),
+    modifiers,
+  }
 }
 
 export function isComponentNode(node: Node): node is JSXElement {

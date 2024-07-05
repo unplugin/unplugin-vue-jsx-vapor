@@ -5,7 +5,7 @@ import {
   type SlotBlockIRNode,
 } from '../ir'
 import { isComponentNode, resolveExpression } from '../utils'
-import {  newBlock } from './utils'
+import { newBlock } from './utils'
 import type { JSXAttribute, JSXElement } from '@babel/types'
 import type { NodeTransform, TransformContext } from '../transform'
 

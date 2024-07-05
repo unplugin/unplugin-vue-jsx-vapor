@@ -28,6 +28,8 @@ import { transformText } from './transforms/transformText'
 import { transformVBind } from './transforms/vBind'
 import { transformVOn } from './transforms/vOn'
 import { transformVSlot } from './transforms/vSlot'
+import { transformVModel } from './transforms/vModel'
+import { transformVShow } from './transforms/vShow'
 import type { JSXElement, JSXFragment, Program } from '@babel/types'
 
 export interface VaporCodegenResult
@@ -129,6 +131,8 @@ export function getBaseTransformPreset(
     {
       bind: transformVBind,
       on: transformVOn,
+      model: transformVModel,
+      show: transformVShow,
     },
   ]
 }

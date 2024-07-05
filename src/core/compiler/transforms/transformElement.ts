@@ -39,6 +39,9 @@ export const isReservedProp = /* #__PURE__ */ makeMap(
 
 const __BROWSER__ = false
 
+const isEventRegex = /^on[A-Z]/
+const isDirectiveRegex = /^v-[a-z]/
+
 export const transformElement: NodeTransform = (node, context) => {
   return function postTransformElement() {
     ;({ node } = context)
@@ -255,9 +258,17 @@ function transformProp(
   context: TransformContext<JSXElement>,
 ): DirectiveTransformResult | void {
   if (prop.type === 'JSXSpreadAttribute') return
-  let name = prop.name.type === 'JSXIdentifier' ? prop.name.name : ''
+  let name =
+    prop.name.type === 'JSXIdentifier'
+      ? prop.name.name
+      : prop.name.type === 'JSXNamespacedName'
+        ? prop.name.namespace.name
+        : ''
 
-  if (!prop.value || prop.value.type === 'StringLiteral') {
+  if (
+    !isDirectiveRegex.test(name) &&
+    (!prop.value || prop.value.type === 'StringLiteral')
+  ) {
     if (isReservedProp(name)) return
     return {
       key: resolveSimpleExpression(name, true, prop.name.loc!),
@@ -268,7 +279,11 @@ function transformProp(
     }
   }
 
-  name = /^on[A-Z]/.test(name) ? 'on' : 'bind'
+  name = isEventRegex.test(name)
+    ? 'on'
+    : isDirectiveRegex.test(name)
+      ? name.slice(2)
+      : 'bind'
   const directiveTransform = context.options.directiveTransforms[name]
   if (directiveTransform) {
     return directiveTransform(prop, node, context)
