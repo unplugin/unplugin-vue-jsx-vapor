@@ -4,7 +4,7 @@
 
 Convert Vue JSX to Vapor.
 
-[Playground](https://stackblitz.com/github/zhiyuanzmj/unplugin-vue-jsx-vapor?file=playground%2FApp.vue)
+[Playground](https://stackblitz.com/github/unplugin/unplugin-vue-jsx-vapor?file=playground%2FApp.vue)
 
 ## Install
 
