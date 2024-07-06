@@ -1,4 +1,4 @@
-import { babelParse } from '@vue-macros/common'
+import { parse } from '@babel/parser'
 import {
   type CompilerOptions,
   generate,
@@ -11,7 +11,10 @@ export function makeCompile(options: CompilerOptions = {}) {
   return (source: string, overrideOptions: CompilerOptions = {}) => {
     const {
       body: [statement],
-    } = babelParse(source)
+    } = parse(source, {
+      sourceType: 'module',
+      plugins: ['jsx', 'typescript'],
+    }).program
     let children!: JSXElement[] | JSXFragment['children']
     if (statement.type === 'ExpressionStatement') {
       children =

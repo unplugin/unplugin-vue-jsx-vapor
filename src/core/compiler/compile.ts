@@ -5,11 +5,11 @@ import {
   defaultOnError,
 } from '@vue-vapor/compiler-dom'
 import { extend, isString } from '@vue-vapor/shared'
-import { babelParse } from '@vue-macros/common'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
   generate,
 } from '@vue-vapor/compiler-vapor'
+import { parse } from '@babel/parser'
 import {
   type DirectiveTransform,
   type NodeTransform,
@@ -62,11 +62,26 @@ export function compile(
 
   const resolvedOptions = extend({}, options, {
     prefixIdentifiers,
+    expressionPlugins: options.expressionPlugins || ['jsx'],
   })
+  if (!__BROWSER__ && options.isTS) {
+    const { expressionPlugins } = resolvedOptions
+    if (!expressionPlugins.includes('typescript')) {
+      resolvedOptions.expressionPlugins = [
+        ...(expressionPlugins || []),
+        'typescript',
+      ]
+    }
+  }
 
   const {
     body: [statement],
-  } = isString(source) ? babelParse(source) : source
+  } = isString(source)
+    ? parse(source, {
+        sourceType: 'module',
+        plugins: resolvedOptions.expressionPlugins,
+      }).program
+    : source
   let children!: JSXElement[] | JSXFragment['children']
   if (statement.type === 'ExpressionStatement') {
     children =
@@ -87,17 +102,6 @@ export function compile(
   }
   const [nodeTransforms, directiveTransforms] =
     getBaseTransformPreset(prefixIdentifiers)
-
-  if (!__BROWSER__ && options.isTS) {
-    const { expressionPlugins } = options
-    if (!expressionPlugins || !expressionPlugins.includes('typescript')) {
-      resolvedOptions.expressionPlugins = [
-        ...(expressionPlugins || []),
-        'typescript',
-        'jsx',
-      ]
-    }
-  }
 
   const ir = transform(
     ast,
