@@ -72,6 +72,11 @@
       "require": "./dist/types.cjs",
       "import": "./dist/types.js"
     },
+    "./compiler": {
+      "types": "./dist/core/compiler/index.d.ts",
+      "require": "./dist/core/compiler/index.cjs",
+      "import": "./dist/core/compiler/index.js"
+    },
     "./*": "./*"
   },
   "typesVersions": {

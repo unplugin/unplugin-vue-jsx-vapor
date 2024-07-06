@@ -5,6 +5,7 @@
     "jsxFactory": "h",
     "jsxImportSource": "vue",
     "lib": ["esnext", "DOM"],
+    "useDefineForClassFields": false,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,

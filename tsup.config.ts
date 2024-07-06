@@ -1,7 +1,7 @@
 import type { Options } from 'tsup'
 
 export default {
-  entryPoints: ['src/*.ts'],
+  entryPoints: ['src/*.ts', 'src/core/compiler/index.ts'],
   clean: true,
   format: ['cjs', 'esm'],
   dts: true,
