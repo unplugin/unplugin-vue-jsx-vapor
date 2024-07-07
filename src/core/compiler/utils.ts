@@ -215,7 +215,7 @@ export function resolveNode(
   return {
     type: NodeTypes.ELEMENT,
     props,
-    children: [],
+    children: node.children as any[],
     tag,
     loc,
     ns: Namespaces.HTML,

@@ -1,7 +1,18 @@
 import type { Options } from 'tsup'
 
 export default {
-  entryPoints: ['src/*.ts', 'src/core/compiler/index.ts'],
+  entry: {
+    vite: 'src/vite.ts',
+    astro: 'src/astro.ts',
+    esbuild: 'src/esbuild.ts',
+    nuxt: 'src/nuxt.ts',
+    rollup: 'src/rollup.ts',
+    rspack: 'src/rspack.ts',
+    types: 'src/types.ts',
+    webpack: 'src/webpack.ts',
+    index: 'src/index.ts',
+    compiler: 'src/core/compiler/index.ts',
+  },
   clean: true,
   format: ['cjs', 'esm'],
   dts: true,

@@ -7,10 +7,10 @@ export default defineComponent({
 
     return (
       <div>
-        <input value={count.value} onInput={e => count.value = e.target.value} type="number" />
+        <input v-model={count.value} type="number" />
 
-        {Array.from({length: count.value}).map((item,index) =>{
-          if(item > 1){
+        {Array.from({ length: count.value }).map((item, index) => {
+          if (item > 1) {
             return <div>({index}) lg 1</div>
           } else {
             return <div>({index}) lt 1</div>

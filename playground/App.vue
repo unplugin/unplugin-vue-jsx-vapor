@@ -6,6 +6,7 @@ import For from './for.vue'
 import Slot from './slot.vue'
 import Model from './model.vue'
 import Show from './show.vue'
+import Html from './html.vue'
 
 export default defineComponent({
   setup() {
@@ -56,6 +57,11 @@ export default defineComponent({
         <fieldset>
           <legend>v-show</legend>
           <Show />
+        </fieldset>
+
+        <fieldset>
+          <legend>v-html</legend>
+          <Html />
         </fieldset>
       </>
     )

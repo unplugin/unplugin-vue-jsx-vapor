@@ -2,7 +2,7 @@
   "name": "unplugin-vue-jsx-vapor",
   "version": "1.0.2",
   "packageManager": "pnpm@9.4.0",
-  "description": "Convert JSX to Vapor",
+  "description": "Converts Vue JSX to Vapor",
   "type": "module",
   "keywords": [
     "unplugin",
