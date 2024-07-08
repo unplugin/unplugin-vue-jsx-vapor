@@ -129,6 +129,7 @@
   },
   "dependencies": {
     "@babel/parser": "^7.24.7",
+    "@babel/types": "^7.24.7",
     "@vue-macros/common": "^1.10.4",
     "@vue-vapor/compiler-core": "3.20240702.0-b44ca85",
     "@vue-vapor/compiler-dom": "3.20240702.0-b44ca85",
@@ -143,7 +144,6 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.2",
-    "@babel/types": "^7.24.7",
     "@changesets/changelog-github": "^0.5.0",
     "@changesets/cli": "^2.27.7",
     "@nuxt/kit": "^3.12.3",

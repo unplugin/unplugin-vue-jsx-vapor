@@ -16,6 +16,9 @@ importers:
       '@babel/parser':
         specifier: ^7.24.7
         version: 7.24.7
+      '@babel/types':
+        specifier: ^7.24.7
+        version: 7.24.7
       '@vue-macros/common':
         specifier: ^1.10.4
         version: 1.10.4(rollup@4.18.0)(vue@3.4.31(typescript@5.5.3))
@@ -52,13 +55,13 @@ importers:
       unplugin:
         specifier: ^1.11.0
         version: 1.11.0
+      vite:
+        specifier: ^5.3.2
+        version: 5.3.2(@types/node@20.14.9)(terser@5.31.1)
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^2.21.2
         version: 2.21.2(@unocss/eslint-plugin@0.61.0(eslint@9.6.0)(typescript@5.5.3))(@vue/compiler-sfc@3.4.31)(eslint@9.6.0)(typescript@5.5.3)(vitest@1.6.0(@types/node@20.14.9)(terser@5.31.1))
-      '@babel/types':
-        specifier: ^7.24.7
-        version: 7.24.7
       '@changesets/changelog-github':
         specifier: ^0.5.0
         version: 0.5.0
@@ -110,9 +113,6 @@ importers:
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
-      vite:
-        specifier: ^5.3.2
-        version: 5.3.2(@types/node@20.14.9)(terser@5.31.1)
       vitest:
         specifier: ^1.6.0
         version: 1.6.0(@types/node@20.14.9)(terser@5.31.1)
