@@ -17,7 +17,7 @@ export default defineComponent({
     }
 
     const Count1 = ({ value }) => {
-      return <div>{value}</div>
+      return <div>{value.value}</div>
     }
 
     return (
@@ -30,7 +30,7 @@ export default defineComponent({
           />
 
           <Count value={count.value} />
-          <Count1 value={count.value} />
+          <Count1 value={count} />
           <Count2 value={count.value} />
         </fieldset>
 

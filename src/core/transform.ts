@@ -35,8 +35,10 @@ export function transformVueJsxVapor(
     },
   })
 
-  const importSet = new Set()
-  const preambles: string[] = []
+  let preambleIndex = 0
+  const importSet = new Set<string>()
+  const delegateEventSet = new Set<string>()
+  const preambleMap = new Map<string, string>()
   for (const { node } of rootNodes) {
     if (isJSXElement(node)) {
       let { code, vaporHelpers, preamble } = compile(s.sliceNode(node), {
@@ -47,22 +49,47 @@ export function transformVueJsxVapor(
         ...options?.compile,
       })
       vaporHelpers.forEach((helper) => importSet.add(helper))
-      preamble = preamble.replace(/^[^\n]*;\n?/, '')
+
       preamble = preamble.replaceAll(
-        /(?<=const t)(?=\d)/g,
-        `_${preambles.length}`,
+        /(?<=const )t(?=(\d))/g,
+        `_${preambleIndex}`,
       )
-      s.overwriteNode(
-        node,
-        code.replaceAll(/(?<= t)(?=\d)/g, `_${preambles.length}`),
-      )
-      preambles.push(preamble)
+      code = code.replaceAll(/(?<== )t(?=\d)/g, `_${preambleIndex}`)
+      preambleIndex++
+
+      for (const [, key, value] of preamble.matchAll(
+        /const (_\d+) = (_template\(.*\))/g,
+      )) {
+        const result = preambleMap.get(value)
+        if (result) {
+          code = code.replaceAll(key, result)
+        } else {
+          preambleMap.set(value, key)
+        }
+      }
+
+      for (const [, events] of preamble.matchAll(/_delegateEvents\((.*)\)/g)) {
+        events.split(', ').forEach((event) => delegateEventSet.add(event))
+      }
+
+      s.overwriteNode(node, code)
     }
   }
 
-  s.prepend(
-    `import { ${Array.from(importSet).map((i) => `${i} as _${i}`)} } from 'vue/vapor';\n${preambles.join('')}`,
-  )
+  if (delegateEventSet.size) {
+    s.prepend(`_delegateEvents(${Array.from(delegateEventSet).join(', ')});\n`)
+  }
+
+  if (preambleMap.size) {
+    let preambleResult = ''
+    for (const [value, key] of preambleMap) {
+      preambleResult += `const ${key} = ${value}\n`
+    }
+    s.prepend(preambleResult)
+  }
+
+  const importResult = Array.from(importSet).map((i) => `${i} as _${i}`)
+  s.prepend(`import { ${importResult} } from 'vue/vapor';\n`)
 
   return generateTransform(s, id)
 }
