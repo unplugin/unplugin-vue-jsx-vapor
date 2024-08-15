@@ -6,4 +6,5 @@ export interface Options {
   include?: FilterPattern
   exclude?: FilterPattern
   compile?: CompilerOptions
+  restructure?: boolean
 }

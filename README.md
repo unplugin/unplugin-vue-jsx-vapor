@@ -12,6 +12,54 @@ Convert Vue JSX to Vapor.
 npm i unplugin-vue-jsx-vapor
 ```
 
+> [!CAUTION]
+> The destructuring of props in a functional component will cause loss of reactivity.
+
+```tsx
+function Comp({ foo }) {
+  return <div>{foo}</div>
+}
+
+const foo = ref('foo')
+export default <Comp foo={foo.value} />
+```
+
+#### Solutions
+
+1. Pass a ref variable as prop:
+
+```tsx
+function Comp({ foo }) {
+  return <div>{foo.value}</div>
+}
+
+const foo = ref('foo')
+export default <Comp foo={foo} />
+```
+
+2. Turn on the restructure option to restructure props.
+
+```ts
+// vite.config.ts
+export default defineConfig({
+  plugins: [
+    VueJsxVapor({
+      restructure: true,
+    }),
+  ],
+})
+```
+
+```tsx
+function Comp({ foo }) {
+  return <div>{foo}</div>
+}
+// Will be convert to:
+function Comp(_ctx0) {
+  return <div>{_ctx0.foo}</div>
+}
+```
+
 <details>
 <summary>Vite</summary><br>
 
@@ -20,9 +68,7 @@ npm i unplugin-vue-jsx-vapor
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/vite'
 
 export default defineConfig({
-  plugins: [
-    VueJsxVapor(),
-  ],
+  plugins: [VueJsxVapor()],
 })
 ```
 
@@ -38,9 +84,7 @@ Example: [`playground/`](./playground/)
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/rollup'
 
 export default {
-  plugins: [
-    VueJsxVapor(),
-  ],
+  plugins: [VueJsxVapor()],
 }
 ```
 
@@ -53,9 +97,7 @@ export default {
 // webpack.config.js
 module.exports = {
   /* ... */
-  plugins: [
-    require('unplugin-vue-jsx-vapor/webpack')(),
-  ],
+  plugins: [require('unplugin-vue-jsx-vapor/webpack')()],
 }
 ```
 
@@ -67,11 +109,7 @@ module.exports = {
 ```ts
 // nuxt.config.js
 export default defineNuxtConfig({
-  modules: [
-    [
-      'unplugin-vue-jsx-vapor/nuxt',
-    ],
-  ],
+  modules: [['unplugin-vue-jsx-vapor/nuxt']],
 })
 ```
 
@@ -86,9 +124,7 @@ export default defineNuxtConfig({
 // vue.config.js
 module.exports = {
   configureWebpack: {
-    plugins: [
-      require('unplugin-vue-jsx-vapor/webpack')(),
-    ],
+    plugins: [require('unplugin-vue-jsx-vapor/webpack')()],
   },
 }
 ```
@@ -104,9 +140,7 @@ import { build } from 'esbuild'
 import VueJsxVapor from 'unplugin-vue-jsx-vapor/esbuild'
 
 build({
-  plugins: [
-    VueJsxVapor()
-  ],
+  plugins: [VueJsxVapor()],
 })
 ```
 
