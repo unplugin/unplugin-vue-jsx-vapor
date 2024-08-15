@@ -2,7 +2,7 @@ import { isMapCallExpression } from './compiler/utils'
 import type {
   ArrowFunctionExpression,
   ConditionalExpression,
-  Expression,
+  FunctionDeclaration,
   FunctionExpression,
   JSXElement,
   JSXFragment,
@@ -39,22 +39,6 @@ export function overwrite(
   }
 }
 
-export function getReturnExpression(node: Node): Expression | undefined {
-  if (
-    node.type === 'FunctionExpression' ||
-    node.type === 'ArrowFunctionExpression'
-  ) {
-    if (node.body.type !== 'BlockStatement') {
-      return node.body
-    } else {
-      for (const statement of node.body.body) {
-        if (statement.type === 'ReturnStatement' && statement.argument)
-          return statement.argument
-      }
-    }
-  }
-}
-
 export function isJSXExpression(node?: Node | null): boolean {
   return (
     !!node &&
@@ -86,9 +70,10 @@ export function isLogicalExpression(node: Node): node is LogicalExpression {
 
 export function isFunctionExpression(
   node: Node,
-): node is FunctionExpression | ArrowFunctionExpression {
+): node is FunctionExpression | ArrowFunctionExpression | FunctionDeclaration {
   return (
     node.type === 'FunctionExpression' ||
-    node.type === 'ArrowFunctionExpression'
+    node.type === 'ArrowFunctionExpression' ||
+    node.type === 'FunctionDeclaration'
   )
 }

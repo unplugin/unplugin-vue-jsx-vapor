@@ -138,6 +138,7 @@
     "@vue-vapor/shared": "3.20240702.0-b44ca85",
     "@vue-vapor/vue": "3.20240702.0-b44ca85",
     "html-tags": "^4.0.0",
+    "magic-string-stack": "^0.1.1",
     "source-map-js": "^1.2.0",
     "svg-tags": "^1.0.0",
     "unplugin": "^1.11.0"

@@ -1,5 +1,5 @@
 import { DynamicFlag, IRNodeTypes } from '../ir'
-import { resolveExpression } from '../utils'
+import { findProp, getReturnExpression, resolveExpression } from '../utils'
 import { isFunctionExpression } from '../../utils'
 import { createBranch } from './utils'
 import type { TransformContext } from '../transform'
@@ -27,9 +27,9 @@ export function processMapCallExpression(
     argument.params[1] && resolveExpression(argument.params[1], context)
   const index =
     argument.params[2] && resolveExpression(argument.params[2], context)
-  // TODO
-  // const keyProp = findProp(node, 'key')
-  // const keyProperty = keyProp && propToExpression(keyProp)
+
+  const returnExpression = getReturnExpression(argument)
+  const keyProperty = findProp(returnExpression, context)
   return () => {
     exitBlock()
     context.registerOperation({
@@ -39,7 +39,7 @@ export function processMapCallExpression(
       value,
       key,
       index,
-      // keyProp: keyProperty,
+      keyProp: keyProperty,
       render,
       once: context.inVOnce,
     })

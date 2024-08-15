@@ -6,14 +6,13 @@
     "dev": "nodemon -w '../../src/**/*.ts' -e .ts -x vite --port 5174"
   },
   "dependencies": {
-    "unplugin-vue-macros": "^2.9.5",
-    "vite-plugin-vue-devtools": "^7.3.4",
     "vue": "npm:@vue-vapor/vue@3.2024.0-4c28469"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue-macros/volar": "^0.23.0",
     "unplugin-vue-jsx-vapor": "workspace:*",
+    "unplugin-vue-macros": "^2.11.5",
     "vite": "^5.3.2",
     "vite-plugin-inspect": "^0.8.4"
   }

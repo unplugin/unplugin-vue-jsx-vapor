@@ -1,53 +1,53 @@
 import {
-  MagicStringAST,
   babelParse,
   generateTransform,
   getLang,
   walkAST,
 } from '@vue-macros/common'
-import { isJSXElement, isJSXExpression } from './utils'
+import MagicStringStack from 'magic-string-stack'
+import { isJSXElement } from './utils'
 import { compile } from './compiler'
-import type { Node } from '@babel/types'
+import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { Options } from '../types'
-
-export type RootNodes = {
-  node: Node
-}[]
 
 export function transformVueJsxVapor(
   code: string,
   id: string,
   options?: Options,
 ) {
-  const s = new MagicStringAST(code)
-  const rootNodes: RootNodes = []
-  walkAST<Node>(babelParse(code, getLang(id)), {
-    enter(node, parent) {
-      if (
-        parent?.type !== 'JSXExpressionContainer' &&
-        !isJSXExpression(parent) &&
-        isJSXExpression(node)
-      ) {
-        rootNodes.unshift({
-          node,
-        })
-      }
-    },
-  })
+  const lang = getLang(id)
+  const s = new MagicStringStack(code)
 
   let preambleIndex = 0
   const importSet = new Set<string>()
   const delegateEventSet = new Set<string>()
   const preambleMap = new Map<string, string>()
-  for (const { node } of rootNodes) {
-    if (isJSXElement(node)) {
-      let { code, vaporHelpers, preamble } = compile(s.sliceNode(node), {
-        mode: 'module',
-        inline: true,
-        isTS: id.endsWith('tsx'),
-        filename: id,
-        ...options?.compile,
-      })
+  function transform() {
+    const rootNodes: (JSXElement | JSXFragment)[] = []
+    walkAST<Node>(babelParse(s.original, lang), {
+      enter(node, parent) {
+        if (
+          parent?.type !== 'JSXExpressionContainer' &&
+          !isJSXElement(parent) &&
+          isJSXElement(node)
+        ) {
+          rootNodes.push(node)
+          this.skip()
+        }
+      },
+    })
+
+    for (const node of rootNodes) {
+      let { code, vaporHelpers, preamble } = compile(
+        s.slice(node.start!, node.end!),
+        {
+          mode: 'module',
+          inline: true,
+          isTS: id.endsWith('tsx'),
+          filename: id,
+          ...options?.compile,
+        },
+      )
       vaporHelpers.forEach((helper) => importSet.add(helper))
 
       preamble = preamble.replaceAll(
@@ -72,9 +72,15 @@ export function transformVueJsxVapor(
         events.split(', ').forEach((event) => delegateEventSet.add(event))
       }
 
-      s.overwriteNode(node, code)
+      s.overwrite(node.start!, node.end!, code)
+    }
+
+    if (rootNodes.length) {
+      s.commit()
+      transform()
     }
   }
+  transform()
 
   if (delegateEventSet.size) {
     s.prepend(`_delegateEvents(${Array.from(delegateEventSet).join(', ')});\n`)
@@ -89,7 +95,8 @@ export function transformVueJsxVapor(
   }
 
   const importResult = Array.from(importSet).map((i) => `${i} as _${i}`)
-  s.prepend(`import { ${importResult} } from 'vue/vapor';\n`)
+  if (importResult.length)
+    s.prepend(`import { ${importResult} } from 'vue/vapor';\n`)
 
   return generateTransform(s, id)
 }

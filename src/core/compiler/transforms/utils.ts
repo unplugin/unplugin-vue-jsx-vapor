@@ -16,6 +16,7 @@ import {
   jsxOpeningFragment,
   parenthesizedExpression,
 } from '@babel/types'
+import { isJSXElement } from '../../utils'
 import type { TransformContext } from '../transform'
 import type { BlockIRNode } from '../ir/index'
 
@@ -63,13 +64,23 @@ export function wrapFragment(
     (node.type === 'ArrowFunctionExpression' ||
       node.type === 'FunctionExpression')
   ) {
-    node = {
-      ...callExpression(
-        parenthesizedExpression(arrowFunctionExpression([], node.body)),
-        [],
-      ),
-      start: node.body.start,
-      end: node.body.end,
+    if (isJSXElement(node.body)) {
+      node = node.body
+    } else if (
+      node.body.type === 'BlockStatement' &&
+      node.body.body[0].type === 'ReturnStatement' &&
+      node.body.body[0].argument
+    ) {
+      node = node.body.body[0].argument
+    } else {
+      node = {
+        ...callExpression(
+          parenthesizedExpression(arrowFunctionExpression([], node.body)),
+          [],
+        ),
+        start: node.body.start,
+        end: node.body.end,
+      }
     }
   }
 

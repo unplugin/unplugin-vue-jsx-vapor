@@ -8,8 +8,6 @@ import {
   NodeTypes,
   type SimpleExpressionNode,
   type TextNode,
-  findDir as _findDir,
-  findProp as _findProp,
   createSimpleExpression,
   isLiteralWhitelisted,
 } from '@vue-vapor/compiler-dom'
@@ -32,20 +30,6 @@ import type {
 } from '@babel/types'
 
 const __BROWSER__ = false
-
-export const findProp = _findProp as (
-  node: ElementNode,
-  name: string,
-  dynamicOnly?: boolean,
-  allowEmpty?: boolean,
-) => AttributeNode | VaporDirectiveNode | undefined
-
-/** find directive */
-export const findDir = _findDir as (
-  node: ElementNode,
-  name: string | RegExp,
-  allowEmpty?: boolean,
-) => VaporDirectiveNode | undefined
 
 export function propToExpression(prop: AttributeNode | VaporDirectiveNode) {
   return prop.type === NodeTypes.ATTRIBUTE
@@ -274,4 +258,33 @@ export function isMapCallExpression(
     node.callee.property.type === 'Identifier' &&
     node.callee.property.name === 'map'
   )
+}
+
+export function findProp(
+  expression: Expression | undefined,
+  context: TransformContext,
+) {
+  if (expression?.type === 'JSXElement') {
+    for (const attr of expression.openingElement.attributes) {
+      if (attr.type === 'JSXAttribute' && attr.name.name === 'key') {
+        return resolveExpression(attr.value, context)
+      }
+    }
+  }
+}
+
+export function getReturnExpression(node: Node): Expression | undefined {
+  if (
+    node.type === 'FunctionExpression' ||
+    node.type === 'ArrowFunctionExpression'
+  ) {
+    if (node.body.type !== 'BlockStatement') {
+      return node.body
+    } else {
+      for (const statement of node.body.body) {
+        if (statement.type === 'ReturnStatement' && statement.argument)
+          return statement.argument
+      }
+    }
+  }
 }

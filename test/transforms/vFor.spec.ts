@@ -26,19 +26,25 @@ const compileWithVFor = makeCompile({
 describe('compiler: v-for', () => {
   test('basic v-for', () => {
     const { code, ir, vaporHelpers, helpers } = compileWithVFor(
-      `<div>{items.map((item) => item)}</div>`,
+      `<div>
+        {list.value.map(item => <div key={item.id}>{item.id}</div> )}
+      </div>`,
+      {
+        prefixIdentifiers: false,
+      },
     )
 
     expect(code).toMatchInlineSnapshot(`
-      "import { createComponent as _createComponent, withDestructure as _withDestructure, createFor as _createFor, insert as _insert, template as _template } from 'vue/vapor';
+      "import { renderEffect as _renderEffect, setText as _setText, createFor as _createFor, insert as _insert, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
         const n3 = t0()
-        const n0 = _createFor(() => (_ctx.items), _withDestructure(([item]) => [], (_ctx0) => {
-          const n2 = _createComponent(_ctx.() => item)
+        const n0 = _createFor(() => (list.value), ([item]) => {
+          const n2 = t0()
+          _renderEffect(() => _setText(n2, item.id))
           return n2
-        }))
+        }, (item) => (item.id))
         _insert(n0, n3)
         return n3
       }"
@@ -52,7 +58,7 @@ describe('compiler: v-for', () => {
       children: [{ id: 3 }],
     })
     expect(ir.block.effect).toEqual([])
-    expect(ir.block.operation[0].render.effect).lengthOf(0)
+    expect(ir.block.operation[0].render.effect).lengthOf(1)
   })
 
   /*
