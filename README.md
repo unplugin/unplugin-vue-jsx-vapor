@@ -13,7 +13,7 @@ npm i unplugin-vue-jsx-vapor
 ```
 
 > [!CAUTION]
-> The destructuring of props in a functional component will cause loss of reactivity.
+> ❌ The destructuring of props in a functional component will cause loss of reactivity.
 
 ```tsx
 function Comp({ foo }) {
@@ -24,9 +24,9 @@ const foo = ref('foo')
 export default <Comp foo={foo.value} />
 ```
 
-#### Solutions
+#### Two Solutions
 
-1. Pass a ref variable as prop:
+1. ✅ Pass a ref variable as prop:
 
 ```tsx
 function Comp({ foo }) {
@@ -37,7 +37,7 @@ const foo = ref('foo')
 export default <Comp foo={foo} />
 ```
 
-2. Turn on the restructure option to restructure props.
+2. ✅ Turn on the restructure option to restructure props.
 
 ```ts
 // vite.config.ts
@@ -58,6 +58,9 @@ function Comp({ foo }) {
 function Comp(_ctx0) {
   return <div>{_ctx0.foo}</div>
 }
+
+const foo = ref('foo')
+export default <Comp foo={foo.value} />
 ```
 
 <details>
