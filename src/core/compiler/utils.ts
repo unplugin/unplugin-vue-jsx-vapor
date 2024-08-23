@@ -1,4 +1,4 @@
-import { isGloballyAllowed, isString } from '@vue-vapor/shared'
+import { isGloballyAllowed, isString, makeMap } from '@vue-vapor/shared'
 import {
   type AttributeNode,
   type DirectiveNode,
@@ -11,8 +11,6 @@ import {
   createSimpleExpression,
   isLiteralWhitelisted,
 } from '@vue-vapor/compiler-dom'
-import htmlTags, { type HtmlTags } from 'html-tags'
-import svgTags from 'svg-tags'
 import { type ParseResult, parseExpression } from '@babel/parser'
 import { EMPTY_EXPRESSION } from './transforms/utils'
 import type { TransformContext } from './transform'
@@ -236,13 +234,21 @@ export function resolveDirectiveNode(
   }
 }
 
+// Copy from https://github.com/sindresorhus/html-tags/blob/main/html-tags.json
+export const isHtmlTags = makeMap(
+  'a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,blockquote,body,br,button,canvas,caption,cite,code,col,colgroup,data,datalist,dd,del,details,dfn,dialog,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,head,header,hgroup,hr,html,i,iframe,img,input,ins,kbd,label,legend,li,link,main,map,mark,math,menu,menuitem,meta,meter,nav,noscript,object,ol,optgroup,option,output,p,param,picture,pre,progress,q,rb,rp,rt,rtc,ruby,s,samp,script,search,section,select,slot,small,source,span,strong,style,sub,summary,sup,svg,table,tbody,td,template,textarea,tfoot,th,thead,time,title,tr,track,u,ul,var,video,wbr',
+)
+// Copy from https://github.com/element-io/svg-tags/blob/master/lib/svg-tags.json
+export const isSvgTags = makeMap(
+  'a,altGlyph,altGlyphDef,altGlyphItem,animate,animateColor,animateMotion,animateTransform,circle,clipPath,color-profile,cursor,defs,desc,ellipse,feBlend,feColorMatrix,feComponentTransfer,feComposite,feConvolveMatrix,feDiffuseLighting,feDisplacementMap,feDistantLight,feFlood,feFuncA,feFuncB,feFuncG,feFuncR,feGaussianBlur,feImage,feMerge,feMergeNode,feMorphology,feOffset,fePointLight,feSpecularLighting,feSpotLight,feTile,feTurbulence,filter,font,font-face,font-face-format,font-face-name,font-face-src,font-face-uri,foreignObject,g,glyph,glyphRef,hkern,image,line,linearGradient,marker,mask,metadata,missing-glyph,mpath,path,pattern,polygon,polyline,radialGradient,rect,script,set,stop,style,svg,switch,symbol,text,textPath,title,tref,tspan,use,view,vkern',
+)
 export function isComponentNode(node: Node): node is JSXElement {
   if (node.type !== 'JSXElement') return false
 
   const { openingElement } = node
   if (openingElement.name.type === 'JSXIdentifier') {
     const name = openingElement.name.name
-    return !htmlTags.includes(name as HtmlTags) && !svgTags.includes(name)
+    return !isHtmlTags(name) && !isSvgTags(name)
   } else {
     return openingElement.name.type === 'JSXMemberExpression'
   }
