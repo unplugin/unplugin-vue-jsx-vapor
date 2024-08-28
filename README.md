@@ -112,7 +112,7 @@ module.exports = {
 ```ts
 // nuxt.config.js
 export default defineNuxtConfig({
-  modules: [['unplugin-vue-jsx-vapor/nuxt']],
+  modules: ['unplugin-vue-jsx-vapor/nuxt'],
 })
 ```
 
