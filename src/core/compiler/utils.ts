@@ -266,14 +266,11 @@ export function isMapCallExpression(
   )
 }
 
-export function findProp(
-  expression: Expression | undefined,
-  context: TransformContext,
-) {
+export function findProp(expression: Expression | undefined, key: string) {
   if (expression?.type === 'JSXElement') {
     for (const attr of expression.openingElement.attributes) {
-      if (attr.type === 'JSXAttribute' && attr.name.name === 'key') {
-        return resolveExpression(attr.value, context)
+      if (attr.type === 'JSXAttribute' && attr.name.name === key) {
+        return attr
       }
     }
   }

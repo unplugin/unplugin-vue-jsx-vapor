@@ -29,7 +29,8 @@ export function processMapCallExpression(
     argument.params[2] && resolveExpression(argument.params[2], context)
 
   const returnExpression = getReturnExpression(argument)
-  const keyProperty = findProp(returnExpression, context)
+  const keyProp = findProp(returnExpression, 'key')
+  const keyProperty = keyProp && resolveExpression(keyProp.value, context)
   return () => {
     exitBlock()
     context.registerOperation({

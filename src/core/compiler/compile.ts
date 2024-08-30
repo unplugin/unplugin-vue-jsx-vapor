@@ -18,6 +18,7 @@ import {
 
 import { transformElement } from './transforms/transformElement'
 import { transformChildren } from './transforms/transformChildren'
+import { transformTemplateRef } from './transforms/transformTemplateRef'
 import {
   type HackOptions,
   IRNodeTypes,
@@ -132,7 +133,13 @@ export function getBaseTransformPreset(
   prefixIdentifiers?: boolean,
 ): TransformPreset {
   return [
-    [transformText, transformElement, transformVSlot, transformChildren],
+    [
+      transformTemplateRef,
+      transformText,
+      transformElement,
+      transformVSlot,
+      transformChildren,
+    ],
     {
       bind: transformVBind,
       on: transformVOn,
