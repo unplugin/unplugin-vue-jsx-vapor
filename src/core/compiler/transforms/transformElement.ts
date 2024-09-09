@@ -17,7 +17,7 @@ import {
   type IRPropsStatic,
 } from '../ir'
 import {
-  isComponentNode,
+  isJSXComponent,
   resolveExpression,
   resolveSimpleExpression,
 } from '../utils'
@@ -56,7 +56,7 @@ export const transformElement: NodeTransform = (node, context) => {
         : name.type === 'JSXMemberExpression'
           ? context.ir.source.slice(name.start!, name.end!)
           : ''
-    const isComponent = isComponentNode(node)
+    const isComponent = isJSXComponent(node)
     const propsResult = buildProps(
       node,
       context as TransformContext<JSXElement>,

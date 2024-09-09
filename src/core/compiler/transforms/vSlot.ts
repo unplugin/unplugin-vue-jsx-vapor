@@ -4,14 +4,14 @@ import {
   type IRSlotsStatic,
   type SlotBlockIRNode,
 } from '../ir'
-import { isComponentNode, resolveExpression } from '../utils'
+import { isJSXComponent, resolveExpression } from '../utils'
 import { newBlock } from './utils'
 import type { JSXAttribute, JSXElement } from '@babel/types'
 import type { NodeTransform, TransformContext } from '../transform'
 
 export const transformVSlot: NodeTransform = (node, context) => {
   if (node.type !== 'JSXElement') return
-  if (!isComponentNode(node)) return
+  if (!isJSXComponent(node)) return
 
   const { openingElement, children } = node
   const vSlotsIndex = openingElement.attributes.findIndex(

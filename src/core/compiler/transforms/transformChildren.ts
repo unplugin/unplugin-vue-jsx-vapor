@@ -4,14 +4,14 @@ import {
   type TransformContext,
   transformNode,
 } from '../transform'
-import { isComponentNode } from '../utils'
+import { isJSXComponent } from '../utils'
 import type { Node } from '@babel/types'
 
 export const transformChildren: NodeTransform = (node, context) => {
   const isFragment =
     node.type === IRNodeTypes.ROOT ||
     node.type === 'JSXFragment' ||
-    isComponentNode(node)
+    isJSXComponent(node)
 
   if (node.type !== 'JSXElement' && !isFragment) return
 

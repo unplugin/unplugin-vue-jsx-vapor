@@ -6,7 +6,7 @@ import {
 import { extend, makeMap } from '@vue-vapor/shared'
 import { IRNodeTypes, type KeyOverride, type SetEventIRNode } from '../ir'
 import {
-  isComponentNode,
+  isJSXComponent,
   resolveExpression,
   resolveLocation,
   resolveSimpleExpression,
@@ -24,7 +24,7 @@ const delegatedEvents = /*#__PURE__*/ makeMap(
 export const transformVOn: DirectiveTransform = (dir, node, context) => {
   const { name, loc, value } = dir
   if (name.type === 'JSXNamespacedName') return
-  const isComponent = isComponentNode(node)
+  const isComponent = isJSXComponent(node)
 
   const [nameString, ...modifiers] = name.name
     .replace(/^on([A-Z])/, (_, $1) => $1.toLowerCase())
