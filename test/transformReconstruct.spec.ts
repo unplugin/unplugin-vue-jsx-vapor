@@ -23,4 +23,38 @@ describe('transform', () => {
     `,
     )
   })
+
+  test('reconstruct arrowFunctionExpression', () => {
+    const { code } = transformRestructure(
+      `const App = ([{root: {foo, ...rest}}]) => (
+        <>{[foo, rest]}</>
+      )`,
+      'tsx',
+    )!
+    expect(code).toMatchInlineSnapshot(
+      `
+      "
+      import { createPropsRestProxy as __MACROS_createPropsRestProxy } from "vue";const App = (_ctx0) => (
+              (rest = __MACROS_createPropsRestProxy(_ctx0[0].root, ['foo']),<>{[_ctx0[0].root.foo, rest]}</>)
+            )"
+    `,
+    )
+  })
+
+  test('reconstruct functionDeclaration', () => {
+    const { code } = transformRestructure(
+      `function App({foo, ...rest}){
+        return <>{[foo, rest]}</>
+      }`,
+      'tsx',
+    )!
+    expect(code).toMatchInlineSnapshot(
+      `
+      "
+      import { createPropsRestProxy as __MACROS_createPropsRestProxy } from "vue";function App(_ctx0){const rest = __MACROS_createPropsRestProxy(_ctx0, ['foo']);
+              return <>{[_ctx0.foo, rest]}</>
+            }"
+    `,
+    )
+  })
 })

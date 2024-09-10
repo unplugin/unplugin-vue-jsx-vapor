@@ -3,6 +3,7 @@ import {
   babelParse,
   generateTransform,
   getLang,
+  importHelperFn,
   walkAST,
 } from '@vue-macros/common'
 import { walkIdentifiers } from '@vue-vapor/compiler-core'
@@ -18,10 +19,23 @@ export function transformRestructure(code: string, id: string) {
     enter(node) {
       if (isFunctionExpression(node)) {
         const result = new Map()
+        const restResult = new Map()
         for (const param of node.params) {
           const paths = `_ctx${index++}`
-          if (resolveParams(param, paths, result)) {
+          if (resolveParam(param, paths, result, restResult)) {
             s.overwrite(param.start!, param.end!, paths)
+          }
+        }
+
+        if (restResult.size) {
+          for (const [key, value] of restResult) {
+            const result = `${key} = ${importHelperFn(s, 0, 'createPropsRestProxy', 'vue')}(${value})`
+            if (node.body.type === 'BlockStatement') {
+              s.appendRight(node.body.start! + 1, `const ${result};`)
+            } else {
+              s.appendRight(node.body.start!, `(${result},`)
+              s.appendRight(node.body.end!, ')')
+            }
           }
         }
         if (!result.size) return
@@ -48,30 +62,47 @@ export function transformRestructure(code: string, id: string) {
   return generateTransform(s, id)
 }
 
-function resolveParams(
+function resolveParam(
   param: Node,
   paths: string = '',
   result: Map<string, string>,
+  restResult: Map<string, string>,
 ) {
-  const elements =
+  const properties =
     param.type === 'ObjectPattern'
       ? param.properties
       : param.type === 'ArrayPattern'
         ? param.elements
         : []
-  if (!elements.length) return
+  if (!properties.length) return
 
-  elements.forEach((element, index) => {
-    if (element?.type === 'Identifier') {
-      result.set(element.name, `${paths}[${index}]`)
+  const propNames: string[] = []
+  properties.forEach((prop, index) => {
+    if (prop?.type === 'Identifier') {
+      result.set(prop.name, `${paths}[${index}]`)
+      propNames.push(`'${prop.name}'`)
     } else if (
-      element?.type === 'ObjectProperty' &&
-      element.key.type === 'Identifier'
+      prop?.type === 'ObjectProperty' &&
+      prop.key.type === 'Identifier'
     ) {
-      if (!resolveParams(element.value, `${paths}.${element.key.name}`, result))
-        result.set(element.key.name, `${paths}.${element.key.name}`)
-    } else if (element) {
-      resolveParams(element, `${paths}[${index}]`, result)
+      if (
+        !resolveParam(
+          prop.value,
+          `${paths}.${prop.key.name}`,
+          result,
+          restResult,
+        )
+      ) {
+        result.set(prop.key.name, `${paths}.${prop.key.name}`)
+        propNames.push(`'${prop.key.name}'`)
+      }
+    } else if (
+      prop?.type === 'RestElement' &&
+      prop?.argument.type === 'Identifier'
+    ) {
+      restResult.set(prop.argument.name, `${paths}, [${propNames.join(', ')}]`)
+    } else if (prop) {
+      resolveParam(prop, `${paths}[${index}]`, result, restResult)
     }
   })
   return true
