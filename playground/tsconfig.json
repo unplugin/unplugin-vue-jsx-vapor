@@ -14,10 +14,7 @@
     "esModuleInterop": true
   },
   "vueCompilerOptions": {
-    "plugins": [
-      "@vue-macros/volar/export-render",
-      "@vue-macros/volar/jsx-directive"
-    ]
+    "plugins": ["unplugin-vue-macros/volar"]
   },
   "exclude": ["dist", "eslint.config.js"]
 }

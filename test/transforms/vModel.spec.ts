@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-// import { BindingTypes, DOMErrorCodes } from '@vue-vapor/compiler-dom'
+// import { BindingTypes, DOMErrorCodes } from '@vue/compiler-dom'
 import {
   // IRNodeTypes,
   transformChildren,

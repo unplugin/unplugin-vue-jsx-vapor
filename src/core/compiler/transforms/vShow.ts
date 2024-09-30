@@ -1,4 +1,4 @@
-import { transformVShow as _transformVShow } from '@vue-vapor/compiler-vapor'
+import { transformVShow as _transformVShow } from '@vue/compiler-vapor'
 import { resolveDirectiveNode, resolveNode } from '../utils'
 import type { DirectiveTransform } from '../transform'
 

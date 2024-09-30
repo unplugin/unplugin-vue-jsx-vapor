@@ -1,7 +1,6 @@
 import { type UnpluginFactory, createUnplugin } from 'unplugin'
 import { createFilter, transformWithEsbuild } from 'vite'
 import { transformVueJsxVapor } from './core/transform'
-import { transformRestructure } from './core/transformRestructure'
 import type { Options } from './types'
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
@@ -34,8 +33,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
       },
       transformInclude,
       transform(code, id) {
-        const result = transformVueJsxVapor(code, id, options)
-        return result
+        return transformVueJsxVapor(code, id, options)
       },
     },
     {
@@ -58,15 +56,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
         })
       },
     },
-    ...(options?.restructure
-      ? [
-          {
-            name: 'unplugin-restructure',
-            transformInclude,
-            transform: transformRestructure,
-          },
-        ]
-      : []),
   ]
 }
 

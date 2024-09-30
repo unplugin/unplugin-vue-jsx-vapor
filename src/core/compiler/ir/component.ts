@@ -1,5 +1,5 @@
-import type { SimpleExpressionNode } from '@vue-vapor/compiler-dom'
-import type { IRFor } from '@vue-vapor/compiler-vapor'
+import type { SimpleExpressionNode } from '@vue/compiler-dom'
+import type { IRFor } from '@vue/compiler-vapor'
 import type { DirectiveTransformResult } from '../transform'
 import type { BlockIRNode } from './index'
 

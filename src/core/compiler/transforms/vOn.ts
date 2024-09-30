@@ -1,9 +1,10 @@
 import {
   ErrorCodes,
   createCompilerError,
+  createSimpleExpression,
   resolveModifiers,
-} from '@vue-vapor/compiler-dom'
-import { extend, makeMap } from '@vue-vapor/shared'
+} from '@vue/compiler-dom'
+import { extend, makeMap } from '@vue/shared'
 import { IRNodeTypes, type KeyOverride, type SetEventIRNode } from '../ir'
 import {
   isJSXComponent,
@@ -45,7 +46,7 @@ export const transformVOn: DirectiveTransform = (dir, node, context) => {
   const { keyModifiers, nonKeyModifiers, eventOptionModifiers } =
     resolveModifiers(
       arg.isStatic ? `on${nameString}` : arg,
-      modifiers,
+      modifiers.map((modifier) => createSimpleExpression(modifier)),
       null,
       resolveLocation(loc, context),
     )

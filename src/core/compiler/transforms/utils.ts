@@ -2,8 +2,8 @@ import {
   DynamicFlag,
   type IRDynamicInfo,
   IRNodeTypes,
-} from '@vue-vapor/compiler-vapor'
-import { createSimpleExpression } from '@vue-vapor/compiler-dom'
+} from '@vue/compiler-vapor'
+import { createSimpleExpression } from '@vue/compiler-dom'
 import {
   type Expression,
   type JSXElement,

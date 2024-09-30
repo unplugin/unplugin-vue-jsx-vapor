@@ -1,4 +1,4 @@
-import { transformVHtml as _transformVHtml } from '@vue-vapor/compiler-vapor'
+import { transformVHtml as _transformVHtml } from '@vue/compiler-vapor'
 import { resolveDirectiveNode, resolveNode } from '../utils'
 import type { DirectiveTransform } from '../transform'
 

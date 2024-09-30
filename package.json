@@ -131,15 +131,15 @@
     "@babel/parser": "^7.24.7",
     "@babel/types": "^7.24.7",
     "@vue-macros/common": "^1.10.4",
-    "@vue-vapor/compiler-core": "3.20240702.0-b44ca85",
-    "@vue-vapor/compiler-dom": "3.20240702.0-b44ca85",
-    "@vue-vapor/compiler-vapor": "3.20240702.0-b44ca85",
-    "@vue-vapor/runtime-vapor": "3.20240702.0-b44ca85",
-    "@vue-vapor/shared": "3.20240702.0-b44ca85",
-    "@vue-vapor/vue": "3.20240702.0-b44ca85",
+    "@vue/compiler-core": "catalog:",
+    "@vue/compiler-dom": "catalog:",
+    "@vue/compiler-vapor": "catalog:",
+    "@vue/runtime-vapor": "catalog:",
+    "@vue/shared": "catalog:",
     "magic-string-stack": "^0.1.1",
     "source-map-js": "^1.2.0",
-    "unplugin": "^1.11.0"
+    "unplugin": "^1.11.0",
+    "vue": "catalog:"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.2",
@@ -162,10 +162,5 @@
     "vite": "^5.3.2",
     "vitest": "^1.6.0",
     "webpack": "^5.92.1"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@vue-vapor/compiler-vapor@3.20240702.0-b44ca85": "patches/@vue-vapor__compiler-vapor@3.20240702.0-b44ca85.patch"
-    }
   }
 }

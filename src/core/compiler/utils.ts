@@ -1,4 +1,4 @@
-import { isGloballyAllowed, isString, makeMap } from '@vue-vapor/shared'
+import { isGloballyAllowed, isString, makeMap } from '@vue/shared'
 import {
   type AttributeNode,
   type DirectiveNode,
@@ -10,7 +10,7 @@ import {
   type TextNode,
   createSimpleExpression,
   isLiteralWhitelisted,
-} from '@vue-vapor/compiler-dom'
+} from '@vue/compiler-dom'
 import { type ParseResult, parseExpression } from '@babel/parser'
 import { EMPTY_EXPRESSION } from './transforms/utils'
 import type { TransformContext } from './transform'
@@ -230,7 +230,7 @@ export function resolveDirectiveNode(
     exp,
     arg,
     loc: resolveLocation(node.loc, context),
-    modifiers,
+    modifiers: modifiers.map((modifier) => createSimpleExpression(modifier)),
   }
 }
 

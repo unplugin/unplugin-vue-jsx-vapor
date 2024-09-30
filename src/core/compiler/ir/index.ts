@@ -4,9 +4,9 @@ import type {
   CompoundExpressionNode,
   DirectiveNode,
   SimpleExpressionNode,
-} from '@vue-vapor/compiler-dom'
+} from '@vue/compiler-dom'
 
-import type { Prettify } from '@vue-vapor/shared'
+import type { Prettify } from '@vue/shared'
 import type { DirectiveTransform, NodeTransform } from '../transform'
 import type { IRProp, IRProps, IRSlots } from './component'
 
@@ -42,7 +42,7 @@ export interface BaseIRNode {
   type: IRNodeTypes
 }
 
-export type VaporHelper = keyof typeof import('@vue-vapor/runtime-vapor')
+export type VaporHelper = keyof typeof import('@vue/runtime-vapor')
 
 export interface RootNode {
   type: IRNodeTypes.ROOT

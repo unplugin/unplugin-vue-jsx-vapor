@@ -1,4 +1,4 @@
-export { generate } from '@vue-vapor/compiler-vapor'
+export { generate } from '@vue/compiler-vapor'
 
 export { compile, type CompilerOptions, type TransformPreset } from './compile'
 export * from './transform'

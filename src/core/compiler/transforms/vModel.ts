@@ -1,4 +1,4 @@
-import { transformVModel as _transformVModel } from '@vue-vapor/compiler-vapor'
+import { transformVModel as _transformVModel } from '@vue/compiler-vapor'
 import { resolveDirectiveNode, resolveNode } from '../utils'
 import type { DirectiveTransform } from '../transform'
 

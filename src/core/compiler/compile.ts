@@ -3,12 +3,12 @@ import {
   ErrorCodes,
   createCompilerError,
   defaultOnError,
-} from '@vue-vapor/compiler-dom'
-import { extend, isString } from '@vue-vapor/shared'
+} from '@vue/compiler-dom'
+import { extend, isString } from '@vue/shared'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
   generate,
-} from '@vue-vapor/compiler-vapor'
+} from '@vue/compiler-vapor'
 import { parse } from '@babel/parser'
 import {
   type DirectiveTransform,

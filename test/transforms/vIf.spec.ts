@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { NodeTypes } from '@vue-vapor/compiler-core'
+import { NodeTypes } from '@vue/compiler-core'
 import {
   IRNodeTypes,
   type IfIRNode,

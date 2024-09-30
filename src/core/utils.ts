@@ -67,13 +67,3 @@ export function isConditionalExpression(
 export function isLogicalExpression(node: Node): node is LogicalExpression {
   return node.type === 'LogicalExpression' && isJSXExpression(node.right)
 }
-
-export function isFunctionExpression(
-  node: Node,
-): node is FunctionExpression | ArrowFunctionExpression | FunctionDeclaration {
-  return (
-    node.type === 'FunctionExpression' ||
-    node.type === 'ArrowFunctionExpression' ||
-    node.type === 'FunctionDeclaration'
-  )
-}

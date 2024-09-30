@@ -37,16 +37,11 @@ const foo = ref('foo')
 export default <Comp foo={foo} />
 ```
 
-2. ✅ Turn on the restructure option to restructure props.
+2. ✅ Use the `defineComponent` macro from [@vue-macros/jsx-macros](https://github.com/vue-macros/vue-macros/pull/794) to wrapping.
 
-```ts
-// vite.config.ts
-export default defineConfig({
-  plugins: [
-    VueJsxVapor({
-      restructure: true,
-    }),
-  ],
+```tsx
+defineComponent(({ foo }) => {
+  return <div>{ foo }<div>
 })
 ```
 

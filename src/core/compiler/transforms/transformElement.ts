@@ -5,7 +5,7 @@ import {
   isBuiltInDirective,
   isVoidTag,
   makeMap,
-} from '@vue-vapor/shared'
+} from '@vue/shared'
 import { isValidHTMLNesting } from '../html-nesting'
 import {
   DynamicFlag,
@@ -22,7 +22,7 @@ import {
   resolveSimpleExpression,
 } from '../utils'
 import { EMPTY_EXPRESSION } from './utils'
-import type { SimpleExpressionNode } from '@vue-vapor/compiler-dom'
+import type { SimpleExpressionNode } from '@vue/compiler-dom'
 import type { JSXAttribute, JSXElement, JSXSpreadAttribute } from '@babel/types'
 import type {
   DirectiveTransformResult,

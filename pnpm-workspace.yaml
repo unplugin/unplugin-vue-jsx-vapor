@@ -1,3 +1,10 @@
+catalog:
+  "@vue/compiler-core": "https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-core@2eae25e"
+  "@vue/compiler-dom": "https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-dom@2eae25e"
+  "@vue/compiler-vapor": "https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-vapor@2eae25e"
+  "@vue/runtime-vapor": "https://pkg.pr.new/vuejs/core-vapor/@vue/runtime-vapor@2eae25e"
+  "@vue/shared": "https://pkg.pr.new/vuejs/core-vapor/@vue/shared@2eae25e"
+  "vue": "https://pkg.pr.new/vuejs/core-vapor/vue@2eae25e"
 packages:
   - .
   - playground

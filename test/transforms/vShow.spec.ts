@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest'
-import { DOMErrorCodes } from '@vue-vapor/compiler-dom'
+import { DOMErrorCodes } from '@vue/compiler-dom'
 import {
   transformChildren,
   transformElement,

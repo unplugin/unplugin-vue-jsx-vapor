@@ -1,6 +1,5 @@
 import { DynamicFlag, IRNodeTypes } from '../ir'
 import { findProp, getReturnExpression, resolveExpression } from '../utils'
-import { isFunctionExpression } from '../../utils'
 import { createBranch } from './utils'
 import type { TransformContext } from '../transform'
 import type { CallExpression } from '@babel/types'
@@ -13,7 +12,13 @@ export function processMapCallExpression(
     callee,
     arguments: [argument],
   } = node
-  if (!isFunctionExpression(argument) || callee?.type !== 'MemberExpression')
+  if (
+    !(
+      argument.type === 'FunctionExpression' ||
+      argument.type === 'ArrowFunctionExpression'
+    ) ||
+    callee?.type !== 'MemberExpression'
+  )
     return
 
   context.dynamic.flags |= DynamicFlag.NON_TEMPLATE | DynamicFlag.INSERT

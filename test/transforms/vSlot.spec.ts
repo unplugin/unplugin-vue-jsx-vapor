@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-// import { ErrorCodes, NodeTypes } from '@vue-vapor/compiler-core'
+// import { ErrorCodes, NodeTypes } from '@vue/compiler-core'
 import {
   // IRNodeTypes,
   // IRSlotType,

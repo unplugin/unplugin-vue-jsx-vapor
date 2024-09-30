@@ -15,7 +15,9 @@ export const transformVSlot: NodeTransform = (node, context) => {
 
   const { openingElement, children } = node
   const vSlotsIndex = openingElement.attributes.findIndex(
-    (attr) => attr.type === 'JSXAttribute' && attr.name.name === 'v-slots',
+    (attr) =>
+      attr.type === 'JSXAttribute' &&
+      ['v-slots', 'vSlots'].includes(attr.name.name.toString()),
   )
   const vSlotsDir = openingElement.attributes[vSlotsIndex] as JSXAttribute
   if (vSlotsDir && vSlotsDir.value?.type === 'JSXExpressionContainer') {

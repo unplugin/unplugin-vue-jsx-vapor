@@ -4,7 +4,7 @@ import { describe, expect, test } from 'vitest'
 //   BindingTypes,
 //   NodeTypes,
 // } from '@vue/compiler-core'
-import { BindingTypes } from '@vue-vapor/compiler-core'
+import { BindingTypes } from '@vue/compiler-core'
 import {
   // IRDynamicPropsKind,
   // IRNodeTypes,

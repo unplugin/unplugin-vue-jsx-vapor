@@ -5,8 +5,8 @@ import {
   type SimpleExpressionNode,
   defaultOnError,
   defaultOnWarn,
-} from '@vue-vapor/compiler-dom'
-import { EMPTY_OBJ, NOOP, extend, isArray } from '@vue-vapor/shared'
+} from '@vue/compiler-dom'
+import { EMPTY_OBJ, NOOP, extend, isArray } from '@vue/shared'
 import { newBlock, newDynamic } from './transforms/utils'
 import { isConstantExpression } from './utils'
 import {
