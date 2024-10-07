@@ -40,19 +40,14 @@ export default <Comp foo={foo} />
 2. ✅ Use the `defineComponent` macro from [@vue-macros/jsx-macros](https://github.com/vue-macros/vue-macros/pull/794) to wrapping.
 
 ```tsx
-defineComponent(({ foo }) => {
-  return <div>{ foo }<div>
+const Comp = defineComponent(({ foo }) => {
+  return <>{foo}</>
 })
-```
 
-```tsx
-function Comp({ foo }) {
-  return <div>{foo}</div>
-}
 // Will be convert to:
-function Comp(_ctx0) {
-  return <div>{_ctx0.foo}</div>
-}
+const Comp = defineComponent((_props) => {
+  return <>{_props.foo}</>
+}, { props: ['foo'] })
 
 const foo = ref('foo')
 export default <Comp foo={foo.value} />
