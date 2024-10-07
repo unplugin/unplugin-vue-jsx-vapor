@@ -1,9 +1,6 @@
 import { isMapCallExpression } from './compiler/utils'
 import type {
-  ArrowFunctionExpression,
   ConditionalExpression,
-  FunctionDeclaration,
-  FunctionExpression,
   JSXElement,
   JSXFragment,
   LogicalExpression,

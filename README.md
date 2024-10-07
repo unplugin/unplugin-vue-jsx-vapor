@@ -43,7 +43,6 @@ export default <Comp foo={foo} />
 const Comp = defineComponent(({ foo }) => {
   return <>{foo}</>
 })
-
 // Will be convert to:
 const Comp = defineComponent((_props) => {
   return <>{_props.foo}</>

@@ -1,5 +1,3 @@
-import { defineComponent } from 'vue'
-
 export default {
   props: {
     value: String,
