@@ -1,19 +1,38 @@
 import { type UnpluginFactory, createUnplugin } from 'unplugin'
 import { createFilter, transformWithEsbuild } from 'vite'
+import { shallowRef } from 'vue'
+import { version } from '../package.json'
 import { transformVueJsxVapor } from './core/transform'
 import type { Options } from './types'
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
-  options = {},
+  rawOptions = {},
 ) => {
+  const options = shallowRef<Options>({
+    include: /\.[jt]sx$/,
+    ...rawOptions,
+  })
+
+  const api = {
+    get options() {
+      return options.value
+    },
+    set options(value) {
+      options.value = value
+    },
+    version,
+  }
+
   const transformInclude = createFilter(
-    options?.include || /\.[jt]sx$/,
-    options?.exclude,
+    options.value.include,
+    options.value.exclude,
   )
+
   return [
     {
       name: 'unplugin-vue-jsx-vapor',
       vite: {
+        api,
         config(config) {
           return {
             // only apply esbuild to ts files
@@ -31,9 +50,15 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
           }
         },
       },
+      rollup: {
+        api,
+      },
+      rolldown: {
+        api,
+      },
       transformInclude,
       transform(code, id) {
-        return transformVueJsxVapor(code, id, options)
+        return transformVueJsxVapor(code, id, options.value)
       },
     },
     {

@@ -45,7 +45,7 @@ export function transformVueJsxVapor(
           inline: true,
           isTS: id.endsWith('tsx'),
           filename: id,
-          ...options?.compile,
+          ...options?.compilerOptions,
         },
       )
       vaporHelpers.forEach((helper) => importSet.add(helper))
