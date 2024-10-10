@@ -4,27 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@vue/compiler-core':
-      specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-core@2eae25e
-      version: 3.5.6
-    '@vue/compiler-dom':
-      specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-dom@2eae25e
-      version: 3.5.6
-    '@vue/compiler-vapor':
-      specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-vapor@2eae25e
-      version: 3.0.0-vapor
-    '@vue/runtime-vapor':
-      specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/runtime-vapor@2eae25e
-      version: 3.0.0-vapor
-    '@vue/shared':
-      specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/shared@2eae25e
-      version: 3.5.6
-    vue:
-      specifier: https://pkg.pr.new/vuejs/core-vapor/vue@2eae25e
-      version: 3.5.6
-
 importers:
 
   .:
@@ -39,19 +18,19 @@ importers:
         specifier: ^1.10.4
         version: 1.10.4(rollup@4.18.0)(vue@https://pkg.pr.new/vuejs/core-vapor/vue@2eae25e(typescript@5.5.3))
       '@vue/compiler-core':
-        specifier: 'catalog:'
+        specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-core@2eae25e
         version: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-core@2eae25e
       '@vue/compiler-dom':
-        specifier: 'catalog:'
+        specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-dom@2eae25e
         version: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-dom@2eae25e
       '@vue/compiler-vapor':
-        specifier: 'catalog:'
+        specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-vapor@2eae25e
         version: https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-vapor@2eae25e
       '@vue/runtime-vapor':
-        specifier: 'catalog:'
+        specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/runtime-vapor@2eae25e
         version: https://pkg.pr.new/vuejs/core-vapor/@vue/runtime-vapor@2eae25e
       '@vue/shared':
-        specifier: 'catalog:'
+        specifier: https://pkg.pr.new/vuejs/core-vapor/@vue/shared@2eae25e
         version: https://pkg.pr.new/vuejs/core-vapor/@vue/shared@2eae25e
       esbuild:
         specifier: '*'
@@ -66,7 +45,7 @@ importers:
         specifier: ^1.11.0
         version: 1.11.0
       vue:
-        specifier: 'catalog:'
+        specifier: https://pkg.pr.new/vuejs/core-vapor/vue@2eae25e
         version: https://pkg.pr.new/vuejs/core-vapor/vue@2eae25e(typescript@5.5.3)
     devDependencies:
       '@antfu/eslint-config':

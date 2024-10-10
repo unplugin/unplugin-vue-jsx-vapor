@@ -131,15 +131,15 @@
     "@babel/parser": "^7.24.7",
     "@babel/types": "^7.24.7",
     "@vue-macros/common": "^1.10.4",
-    "@vue/compiler-core": "catalog:",
-    "@vue/compiler-dom": "catalog:",
-    "@vue/compiler-vapor": "catalog:",
-    "@vue/runtime-vapor": "catalog:",
-    "@vue/shared": "catalog:",
+    "@vue/compiler-core": "https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-core@2eae25e",
+    "@vue/compiler-dom": "https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-dom@2eae25e",
+    "@vue/compiler-vapor": "https://pkg.pr.new/vuejs/core-vapor/@vue/compiler-vapor@2eae25e",
+    "@vue/runtime-vapor": "https://pkg.pr.new/vuejs/core-vapor/@vue/runtime-vapor@2eae25e",
+    "@vue/shared": "https://pkg.pr.new/vuejs/core-vapor/@vue/shared@2eae25e",
     "magic-string-stack": "^0.1.1",
     "source-map-js": "^1.2.0",
     "unplugin": "^1.11.0",
-    "vue": "catalog:"
+    "vue": "https://pkg.pr.new/vuejs/core-vapor/vue@2eae25e"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.2",
