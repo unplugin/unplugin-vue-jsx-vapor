@@ -115,7 +115,6 @@
   "scripts": {
     "build": "tsup",
     "dev": "DEV=true tsup",
-    "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "play": "npm -C playground run dev",
     "release": "bumpp && npm publish",
@@ -164,7 +163,7 @@
     "rollup": "^4.18.0",
     "tsup": "^8.1.0",
     "typescript": "^5.5.3",
-    "vite": "^5.3.2",
+    "vite": "^6.0.0",
     "vitest": "^1.6.0",
     "webpack": "^5.92.1"
   }

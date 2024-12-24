@@ -51,7 +51,6 @@
   "scripts": {
     "build": "tsup",
     "dev": "DEV=true tsup",
-    "typecheck": "tsc --noEmit",
     "release": "bumpp && npm publish",
     "test": "vitest"
   },

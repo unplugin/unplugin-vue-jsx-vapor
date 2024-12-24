@@ -21,7 +21,7 @@
   "scripts": {
     "dev": "pnpm run --filter=\"./packages/*\" --parallel dev",
     "build": "pnpm run --filter=\"./packages/*\" build",
-    "typecheck": "pnpm run --filter=\"./packages/*\" --parallel typecheck",
+    "typecheck": "tsc --noEmit",
     "publish": "pnpm build && changeset publish",
     "lint": "eslint .",
     "play": "npm -C playground run dev",
