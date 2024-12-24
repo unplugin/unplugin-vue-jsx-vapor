@@ -33,7 +33,7 @@ describe('compiler: element transform', () => {
 
         export function render(_ctx) {
           const _component_Foo = _resolveComponent("Foo")
-          const n0 = _createComponent(_component_Foo, null, null, true)
+          const n0 = _createComponent(_component_Foo)
           return n0
         }"
       `)
@@ -55,8 +55,8 @@ describe('compiler: element transform', () => {
       },
     )
     expect(code).toMatchInlineSnapshot(`
-      "(() => {
-        const n0 = _createComponent(Foo.Example, null, null, true)
+      "((_ctx) => {
+        const n0 = _createComponent(Foo.Example)
         return n0
       })()"
     `)

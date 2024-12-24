@@ -33,7 +33,7 @@ describe('compiler: children transform', () => {
       </div>`,
     )
     expect(code).toMatchInlineSnapshot(`
-      "import { next as _next, createTextNode as _createTextNode, insert as _insert, renderEffect as _renderEffect, setText as _setText, template as _template } from 'vue/vapor';
+      "import { next as _next, createTextNode as _createTextNode, insert as _insert, setText as _setText, renderEffect as _renderEffect, template as _template } from 'vue/vapor';
       const t0 = _template("<div><p></p> <!><p></p></div>")
 
       export function render(_ctx) {
@@ -43,8 +43,11 @@ describe('compiler: children transform', () => {
         const n2 = n3.nextSibling
         const n1 = _createTextNode(() => [_ctx.second, " "])
         _insert(n1, n4, n3)
-        _renderEffect(() => _setText(n0, _ctx.first))
-        _renderEffect(() => _setText(n2, _ctx.forth))
+        let _first, _forth
+        _renderEffect(() => {
+          _first !== _ctx.first && _setText(n0, (_first = _ctx.first))
+          _forth !== _ctx.forth && _setText(n2, (_forth = _ctx.forth))
+        })
         return n4
       }"
     `)
@@ -60,12 +63,14 @@ describe('compiler: children transform', () => {
   test('{...obj}', () => {
     const { code, ir } = compileWithElementTransform(`<div {...obj} />`)
     expect(code).toMatchInlineSnapshot(`
-      "import { renderEffect as _renderEffect, setDynamicProps as _setDynamicProps, template as _template } from 'vue/vapor';
+      "import { setInheritAttrs as _setInheritAttrs, setDynamicProps as _setDynamicProps, renderEffect as _renderEffect, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
         const n0 = t0()
-        _renderEffect(() => _setDynamicProps(n0, _ctx.obj))
+        _setInheritAttrs(true)
+        let _obj
+        _renderEffect(() => _obj !== _ctx.obj && (_obj = _setDynamicProps(n0, _obj, [_ctx.obj], true)))
         return n0
       }"
     `)
@@ -96,6 +101,6 @@ describe('compiler: children transform', () => {
         ],
       },
     ])
-    expect(code).contains('_setDynamicProps(n0, _ctx.obj)')
+    expect(code).contains('_setDynamicProps(n0, _obj, [_ctx.obj], true)')
   })
 })

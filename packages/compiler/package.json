@@ -55,8 +55,8 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@babel/parser": "^7.24.7",
-    "@babel/types": "^7.24.7",
+    "@babel/parser": "catalog:",
+    "@babel/types": "catalog:",
     "@vue-macros/common": "^1.10.4",
     "@vue/compiler-core": "catalog:",
     "@vue/compiler-dom": "catalog:",

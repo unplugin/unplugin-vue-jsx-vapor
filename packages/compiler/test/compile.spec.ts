@@ -45,12 +45,13 @@ describe('compile', () => {
   test('dynamic root', () => {
     const { code } = compile(`<div>{a +b +       c }</div>`)
     expect(code).toMatchInlineSnapshot(`
-      "import { renderEffect as _renderEffect, setText as _setText, template as _template } from 'vue/vapor';
+      "import { setText as _setText, renderEffect as _renderEffect, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
         const n0 = t0()
-        _renderEffect(() => _setText(n0, _ctx.a +_ctx.b +       _ctx.c))
+        let _a, _b, _c
+        _renderEffect(() => (_a !== _ctx.a || _b !== _ctx.b || _c !== _ctx.c) && _setText(n0, (_a = _ctx.a) +(_b = _ctx.b) +       (_c = _ctx.c)))
         return n0
       }"
     `)
@@ -65,7 +66,7 @@ describe('compile', () => {
         },
       })
       expect(code).toMatchInlineSnapshot(`
-        "(() => {
+        "((_ctx) => {
           const n0 = _createTextNode(() => [a + b.value])
           return n0
         })()"

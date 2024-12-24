@@ -42,12 +42,12 @@ describe('compiler: transform slot', () => {
         const _component_Comp = _resolveComponent("Comp")
         const n1 = _createComponent(_component_Comp, null, [
           {
-            default: () => {
+            "default": () => {
               const n0 = t0()
               return n0
             }
           }
-        ], true)
+        ])
         return n1
       }"
     `)
@@ -60,7 +60,7 @@ describe('compiler: transform slot', () => {
   })
 
   test('on-component default slot', () => {
-    const { ir, code, vaporHelpers } = compileWithSlots(
+    const { code } = compileWithSlots(
       `<Comp v-slots={{ default: ({ foo })=> <>{ foo + bar }</> }}></Comp>`,
       { prefixIdentifiers: false },
     )
@@ -70,7 +70,7 @@ describe('compiler: transform slot', () => {
       export function render(_ctx) {
         const n0 = _createComponent(Comp, null, [
           { default: ({ foo })=> <>{ foo + bar }</> }
-        ], true)
+        ])
         return n0
       }"
     `)

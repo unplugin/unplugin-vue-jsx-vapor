@@ -38,6 +38,15 @@ export function processMapCallExpression(
   const keyProperty = keyProp && resolveExpression(keyProp.value, context)
   return () => {
     exitBlock()
+    const { parent } = context
+    let container: number | undefined
+    if (
+      parent &&
+      parent.block.node !== parent.node &&
+      parent.node.children.length === 1
+    ) {
+      container = parent.reference()
+    }
     context.registerOperation({
       type: IRNodeTypes.FOR,
       id,
@@ -48,6 +57,7 @@ export function processMapCallExpression(
       keyProp: keyProperty,
       render,
       once: context.inVOnce,
+      container,
     })
   }
 }

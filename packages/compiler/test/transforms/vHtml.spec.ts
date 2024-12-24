@@ -29,7 +29,11 @@ describe('v-html', () => {
     expect(vaporHelpers).contains('setHtml')
     expect(helpers.size).toBe(0)
 
-    expect(ir.block.operation).toEqual([])
+    expect(ir.block.operation).toMatchObject([
+      {
+        type: IRNodeTypes.SET_INHERIT_ATTRS,
+      },
+    ])
     expect(ir.block.effect).toMatchObject([
       {
         expressions: [
@@ -71,7 +75,11 @@ describe('v-html', () => {
     // children should have been removed
     expect(ir.template).toEqual(['<div></div>'])
 
-    expect(ir.block.operation).toEqual([])
+    expect(ir.block.operation).toMatchObject([
+      {
+        type: IRNodeTypes.SET_INHERIT_ATTRS,
+      },
+    ])
     expect(ir.block.effect).toMatchObject([
       {
         expressions: [

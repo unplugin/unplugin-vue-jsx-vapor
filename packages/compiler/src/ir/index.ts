@@ -24,6 +24,7 @@ export enum IRNodeTypes {
   SET_HTML,
   SET_TEMPLATE_REF,
   SET_MODEL_VALUE,
+  SET_INHERIT_ATTRS,
 
   INSERT_NODE,
   PREPEND_NODE,
@@ -102,18 +103,22 @@ export interface ForIRNode extends BaseIRNode, IRFor {
   keyProp?: SimpleExpressionNode
   render: BlockIRNode
   once: boolean
+  container?: number
 }
 
 export interface SetPropIRNode extends BaseIRNode {
   type: IRNodeTypes.SET_PROP
   element: number
   prop: IRProp
+  root: boolean
+  tag: string
 }
 
 export interface SetDynamicPropsIRNode extends BaseIRNode {
   type: IRNodeTypes.SET_DYNAMIC_PROPS
   element: number
   props: IRProps[]
+  root: boolean
 }
 
 export interface SetDynamicEventsIRNode extends BaseIRNode {
@@ -169,6 +174,12 @@ export interface SetModelValueIRNode extends BaseIRNode {
   value: SimpleExpressionNode
   bindingType?: BindingTypes
   isComponent: boolean
+}
+
+export interface SetInheritAttrsIRNode extends BaseIRNode {
+  type: IRNodeTypes.SET_INHERIT_ATTRS
+  staticProps: boolean
+  dynamicProps: true | string[]
 }
 
 export interface CreateTextNodeIRNode extends BaseIRNode {
@@ -234,6 +245,7 @@ export type OperationNode =
   | SetHtmlIRNode
   | SetTemplateRefIRNode
   | SetModelValueIRNode
+  | SetInheritAttrsIRNode
   | CreateTextNodeIRNode
   | InsertNodeIRNode
   | PrependNodeIRNode
@@ -270,7 +282,12 @@ export interface IRDynamicInfo {
 
 export interface IREffect {
   expressions: SimpleExpressionNode[]
+  identifiers: string[]
   operations: OperationNode[]
+  declareNames: Set<string>
+  rewrittenNames: Set<string>
+  earlyCheckExps: string[]
+  inVFor: boolean
 }
 
 type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> &

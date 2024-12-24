@@ -150,14 +150,13 @@
     }
   },
   "dependencies": {
-    "@babel/parser": "^7.24.7",
-    "@babel/types": "^7.24.7",
     "@vue-jsx-vapor/compiler": "workspace:*",
     "@vue-macros/common": "^1.10.4",
     "magic-string-stack": "^0.1.1",
     "unplugin": "^1.11.0"
   },
   "devDependencies": {
+    "@babel/types": "catalog:",
     "@nuxt/kit": "^3.12.3",
     "@nuxt/schema": "^3.12.3",
     "rollup": "^4.18.0",

@@ -35,7 +35,7 @@ describe('compiler: v-for', () => {
     )
 
     expect(code).toMatchInlineSnapshot(`
-      "import { renderEffect as _renderEffect, setText as _setText, createFor as _createFor, insert as _insert, template as _template } from 'vue/vapor';
+      "import { setText as _setText, renderEffect as _renderEffect, createFor as _createFor, insert as _insert, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
@@ -44,7 +44,7 @@ describe('compiler: v-for', () => {
           const n2 = t0()
           _renderEffect(() => _setText(n2, item.id))
           return n2
-        }, (item) => (item.id))
+        }, (item) => (item.id), n3)
         _insert(n0, n3)
         return n3
       }"

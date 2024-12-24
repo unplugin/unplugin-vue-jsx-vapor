@@ -2,11 +2,13 @@ import {
   type TransformOptions as BaseTransformOptions,
   type CommentNode,
   type CompilerCompatOptions,
+  type ExpressionNode,
   type SimpleExpressionNode,
   defaultOnError,
   defaultOnWarn,
+  walkIdentifiers,
 } from '@vue/compiler-dom'
-import { EMPTY_OBJ, NOOP, extend, isArray } from '@vue/shared'
+import { EMPTY_OBJ, NOOP, extend, isArray, looseEqual } from '@vue/shared'
 import { newBlock, newDynamic } from './transforms/utils'
 import { isConstantExpression } from './utils'
 import {
@@ -152,8 +154,10 @@ export class TransformContext<
     if (this.inVOnce || expressions.length === 0) {
       return this.registerOperation(...operations)
     }
+    const ids = new Set<string>()
+    expressions.forEach((exp) => extractIdentifiers(ids, exp))
     const existing = this.block.effect.find((e) =>
-      isSameExpression(e.expressions, expressions),
+      looseEqual(e.identifiers, Array.from(ids)),
     )
     if (existing) {
       existing.operations.push(...operations)
@@ -161,16 +165,21 @@ export class TransformContext<
       this.block.effect.push({
         expressions,
         operations,
+        earlyCheckExps: [],
+        declareNames: new Set<string>(),
+        rewrittenNames: new Set<string>(),
+        inVFor: this.inVFor > 0,
+        identifiers: Array.from(ids),
       })
     }
 
-    function isSameExpression(
-      a: SimpleExpressionNode[],
-      b: SimpleExpressionNode[],
-    ) {
-      if (a.length !== b.length) return false
-      return a.every((exp, i) => exp.content === b[i].content)
-    }
+    // function isSameExpression(
+    //   a: SimpleExpressionNode[],
+    //   b: SimpleExpressionNode[],
+    // ) {
+    //   if (a.length !== b.length) return false
+    //   return a.every((exp, i) => exp.content === b[i].content)
+    // }
   }
 
   registerOperation(...node: OperationNode[]) {
@@ -245,5 +254,13 @@ export function transformNode(context: TransformContext<BlockIRNode['node']>) {
 
   if (context.node.type === IRNodeTypes.ROOT) {
     context.registerTemplate()
+  }
+}
+
+function extractIdentifiers(ids: Set<string>, node: ExpressionNode) {
+  if (node.ast) {
+    walkIdentifiers(node.ast, (n) => ids.add(n.name), true)
+  } else if (node.ast === null) {
+    ids.add((node as SimpleExpressionNode).content)
   }
 }

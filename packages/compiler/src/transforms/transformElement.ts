@@ -63,9 +63,14 @@ export const transformElement: NodeTransform = (node, context) => {
       isComponent,
     )
 
+    const singleRoot =
+      context.root === context.parent &&
+      context.parent.node.children.filter((child) => !isJSXComponent(child))
+        .length === 1
     ;(isComponent ? transformComponentElement : transformNativeElement)(
       tag,
       propsResult,
+      singleRoot,
       context as TransformContext<JSXElement>,
     )
   }
@@ -74,6 +79,7 @@ export const transformElement: NodeTransform = (node, context) => {
 function transformComponentElement(
   tag: string,
   propsResult: PropsResult,
+  singleRoot: boolean,
   context: TransformContext<JSXElement>,
 ) {
   let asset = true
@@ -98,8 +104,6 @@ function transformComponentElement(
   }
 
   context.dynamic.flags |= DynamicFlag.NON_TEMPLATE | DynamicFlag.INSERT
-  const root =
-    context.root === context.parent && context.parent.node.children.length === 1
 
   context.registerOperation({
     type: IRNodeTypes.CREATE_COMPONENT_NODE,
@@ -107,7 +111,7 @@ function transformComponentElement(
     tag,
     props: propsResult[0] ? propsResult[1] : [propsResult[1]],
     asset,
-    root,
+    root: singleRoot,
     slots: context.slots,
     once: context.inVOnce,
   })
@@ -136,6 +140,7 @@ function resolveSetupReference(name: string, context: TransformContext) {
 function transformNativeElement(
   tag: string,
   propsResult: PropsResult,
+  singleRoot: boolean,
   context: TransformContext<JSXElement>,
 ) {
   const { scopeId } = context.options
@@ -145,27 +150,42 @@ function transformNativeElement(
   template += `<${tag}`
   if (scopeId) template += ` ${scopeId}`
 
+  let staticProps = false
+  const dynamicProps: string[] = []
   if (propsResult[0] /* dynamic props */) {
     const [, dynamicArgs, expressions] = propsResult
     context.registerEffect(expressions, {
       type: IRNodeTypes.SET_DYNAMIC_PROPS,
       element: context.reference(),
       props: dynamicArgs,
+      root: singleRoot,
     })
   } else {
     for (const prop of propsResult[1]) {
       const { key, values } = prop
       if (key.isStatic && values.length === 1 && values[0].isStatic) {
+        staticProps = true
         template += ` ${key.content}`
         if (values[0].content) template += `="${values[0].content}"`
       } else {
+        dynamicProps.push(key.content)
         context.registerEffect(values, {
           type: IRNodeTypes.SET_PROP,
           element: context.reference(),
           prop,
+          tag,
+          root: singleRoot,
         })
       }
     }
+  }
+
+  if (singleRoot) {
+    context.registerOperation({
+      type: IRNodeTypes.SET_INHERIT_ATTRS,
+      staticProps,
+      dynamicProps: propsResult[0] ? true : dynamicProps,
+    })
   }
 
   template += `>${context.childrenTemplate.join('')}`

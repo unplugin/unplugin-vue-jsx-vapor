@@ -34,7 +34,7 @@ describe('v-on', () => {
       const t0 = _template("<div></div>")
       _delegateEvents("click")
 
-      export function render(_ctx) {
+      export function render(_ctx, $props, $emit, $attrs, $slots) {
         const n0 = t0()
         _delegate(n0, "click", () => _ctx.handleClick)
         return n0
@@ -60,6 +60,9 @@ describe('v-on', () => {
         modifiers: { keys: [], nonKeys: [], options: [] },
         keyOverride: undefined,
         delegate: true,
+      },
+      {
+        type: IRNodeTypes.SET_INHERIT_ATTRS,
       },
     ])
   })
