@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { transformVueJsxVapor } from '../src/core/transform'
+import { transformVueJsxVapor } from '../src/core'
 
 describe('transform', () => {
   test('transform multiple components', () => {

@@ -1,0 +1,68 @@
+{
+  "name": "@vue-jsx-vapor/compiler",
+  "version": "0.0.1",
+  "packageManager": "pnpm@9.15.1",
+  "description": "Vue JSX Vapor Compiler",
+  "type": "module",
+  "keywords": [
+    "vue",
+    "jsx",
+    "vapor",
+    "compiler"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/unplugin/unplugin-vue-jsx-vapor#readme",
+  "bugs": {
+    "url": "https://github.com/unplugin/unplugin-vue-jsx-vapor/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unplugin/unplugin-vue-jsx-vapor.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "dev": "./src/index.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    },
+    "./*": "./*"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./*"
+      ]
+    }
+  },
+  "publishConfig": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    },
+    "./*": "./*"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "DEV=true tsup",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp && npm publish",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.24.7",
+    "@babel/types": "^7.24.7",
+    "@vue-macros/common": "^1.10.4",
+    "@vue/compiler-core": "catalog:",
+    "@vue/compiler-dom": "catalog:",
+    "@vue/compiler-vapor": "catalog:",
+    "@vue/runtime-vapor": "catalog:",
+    "@vue/shared": "catalog:"
+  }
+}

@@ -7,7 +7,7 @@ import {
   transformVBind,
   // transformVFor,
   transformVOn,
-} from '../../src/core/compiler'
+} from '../../src'
 import { makeCompile } from './_utils'
 
 const compileWithVFor = makeCompile({

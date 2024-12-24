@@ -5,7 +5,7 @@ import {
   transformChildren,
   transformElement,
   transformVModel,
-} from '../../src/core/compiler'
+} from '../../src'
 import { makeCompile } from './_utils'
 
 const compileWithVModel = makeCompile({

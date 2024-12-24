@@ -8,7 +8,7 @@ import {
   transformText,
   transformVBind,
   // transformVIf,
-} from '../../src/core/compiler'
+} from '../../src'
 import { makeCompile } from './_utils'
 
 const compileWithElementTransform = makeCompile({

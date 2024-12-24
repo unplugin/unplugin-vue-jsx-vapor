@@ -1,10 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
 import { DOMErrorCodes } from '@vue/compiler-dom'
-import {
-  transformChildren,
-  transformElement,
-  transformVShow,
-} from '../../src/core/compiler'
+import { transformChildren, transformElement, transformVShow } from '../../src'
 import { makeCompile } from './_utils'
 
 const compileWithVShow = makeCompile({

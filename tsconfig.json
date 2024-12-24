@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "ESNext",
     "jsx": "preserve",
     "jsxFactory": "h",
     "jsxImportSource": "vue",
     "lib": ["esnext", "DOM"],
     "useDefineForClassFields": false,
+    "customConditions": ["dev"],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,

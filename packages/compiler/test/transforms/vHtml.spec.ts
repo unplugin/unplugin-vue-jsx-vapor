@@ -5,7 +5,7 @@ import {
   transformChildren,
   transformElement,
   transformVHtml,
-} from '../../src/core/compiler/index'
+} from '../../src'
 import { makeCompile } from './_utils'
 
 const compileWithVHtml = makeCompile({
