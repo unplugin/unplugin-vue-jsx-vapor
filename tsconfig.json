@@ -16,5 +16,5 @@
     "skipLibCheck": true
   },
   "include": ["packages"],
-  "exclude": ["eslint.config.js", "playground"]
+  "exclude": ["**/dist", "eslint.config.js", "playground"]
 }
