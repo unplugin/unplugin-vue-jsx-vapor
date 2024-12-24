@@ -1,6 +1,9 @@
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
+  resolve: {
+    conditions: ['dev'],
+  },
   define: {
     __DEV__: true,
     __TEST__: true,

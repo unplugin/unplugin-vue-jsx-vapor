@@ -8,8 +8,9 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
     "unplugin-vue-jsx-vapor": "workspace:*",
-    "unplugin-vue-macros": "https://pkg.pr.new/vue-macros/vue-macros/unplugin-vue-macros@b482dd9",
+    "unplugin-vue-macros": "https://pkg.pr.new/vue-macros/vue-macros/unplugin-vue-macros@f4ebeab",
     "vite": "^5.3.2",
-    "vite-plugin-inspect": "^0.8.4"
+    "vite-plugin-inspect": "^0.8.4",
+    "vue": "catalog:"
   }
 }

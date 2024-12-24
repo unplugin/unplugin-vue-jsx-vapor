@@ -6,7 +6,7 @@ import {
   transformChildren,
   transformElement,
   transformVBind,
-} from '../../src/core/compiler'
+} from '../../src'
 import { makeCompile } from './_utils'
 
 const compileWithVBind = makeCompile({

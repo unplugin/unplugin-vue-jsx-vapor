@@ -5,7 +5,7 @@ import {
   transformChildren,
   transformElement,
   transformTemplateRef,
-} from '../../src/core/compiler/index'
+} from '../../src'
 
 import { makeCompile } from './_utils'
 

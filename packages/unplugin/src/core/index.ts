@@ -5,8 +5,7 @@ import {
   walkAST,
 } from '@vue-macros/common'
 import MagicStringStack from 'magic-string-stack'
-import { isJSXElement } from './utils'
-import { compile } from './compiler'
+import { compile } from '@vue-jsx-vapor/compiler'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { Options } from '../types'
 
@@ -99,4 +98,10 @@ export function transformVueJsxVapor(
     s.prepend(`import { ${importResult} } from 'vue/vapor';\n`)
 
   return generateTransform(s, id)
+}
+
+export function isJSXElement(
+  node?: Node | null,
+): node is JSXElement | JSXFragment {
+  return !!node && (node.type === 'JSXElement' || node.type === 'JSXFragment')
 }

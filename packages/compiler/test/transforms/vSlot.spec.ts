@@ -12,7 +12,7 @@ import {
   // transformVIf,
   transformVOn,
   transformVSlot,
-} from '../../src/core/compiler'
+} from '../../src'
 import { makeCompile } from './_utils'
 
 const compileWithSlots = makeCompile({

@@ -1,7 +1,7 @@
 import {
   DynamicFlag,
   type IRDynamicInfo,
-  IRNodeTypes,
+  type IRNodeTypes,
 } from '@vue/compiler-vapor'
 import { createSimpleExpression } from '@vue/compiler-dom'
 import {
@@ -16,7 +16,7 @@ import {
   jsxOpeningFragment,
   parenthesizedExpression,
 } from '@babel/types'
-import { isJSXElement } from '../../utils'
+import { isJSXElement } from '../utils'
 import type { TransformContext } from '../transform'
 import type { BlockIRNode } from '../ir/index'
 
@@ -29,7 +29,7 @@ export function newDynamic(): IRDynamicInfo {
 
 export function newBlock(node: BlockIRNode['node']): BlockIRNode {
   return {
-    type: IRNodeTypes.BLOCK,
+    type: 1 satisfies IRNodeTypes.BLOCK,
     node,
     dynamic: newDynamic(),
     effect: [],

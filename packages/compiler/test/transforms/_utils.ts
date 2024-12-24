@@ -1,10 +1,6 @@
 import { parse } from '@babel/parser'
-import {
-  type CompilerOptions,
-  generate,
-  transform,
-} from '../../src/core/compiler'
-import { IRNodeTypes, type RootNode } from '../../src/core/compiler/ir'
+import { type CompilerOptions, generate, transform } from '../../src/'
+import { IRNodeTypes, type RootNode } from '../../src/ir'
 import type { JSXElement, JSXFragment } from '@babel/types'
 
 export function makeCompile(options: CompilerOptions = {}) {

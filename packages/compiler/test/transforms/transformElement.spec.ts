@@ -13,7 +13,7 @@ import {
   transformText,
   transformVBind,
   transformVOn,
-} from '../../src/core/compiler/index'
+} from '../../src'
 import { makeCompile } from './_utils'
 
 const compileWithElementTransform = makeCompile({

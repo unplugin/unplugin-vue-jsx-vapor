@@ -1,6 +1,6 @@
 import { type UnpluginFactory, createUnplugin } from 'unplugin'
 import { createFilter, transformWithEsbuild } from 'vite'
-import { transformVueJsxVapor } from './core/transform'
+import { transformVueJsxVapor } from './core'
 import type { Options } from './types'
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
