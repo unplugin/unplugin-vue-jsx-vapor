@@ -1,5 +1,16 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.0
+
+### Minor Changes
+
+- support DOM insertion expression
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-jsx-vapor/compiler@0.1.0
+
 ## 1.1.1
 
 ### Patch Changes
