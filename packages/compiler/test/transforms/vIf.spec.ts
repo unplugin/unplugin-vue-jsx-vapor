@@ -34,18 +34,17 @@ describe('compiler: v-if', () => {
     )
 
     expect(code).toMatchInlineSnapshot(`
-      "import { setText as _setText, renderEffect as _renderEffect, createTextNode as _createTextNode, createIf as _createIf, template as _template } from 'vue/vapor';
+      "import { setText as _setText, createTextNode as _createTextNode, createIf as _createIf, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
       const t1 = _template("<div>fail</div>")
 
       export function render(_ctx) {
-        const n0 = _createIf(() => (_ctx.ok), () => {
+        const n0 = _createIf(() => (ok), () => {
           const n2 = t0()
-          let _msg
-          _renderEffect(() => _msg !== _ctx.msg && _setText(n2, (_msg = _ctx.msg)))
+          _setText(n2, () => (msg))
           return n2
         }, () => {
-          const n4 = _createIf(() => (_ctx.fail), () => {
+          const n4 = _createIf(() => (fail), () => {
             const n6 = t1()
             return n6
           }, () => {
@@ -85,7 +84,7 @@ describe('compiler: v-if', () => {
     })
 
     expect(ir.block.effect).toEqual([])
-    expect((ir.block.operation[0] as IfIRNode).positive.effect).lengthOf(1)
+    expect((ir.block.operation[0] as IfIRNode).positive.effect).lengthOf(0)
 
     // expect(code).matchSnapshot()
   })
@@ -94,17 +93,16 @@ describe('compiler: v-if', () => {
       `<>{ok && <div>{msg}</div>}</>`,
     )
     expect(code).toMatchInlineSnapshot(`
-      "import { setText as _setText, renderEffect as _renderEffect, createTextNode as _createTextNode, createIf as _createIf, template as _template } from 'vue/vapor';
+      "import { setText as _setText, createTextNode as _createTextNode, createIf as _createIf, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
-        const n0 = _createIf(() => (_ctx.ok), () => {
+        const n0 = _createIf(() => (ok), () => {
           const n2 = t0()
-          let _msg
-          _renderEffect(() => _msg !== _ctx.msg && _setText(n2, (_msg = _ctx.msg)))
+          _setText(n2, () => (msg))
           return n2
         }, () => {
-          const n4 = _createTextNode(() => [_ctx.ok])
+          const n4 = _createTextNode([() => (ok)])
           return n4
         })
         return n0
@@ -138,7 +136,7 @@ describe('compiler: v-if', () => {
     })
 
     expect(ir.block.effect).toEqual([])
-    expect((ir.block.operation[0] as IfIRNode).positive.effect).lengthOf(1)
+    expect((ir.block.operation[0] as IfIRNode).positive.effect).lengthOf(0)
   })
 
   /*

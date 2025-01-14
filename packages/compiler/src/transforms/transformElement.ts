@@ -1,11 +1,4 @@
-import {
-  camelize,
-  capitalize,
-  extend,
-  isBuiltInDirective,
-  isVoidTag,
-  makeMap,
-} from '@vue/shared'
+import { extend, isBuiltInDirective, isVoidTag, makeMap } from '@vue/shared'
 import { isValidHTMLNesting } from '../html-nesting'
 import {
   DynamicFlag,
@@ -85,14 +78,14 @@ function transformComponentElement(
   let asset = true
 
   if (!__BROWSER__) {
-    const fromSetup = resolveSetupReference(tag, context)
+    const fromSetup = tag
     if (fromSetup) {
       tag = fromSetup
       asset = false
     }
     const dotIndex = tag.indexOf('.')
     if (dotIndex > 0) {
-      const ns = resolveSetupReference(tag.slice(0, dotIndex), context)
+      const ns = tag.slice(0, dotIndex)
       if (ns) {
         tag = ns + tag.slice(dotIndex)
         asset = false
@@ -116,25 +109,6 @@ function transformComponentElement(
     once: context.inVOnce,
   })
   context.slots = []
-}
-
-function resolveSetupReference(name: string, context: TransformContext) {
-  const bindings = context.options.bindingMetadata
-  // TODO
-  if (!context.options.prefixIdentifiers) return name
-  if (!bindings || bindings.__isScriptSetup === false) {
-    return
-  }
-
-  const camelName = camelize(name)
-  const PascalName = capitalize(camelName)
-  return bindings[name]
-    ? name
-    : bindings[camelName]
-      ? camelName
-      : bindings[PascalName]
-        ? PascalName
-        : undefined
 }
 
 function transformNativeElement(
@@ -310,8 +284,7 @@ function transformProp(
   }
 
   if (!isBuiltInDirective(name)) {
-    const fromSetup =
-      !__BROWSER__ && resolveSetupReference(`v-${name}`, context)
+    const fromSetup = !__BROWSER__ && `v-${name}`
     if (fromSetup) {
       name = fromSetup
     } else {

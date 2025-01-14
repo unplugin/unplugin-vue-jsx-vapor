@@ -36,7 +36,7 @@ describe('v-on', () => {
 
       export function render(_ctx, $props, $emit, $attrs, $slots) {
         const n0 = t0()
-        _delegate(n0, "click", () => _ctx.handleClick)
+        _delegate(n0, "click", () => handleClick)
         return n0
       }"
     `)

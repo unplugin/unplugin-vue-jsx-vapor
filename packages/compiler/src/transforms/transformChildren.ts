@@ -15,17 +15,6 @@ export const transformChildren: NodeTransform = (node, context) => {
 
   if (node.type !== 'JSXElement' && !isFragment) return
 
-  Array.from(node.children).forEach((child, index) => {
-    if (child.type === 'JSXText' && !child.value.trim()) {
-      child.value = ' '
-      if (!index) {
-        node.children.splice(0, 1)
-      } else if (index === node.children.length) {
-        node.children.splice(-1, 1)
-      }
-    }
-  })
-
   for (const [i, child] of node.children.entries()) {
     const childContext = context.create(child, i)
     transformNode(childContext)

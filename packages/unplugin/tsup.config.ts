@@ -1,4 +1,5 @@
 import process from 'node:process'
+import Raw from 'unplugin-raw/esbuild'
 import type { Options } from 'tsup'
 
 export default {
@@ -14,4 +15,5 @@ export default {
     __DEV__: 'true',
     __BROWSER__: 'false',
   },
+  esbuildPlugins: [Raw()],
 } satisfies Options

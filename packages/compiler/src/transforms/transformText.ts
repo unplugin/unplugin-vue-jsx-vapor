@@ -6,16 +6,14 @@ import {
 } from '../ir'
 import {
   getLiteralExpressionValue,
-  isConstantExpression,
+  isEmptyText,
   isJSXComponent,
-  isMapCallExpression,
   resolveExpression,
+  resolveJSXText,
 } from '../utils'
 import { processConditionalExpression, processLogicalExpression } from './vIf'
-import { processMapCallExpression } from './vFor'
 import type { NodeTransform, TransformContext } from '../transform'
 import type {
-  CallExpression,
   JSXElement,
   JSXExpressionContainer,
   JSXText,
@@ -49,17 +47,16 @@ export const transformText: NodeTransform = (node, context) => {
       return processConditionalExpression(node.expression, context)
     } else if (node.expression.type === 'LogicalExpression') {
       return processLogicalExpression(node.expression, context)
-    } else if (node.expression.type === 'CallExpression') {
-      if (isMapCallExpression(node.expression)) {
-        return processMapCallExpression(node.expression, context)
-      } else {
-        processCallExpression(node.expression, context)
-      }
     } else {
       processTextLike(context as TransformContext<JSXExpressionContainer>)
     }
   } else if (node.type === 'JSXText') {
-    context.template += node.value
+    const value = resolveJSXText(node)
+    if (value) {
+      context.template += value
+    } else {
+      context.dynamic.flags |= DynamicFlag.NON_TEMPLATE
+    }
   }
 }
 
@@ -68,16 +65,15 @@ function processTextLike(context: TransformContext<JSXExpressionContainer>) {
   const idx = nexts.findIndex((n) => !isTextLike(n))
   const nodes = (idx > -1 ? nexts.slice(0, idx) : nexts) as Array<TextLike>
 
-  const id = context.reference()
-  const values = nodes.map((node) => createTextLikeExpression(node, context))
+  const values = createTextLikeExpressions(nodes, context)
+  if (!values.length) return
 
   context.dynamic.flags |= DynamicFlag.INSERT | DynamicFlag.NON_TEMPLATE
-
   context.registerOperation({
     type: IRNodeTypes.CREATE_TEXT_NODE,
-    id,
+    id: context.reference(),
     values,
-    effect: !values.every(isConstantExpression) && !context.inVOnce,
+    effect: false,
   })
 }
 
@@ -85,14 +81,14 @@ function processTextLikeContainer(
   children: TextLike[],
   context: TransformContext<JSXElement>,
 ) {
-  const values = children.map((child) =>
-    createTextLikeExpression(child, context),
-  )
+  const values = createTextLikeExpressions(children, context)
+  if (!values.length) return
+
   const literals = values.map(getLiteralExpressionValue)
   if (literals.every((l) => l != null)) {
     context.childrenTemplate = literals.map((l) => String(l))
   } else {
-    context.registerEffect(values, {
+    context.registerOperation({
       type: IRNodeTypes.SET_TEXT,
       element: context.reference(),
       values,
@@ -100,9 +96,17 @@ function processTextLikeContainer(
   }
 }
 
-function createTextLikeExpression(node: TextLike, context: TransformContext) {
-  seen.get(context.root)!.add(node)
-  return resolveExpression(node, context)
+function createTextLikeExpressions(
+  nodes: TextLike[],
+  context: TransformContext,
+) {
+  const values = []
+  for (const node of nodes) {
+    if (isEmptyText(node)) continue
+    seen.get(context.root)!.add(node)
+    values.push(resolveExpression(node, context, true))
+  }
+  return values
 }
 
 function isAllTextLike(children: Node[]): children is TextLike[] {
@@ -120,29 +124,7 @@ function isTextLike(node: Node): node is TextLike {
       !(
         node.expression.type === 'ConditionalExpression' ||
         node.expression.type === 'LogicalExpression'
-      ) &&
-      node.expression.type !== 'CallExpression') ||
+      )) ||
     node.type === 'JSXText'
   )
-}
-
-function processCallExpression(
-  node: CallExpression,
-  context: TransformContext,
-) {
-  context.dynamic.flags |= DynamicFlag.NON_TEMPLATE | DynamicFlag.INSERT
-  const root =
-    context.root === context.parent && context.parent.node.children.length === 1
-  const tag = `() => ${context.ir.source.slice(node.start!, node.end!)}`
-
-  context.registerOperation({
-    type: IRNodeTypes.CREATE_COMPONENT_NODE,
-    id: context.reference(),
-    tag,
-    props: [],
-    asset: false,
-    root,
-    slots: context.slots,
-    once: context.inVOnce,
-  })
 }

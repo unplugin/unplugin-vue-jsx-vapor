@@ -30,13 +30,11 @@ export function makeCompile(options: CompilerOptions = {}) {
       temps: 0,
     }
     const ir = transform(ast, {
-      prefixIdentifiers: true,
       expressionPlugins: ['typescript', 'jsx'],
       ...options,
       ...overrideOptions,
     }) as any
     const { code, helpers, vaporHelpers } = generate(ir, {
-      prefixIdentifiers: true,
       ...options,
       ...overrideOptions,
     })

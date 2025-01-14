@@ -11,24 +11,27 @@ import {
   createSimpleExpression,
   isLiteralWhitelisted,
 } from '@vue/compiler-dom'
-import { type ParseResult, parseExpression } from '@babel/parser'
+import {
+  type BigIntLiteral,
+  type ConditionalExpression,
+  type Expression,
+  type Identifier,
+  type JSXAttribute,
+  type JSXElement,
+  type JSXFragment,
+  type JSXText,
+  type Literal,
+  type LogicalExpression,
+  type Node,
+  type NumericLiteral,
+  type SourceLocation,
+  type SpreadElement,
+  type StringLiteral,
+  isLiteral,
+} from '@babel/types'
 import { EMPTY_EXPRESSION } from './transforms/utils'
 import type { TransformContext } from './transform'
 import type { VaporDirectiveNode } from './ir'
-import type {
-  BigIntLiteral,
-  CallExpression,
-  ConditionalExpression,
-  Expression,
-  JSXAttribute,
-  JSXElement,
-  JSXFragment,
-  LogicalExpression,
-  Node,
-  NumericLiteral,
-  SourceLocation,
-  StringLiteral,
-} from '@babel/types'
 
 import type { MagicString } from '@vue-macros/common'
 
@@ -70,52 +73,109 @@ export function getLiteralExpressionValue(
   return exp.isStatic ? exp.content : null
 }
 
+export const isConstant = (
+  node: Expression | Identifier | Literal | SpreadElement | null,
+): boolean => {
+  if (!node) return false
+  if (node.type === 'Identifier') {
+    return node.name === 'undefined'
+  }
+  if (node.type === 'ArrayExpression') {
+    const { elements } = node
+    return elements.every((element) => element && isConstant(element))
+  }
+  if (node.type === 'ObjectExpression') {
+    return node.properties.every((property) =>
+      isConstant((property as any).value),
+    )
+  }
+  if (
+    node.type === 'TemplateLiteral' ? !node.expressions.length : isLiteral(node)
+  ) {
+    return true
+  }
+  return false
+}
+
+export function isLiteralExpressionContainer(node?: Node | null) {
+  return (
+    node?.type === 'JSXExpressionContainer' &&
+    node.expression.type !== 'JSXEmptyExpression' &&
+    isConstant(node.expression)
+  )
+}
+
+const EMPTY_TEXT_REGEX = /^\s*[\n\r]\s*$/
+const START_EMPTY_TEXT_REGEX = /^\s*[\n\r]/
+const END_EMPTY_TEXT_REGEX = /[\n\r]\s*$/
+export function resolveJSXText(node: JSXText) {
+  if (EMPTY_TEXT_REGEX.test(`${node.extra?.raw}`)) {
+    return ''
+  }
+  let value = node.value
+  if (START_EMPTY_TEXT_REGEX.test(value)) {
+    value = value.trimStart()
+  }
+  if (END_EMPTY_TEXT_REGEX.test(value)) {
+    value = value.trimEnd()
+  }
+  return value
+}
+
+export function isEmptyText(node: Node) {
+  return (
+    (node.type === 'JSXText' && EMPTY_TEXT_REGEX.test(`${node.extra?.raw}`)) ||
+    (node.type === 'JSXExpressionContainer' &&
+      node.expression.type === 'JSXEmptyExpression')
+  )
+}
+
 export function resolveExpression(
   node: Node | undefined | null,
   context: TransformContext,
+  effect = false,
 ): SimpleExpressionNode {
   const isStatic =
     !!node &&
     (node.type === 'StringLiteral' ||
       node.type === 'JSXText' ||
       node.type === 'JSXIdentifier')
-  const source = !node
+  let source = !node
     ? ''
     : node.type === 'JSXIdentifier'
       ? node.name
-      : isStatic
+      : node.type === 'StringLiteral'
         ? node.value
-        : node.type === 'JSXExpressionContainer'
-          ? node.expression.type === 'Identifier'
-            ? node.expression.name
-            : context.ir.source.slice(
-                node.expression.start!,
-                node.expression.end!,
-              )
-          : context.ir.source.slice(node.start!, node.end!)
+        : node.type === 'JSXText'
+          ? resolveJSXText(node)
+          : node.type === 'JSXExpressionContainer'
+            ? node.expression.type === 'JSXEmptyExpression'
+              ? ''
+              : node.expression.type === 'Identifier'
+                ? node.expression.name
+                : context.ir.source.slice(
+                    node.expression.start!,
+                    node.expression.end!,
+                  )
+            : context.ir.source.slice(node.start!, node.end!)
   const location = node ? node.loc : null
-  let ast: false | ParseResult<Expression> = false
-  if (!isStatic && context.options.prefixIdentifiers) {
-    ast = parseExpression(` ${source}`, {
-      sourceType: 'module',
-      plugins: context.options.expressionPlugins,
-    })
+  if (source && !isStatic && effect && !isLiteralExpressionContainer(node)) {
+    source = `() => (${source})`
   }
-  return resolveSimpleExpression(source, isStatic, location, ast)
+  return resolveSimpleExpression(source, isStatic, location)
 }
 
 export function resolveSimpleExpression(
   source: string,
   isStatic: boolean,
   location?: SourceLocation | null,
-  ast?: false | ParseResult<Expression>,
 ) {
   const result = createSimpleExpression(
     source,
     isStatic,
     resolveLocation(location, source),
   )
-  result.ast = ast ?? null
+  result.ast = null
   return result
 }
 
@@ -259,18 +319,6 @@ export function isJSXComponent(node: Node): node is JSXElement {
   }
 }
 
-export function isMapCallExpression(
-  node?: Node | null,
-): node is CallExpression {
-  return (
-    !!node &&
-    node.type === 'CallExpression' &&
-    node.callee.type === 'MemberExpression' &&
-    node.callee.property.type === 'Identifier' &&
-    node.callee.property.name === 'map'
-  )
-}
-
 export function findProp(expression: Expression | undefined, key: string) {
   if (expression?.type === 'JSXElement') {
     for (const attr of expression.openingElement.attributes) {
@@ -330,8 +378,7 @@ export function isJSXExpression(node?: Node | null): boolean {
     !!node &&
     (isJSXElement(node) ||
       isConditionalExpression(node) ||
-      isLogicalExpression(node) ||
-      isMapCallExpression(node))
+      isLogicalExpression(node))
   )
 }
 

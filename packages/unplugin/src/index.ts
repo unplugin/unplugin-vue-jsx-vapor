@@ -1,6 +1,8 @@
 import { type UnpluginFactory, createUnplugin } from 'unplugin'
 import { createFilter, transformWithEsbuild } from 'vite'
+import { normalizePath } from '@vue-macros/common'
 import { transformVueJsxVapor } from './core'
+import { helperPrefix, setTextCode, setTextId } from './core/helper'
 import type { Options } from './types'
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
@@ -30,6 +32,15 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
             },
           }
         },
+      },
+      resolveId(id) {
+        if (normalizePath(id).startsWith(helperPrefix)) return id
+      },
+      loadInclude(id) {
+        return normalizePath(id).startsWith(helperPrefix)
+      },
+      load(id) {
+        if (normalizePath(id) === setTextId) return setTextCode
       },
       transformInclude,
       transform(code, id) {

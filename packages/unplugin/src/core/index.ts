@@ -93,6 +93,17 @@ export function transformVueJsxVapor(
     s.prepend(preambleResult)
   }
 
+  const helpers = ['setText', 'createTextNode'].filter((helper) => {
+    const result = importSet.has(helper)
+    result && importSet.delete(helper)
+    return result
+  })
+  if (helpers.length) {
+    s.prepend(
+      `import { ${helpers.map((i) => `${i} as _${i}`)} } from 'unplugin-vue-jsx-vapor/helper/setText';\n`,
+    )
+  }
+
   const importResult = Array.from(importSet).map((i) => `${i} as _${i}`)
   if (importResult.length)
     s.prepend(`import { ${importResult} } from 'vue/vapor';\n`)

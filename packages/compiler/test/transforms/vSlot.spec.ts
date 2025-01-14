@@ -35,12 +35,11 @@ describe('compiler: transform slot', () => {
   test('implicit default slot', () => {
     const { ir, code } = compileWithSlots(`<Comp><div/></Comp>`)
     expect(code).toMatchInlineSnapshot(`
-      "import { resolveComponent as _resolveComponent, createComponent as _createComponent, template as _template } from 'vue/vapor';
+      "import { createComponent as _createComponent, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
-        const _component_Comp = _resolveComponent("Comp")
-        const n1 = _createComponent(_component_Comp, null, [
+        const n1 = _createComponent(Comp, null, [
           {
             "default": () => {
               const n0 = t0()
@@ -62,7 +61,6 @@ describe('compiler: transform slot', () => {
   test('on-component default slot', () => {
     const { code } = compileWithSlots(
       `<Comp v-slots={{ default: ({ foo })=> <>{ foo + bar }</> }}></Comp>`,
-      { prefixIdentifiers: false },
     )
     expect(code).toMatchInlineSnapshot(`
       "import { createComponent as _createComponent } from 'vue/vapor';

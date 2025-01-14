@@ -48,22 +48,16 @@ export function compile(
   const isModuleMode = options.mode === 'module'
   const __BROWSER__ = false
   /* istanbul ignore if */
-  if (__BROWSER__) {
-    if (options.prefixIdentifiers === true) {
-      onError(createCompilerError(ErrorCodes.X_PREFIX_ID_NOT_SUPPORTED))
-    } else if (isModuleMode) {
-      onError(createCompilerError(ErrorCodes.X_MODULE_MODE_NOT_SUPPORTED))
-    }
+  if (__BROWSER__ && isModuleMode) {
+    onError(createCompilerError(ErrorCodes.X_MODULE_MODE_NOT_SUPPORTED))
   }
-
-  const prefixIdentifiers = !__BROWSER__ && options.prefixIdentifiers === true
 
   if (options.scopeId && !isModuleMode) {
     onError(createCompilerError(ErrorCodes.X_SCOPE_ID_NOT_SUPPORTED))
   }
 
   const resolvedOptions = extend({}, options, {
-    prefixIdentifiers,
+    prefixIdentifiers: false,
     expressionPlugins: options.expressionPlugins || ['jsx'],
   })
   if (!__BROWSER__ && options.isTS) {
@@ -102,8 +96,7 @@ export function compile(
     helpers: new Set(),
     temps: 0,
   }
-  const [nodeTransforms, directiveTransforms] =
-    getBaseTransformPreset(prefixIdentifiers)
+  const [nodeTransforms, directiveTransforms] = getBaseTransformPreset()
 
   const ir = transform(
     ast,
@@ -129,9 +122,7 @@ export type TransformPreset = [
   Record<string, DirectiveTransform>,
 ]
 
-export function getBaseTransformPreset(
-  prefixIdentifiers?: boolean,
-): TransformPreset {
+export function getBaseTransformPreset(): TransformPreset {
   return [
     [
       transformTemplateRef,

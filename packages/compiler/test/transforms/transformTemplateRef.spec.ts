@@ -11,7 +11,6 @@ import { makeCompile } from './_utils'
 
 const compileWithTransformRef = makeCompile({
   nodeTransforms: [transformTemplateRef, transformElement, transformChildren],
-  prefixIdentifiers: false,
 })
 
 describe('compiler: template ref transform', () => {

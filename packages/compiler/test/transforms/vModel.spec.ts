@@ -26,8 +26,8 @@ describe('compiler: vModel transform', () => {
 
       export function render(_ctx) {
         const n0 = t0()
-        _withDirectives(n0, [[_vModelText, () => _ctx.model]])
-        _delegate(n0, "update:modelValue", () => $event => (_ctx.model = $event))
+        _withDirectives(n0, [[_vModelText, () => model]])
+        _delegate(n0, "update:modelValue", () => $event => (model = $event))
         return n0
       }"
     `)

@@ -6,7 +6,6 @@ export function compile(template: string, options: CompilerOptions = {}) {
   return _compile(template, {
     ...options,
     mode: 'module',
-    prefixIdentifiers: true,
   })
 }
 
@@ -21,7 +20,7 @@ describe('compile', () => {
     )
     expect(code).toMatchInlineSnapshot(`
       "import { template as _template } from 'vue/vapor';
-      const t0 = _template("<div><div>hello</div> <input> <span></span></div>")
+      const t0 = _template("<div><div>hello</div><input><span></span></div>")
 
       export function render(_ctx) {
         const n0 = t0()
@@ -45,13 +44,12 @@ describe('compile', () => {
   test('dynamic root', () => {
     const { code } = compile(`<div>{a +b +       c }</div>`)
     expect(code).toMatchInlineSnapshot(`
-      "import { setText as _setText, renderEffect as _renderEffect, template as _template } from 'vue/vapor';
+      "import { setText as _setText, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
         const n0 = t0()
-        let _a, _b, _c
-        _renderEffect(() => (_a !== _ctx.a || _b !== _ctx.b || _c !== _ctx.c) && _setText(n0, (_a = _ctx.a) +(_b = _ctx.b) +       (_c = _ctx.c)))
+        _setText(n0, () => (a +b +       c))
         return n0
       }"
     `)
@@ -61,17 +59,14 @@ describe('compile', () => {
     test('interpolation', () => {
       const { code } = compile(`<>{ a + b }</>`, {
         inline: true,
-        bindingMetadata: {
-          b: BindingTypes.SETUP_REF,
-        },
       })
       expect(code).toMatchInlineSnapshot(`
         "((_ctx) => {
-          const n0 = _createTextNode(() => [a + b.value])
+          const n0 = _createTextNode([() => (a + b)])
           return n0
         })()"
       `)
-      expect(code).contains('a + b.value')
+      expect(code).contains('a + b')
     })
   })
 })

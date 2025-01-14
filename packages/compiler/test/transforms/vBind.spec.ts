@@ -26,8 +26,7 @@ describe('compiler v-bind', () => {
       export function render(_ctx) {
         const n0 = t0()
         _setInheritAttrs(["id"])
-        let _id
-        _renderEffect(() => _id !== _ctx.id && _setDOMProp(n0, "id", (_id = _ctx.id)))
+        _renderEffect(() => _setDOMProp(n0, "id", id))
         return n0
       }"
     `)
