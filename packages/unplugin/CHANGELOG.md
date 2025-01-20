@@ -1,5 +1,13 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.1
+
+### Patch Changes
+
+- support browser environments
+- Updated dependencies
+  - @vue-jsx-vapor/compiler@0.1.1
+
 ## 1.2.0
 
 ### Minor Changes

@@ -3,7 +3,7 @@ import Raw from 'unplugin-raw/esbuild'
 import type { Options } from 'tsup'
 
 export default {
-  entry: ['./src/*.ts', './src/core/index.ts', './src/core/helper/index.ts'],
+  entry: ['./src/*.ts'],
   clean: true,
   format: ['cjs', 'esm'],
   watch: !!process.env.DEV,

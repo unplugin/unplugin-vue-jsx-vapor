@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.1.1
+
+### Patch Changes
+
+- support browser environments
+
 ## 0.1.0
 
 ### Minor Changes

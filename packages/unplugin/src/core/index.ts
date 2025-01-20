@@ -6,11 +6,13 @@ import {
 } from '@vue-macros/common'
 import { compile } from '@vue-jsx-vapor/compiler'
 import MagicStringStack from 'magic-string-stack'
-import { helperId } from './helper'
+import * as helper from './helper'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { Options } from '../types'
 
-export * from './helper'
+export const helperCode = helper.helperCode
+export const helperId = helper.helperId
+export const helperPrefix = helper.helperPrefix
 
 export function transformVueJsxVapor(
   code: string,
@@ -40,6 +42,7 @@ export function transformVueJsxVapor(
     })
 
     for (const node of rootNodes) {
+      // @ts-ignore
       let { code, vaporHelpers, preamble } = compile(
         s.slice(node.start!, node.end!),
         {
@@ -73,7 +76,7 @@ export function transformVueJsxVapor(
       }
 
       for (const [, events] of preamble.matchAll(/_delegateEvents\((.*)\)/g)) {
-        events.split(', ').forEach((event) => delegateEventSet.add(event))
+        events.split(', ').forEach((event: any) => delegateEventSet.add(event))
       }
 
       s.overwrite(node.start!, node.end!, code)
