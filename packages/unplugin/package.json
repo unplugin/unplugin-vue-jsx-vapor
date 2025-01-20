@@ -68,9 +68,9 @@
       "import": "./dist/nuxt.js"
     },
     "./api": {
-      "dev": "./src/api/index.ts",
-      "require": "./dist/api/index.cjs",
-      "import": "./dist/api/index.js"
+      "dev": "./src/api.ts",
+      "require": "./dist/api.cjs",
+      "import": "./dist/api.js"
     },
     "./*": "./*"
   },
@@ -116,8 +116,8 @@
       "import": "./dist/nuxt.js"
     },
     "./api": {
-      "require": "./dist/api/index.cjs",
-      "import": "./dist/api/index.js"
+      "require": "./dist/api.cjs",
+      "import": "./dist/api.js"
     },
     "./*": "./*"
   },
