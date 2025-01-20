@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.2
+
+### Patch Changes
+
+- export api
+
 ## 1.2.1
 
 ### Patch Changes
