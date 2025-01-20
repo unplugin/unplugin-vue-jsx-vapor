@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.3
+
+### Patch Changes
+
+- correct export path for api
+
 ## 1.2.2
 
 ### Patch Changes
