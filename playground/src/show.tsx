@@ -6,7 +6,7 @@ export default () => {
   return (
     <>
       <input v-model={show.value} type="checkbox" />
-      <span v-show={show.value}>{show.value}</span>
+      <span v-show={show.value}>{String(show.value)}</span>
     </>
   )
 }

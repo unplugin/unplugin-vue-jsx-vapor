@@ -3,12 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --port 5174"
+    "dev": "node vite.js --port 5174"
   },
   "devDependencies": {
     "unplugin-vue-jsx-vapor": "workspace:*",
     "unplugin-vue-macros": "https://pkg.pr.new/vue-macros/vue-macros/unplugin-vue-macros@f4ebeab",
     "vite": "^6.0.0",
+    "vite-hyper-config": "^0.5.0",
     "vite-plugin-inspect": "^0.8.4",
     "vue": "catalog:"
   }

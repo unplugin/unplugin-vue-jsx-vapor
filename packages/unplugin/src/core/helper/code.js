@@ -1,10 +1,8 @@
 import { effectScope, insert, remove, renderEffect } from 'vue/vapor'
-import { toDisplayString } from 'vue'
 
-const fragmentKey = Symbol('')
 function createFragment(nodes) {
   const fragment = [nodes, document.createTextNode('')]
-  fragment[fragmentKey] = true
+  fragment._fragmentKey = true
   return fragment
 }
 
@@ -12,16 +10,16 @@ function isFragment(node) {
   return (
     node &&
     typeof node === 'object' &&
-    (node[fragmentKey] || (node.nodes && node.anchor))
+    (node._fragmentKey || (node.nodes && node.anchor))
   )
 }
 
 function getFragmentNodes(fragment) {
-  return fragment[fragmentKey] ? fragment[0] : fragment.nodes
+  return fragment._fragmentKey ? fragment[0] : fragment.nodes
 }
 
 function getFragmentAnchor(fragment) {
-  return fragment[fragmentKey] ? fragment[1] : fragment.anchor
+  return fragment._fragmentKey ? fragment[1] : fragment.anchor
 }
 
 function normalizeValue(value) {
@@ -31,7 +29,7 @@ function normalizeValue(value) {
       ? value
       : Array.isArray(value)
         ? createFragment(value.map(normalizeValue))
-        : document.createTextNode(toDisplayString(value))
+        : document.createTextNode(String(value))
 }
 
 function resolveValue(current, value) {

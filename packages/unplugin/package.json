@@ -67,6 +67,11 @@
       "require": "./dist/nuxt.cjs",
       "import": "./dist/nuxt.js"
     },
+    "./core": {
+      "dev": "./src/core/index.ts",
+      "require": "./dist/core/index.cjs",
+      "import": "./dist/core/index.js"
+    },
     "./*": "./*"
   },
   "typesVersions": {
@@ -110,6 +115,10 @@
       "require": "./dist/nuxt.cjs",
       "import": "./dist/nuxt.js"
     },
+    "./core": {
+      "require": "./dist/core/index.cjs",
+      "import": "./dist/core/index.js"
+    },
     "./*": "./*"
   },
   "scripts": {
@@ -151,7 +160,7 @@
   },
   "dependencies": {
     "@vue-jsx-vapor/compiler": "workspace:*",
-    "@vue-macros/common": "^1.10.4",
+    "@vue-macros/common": "^1.16.1",
     "magic-string-stack": "^0.1.1",
     "unplugin": "^1.11.0"
   },

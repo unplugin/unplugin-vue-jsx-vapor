@@ -36,14 +36,17 @@ describe('compiler: children transform', () => {
   })
 
   test('comments', () => {
-    const { code } = compileWithElementTransform('<div>{/*bar*/}</div>')
+    const { code } = compileWithElementTransform(
+      '<>{/*foo*/}<div>{/*bar*/}</div></>',
+    )
     expect(code).toMatchInlineSnapshot(`
-      "import { template as _template } from 'vue/vapor';
+      "import { createTextNode as _createTextNode, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
-        const n0 = t0()
-        return n0
+        const n1 = t0()
+        const n0 = _createTextNode([])
+        return [n0, n1]
       }"
     `)
   })

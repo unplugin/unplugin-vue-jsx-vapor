@@ -9,22 +9,22 @@ describe('transform', () => {
       'index.tsx',
     )!
     expect(code).toMatchInlineSnapshot(`
-      "import { delegate as _delegate,delegateEvents as _delegateEvents,template as _template,createIf as _createIf } from 'vue/vapor';
-      const _00 = _template("<div>Hello</div>")
-      const _11 = _template("<div>World</div>")
+      "import { delegate as _delegate, delegateEvents as _delegateEvents, template as _template, createIf as _createIf } from 'vue/vapor';
+      const _t00 = _template("<div>Hello</div>")
+      const _t11 = _template("<div>World</div>")
       _delegateEvents("click", "dblclick");
-      const a = ((_ctx: any) => {
-        const n0 = _00()
+      const a = (() => {
+        const n0 = _t00()
         _delegate(n0, "click", () => onClick)
         return n0
       })()
-             const b = ((_ctx: any) => {
+             const b = (() => {
         const n0 = _createIf(() => (foo), () => {
-          const n2 = _00()
+          const n2 = _t00()
           _delegate(n2, "click", () => onClick)
           return n2
         }, () => {
-          const n4 = _11()
+          const n4 = _t11()
           _delegate(n4, "dblclick", () => onDblclick)
           return n4
         })

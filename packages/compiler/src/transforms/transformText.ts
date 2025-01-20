@@ -65,14 +65,11 @@ function processTextLike(context: TransformContext<JSXExpressionContainer>) {
   const idx = nexts.findIndex((n) => !isTextLike(n))
   const nodes = (idx > -1 ? nexts.slice(0, idx) : nexts) as Array<TextLike>
 
-  const values = createTextLikeExpressions(nodes, context)
-  if (!values.length) return
-
   context.dynamic.flags |= DynamicFlag.INSERT | DynamicFlag.NON_TEMPLATE
   context.registerOperation({
     type: IRNodeTypes.CREATE_TEXT_NODE,
     id: context.reference(),
-    values,
+    values: createTextLikeExpressions(nodes, context),
     effect: false,
   })
 }
@@ -82,8 +79,6 @@ function processTextLikeContainer(
   context: TransformContext<JSXElement>,
 ) {
   const values = createTextLikeExpressions(children, context)
-  if (!values.length) return
-
   const literals = values.map(getLiteralExpressionValue)
   if (literals.every((l) => l != null)) {
     context.childrenTemplate = literals.map((l) => String(l))
@@ -102,8 +97,8 @@ function createTextLikeExpressions(
 ) {
   const values = []
   for (const node of nodes) {
-    if (isEmptyText(node)) continue
     seen.get(context.root)!.add(node)
+    if (isEmptyText(node)) continue
     values.push(resolveExpression(node, context, true))
   }
   return values

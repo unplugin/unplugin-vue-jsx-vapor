@@ -4,10 +4,13 @@ import {
   getLang,
   walkAST,
 } from '@vue-macros/common'
-import MagicStringStack from 'magic-string-stack'
 import { compile } from '@vue-jsx-vapor/compiler'
+import MagicStringStack from 'magic-string-stack'
+import { helperId } from './helper'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { Options } from '../types'
+
+export * from './helper'
 
 export function transformVueJsxVapor(
   code: string,
@@ -51,13 +54,15 @@ export function transformVueJsxVapor(
 
       preamble = preamble.replaceAll(
         /(?<=const )t(?=(\d))/g,
-        `_${preambleIndex}`,
+        `_t${preambleIndex}`,
       )
-      code = code.replaceAll(/(?<== )t(?=\d)/g, `_${preambleIndex}`)
+      code = code
+        .replaceAll(/(?<== )t(?=\d)/g, `_t${preambleIndex}`)
+        .replaceAll('_ctx: any', '')
       preambleIndex++
 
       for (const [, key, value] of preamble.matchAll(
-        /const (_\d+) = (_template\(.*\))/g,
+        /const (_t\d+) = (_template\(.*\))/g,
       )) {
         const result = preambleMap.get(value)
         if (result) {
@@ -100,19 +105,19 @@ export function transformVueJsxVapor(
   })
   if (helpers.length) {
     s.prepend(
-      `import { ${helpers.map((i) => `${i} as _${i}`)} } from 'unplugin-vue-jsx-vapor/helper/setText';\n`,
+      `import { ${helpers.map((i) => `${i} as _${i}`).join(', ')} } from '${helperId}';\n`,
     )
   }
 
-  const importResult = Array.from(importSet).map((i) => `${i} as _${i}`)
+  const importResult = Array.from(importSet)
+    .map((i) => `${i} as _${i}`)
+    .join(', ')
   if (importResult.length)
     s.prepend(`import { ${importResult} } from 'vue/vapor';\n`)
 
-  return generateTransform(s, id)
+  return generateTransform(s as any, id)
 }
 
-export function isJSXElement(
-  node?: Node | null,
-): node is JSXElement | JSXFragment {
+function isJSXElement(node?: Node | null): node is JSXElement | JSXFragment {
   return !!node && (node.type === 'JSXElement' || node.type === 'JSXFragment')
 }
