@@ -1,5 +1,13 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.4
+
+### Patch Changes
+
+- expose plugin from api.ts
+- Updated dependencies
+  - @vue-jsx-vapor/compiler@0.1.2
+
 ## 1.2.3
 
 ### Patch Changes

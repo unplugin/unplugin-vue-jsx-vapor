@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.1.2
+
+### Patch Changes
+
+- expose plugin from api.ts
+
 ## 0.1.1
 
 ### Patch Changes
