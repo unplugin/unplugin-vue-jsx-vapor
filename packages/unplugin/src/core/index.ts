@@ -10,6 +10,7 @@ import * as helper from './helper'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { Options } from '../types'
 
+export type { Options }
 export const helperCode = helper.helperCode
 export const helperId = helper.helperId
 export const helperPrefix = helper.helperPrefix

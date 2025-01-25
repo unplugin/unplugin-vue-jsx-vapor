@@ -1,6 +1,6 @@
 {
-  "packageManager": "pnpm@9.15.1",
-  "description": "Convert Vue JSX to Vapor",
+  "packageManager": "pnpm@10.0.0",
+  "description": "Vue JSX Vapor",
   "type": "module",
   "keywords": [
     "unplugin",
