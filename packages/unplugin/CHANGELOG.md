@@ -1,5 +1,13 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.5
+
+### Patch Changes
+
+- remove any
+- Updated dependencies
+  - @vue-jsx-vapor/compiler@0.1.3
+
 ## 1.2.4
 
 ### Patch Changes
