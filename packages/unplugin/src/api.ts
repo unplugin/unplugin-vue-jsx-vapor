@@ -6,7 +6,7 @@ import type { UnpluginFactory } from 'unplugin'
 
 export * from './core'
 
-const unplugin: UnpluginFactory<Options | undefined> = (
+const unplugin: UnpluginFactory<Options | undefined, false> = (
   options: Options = {},
 ) => {
   const transformInclude = createFilter({

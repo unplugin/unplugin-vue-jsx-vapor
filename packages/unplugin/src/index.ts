@@ -4,9 +4,10 @@ import transformVueJsxVapor, { type Options } from './api'
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   options = {},
+  meta,
 ) => {
   return [
-    transformVueJsxVapor,
+    transformVueJsxVapor(options, meta),
     {
       name: 'unplugin-esbuild',
       transformInclude: createFilter(

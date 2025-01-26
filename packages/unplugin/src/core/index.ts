@@ -63,6 +63,7 @@ export function transformVueJsxVapor(
       code = code
         .replaceAll(/(?<== )t(?=\d)/g, `_t${preambleIndex}`)
         .replaceAll('_ctx: any', '')
+        .replaceAll('$event: any', '$event')
       preambleIndex++
 
       for (const [, key, value] of preamble.matchAll(
