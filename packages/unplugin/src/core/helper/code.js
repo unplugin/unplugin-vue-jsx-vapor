@@ -1,31 +1,24 @@
-import { effectScope, insert, remove, renderEffect } from 'vue/vapor'
+import {
+  createBranch,
+  effectScope,
+  insert,
+  remove,
+  renderEffect,
+} from 'vue/vapor'
 
+const fragmentKey = Object.getOwnPropertySymbols(createBranch(() => {}))[0]
 function createFragment(nodes) {
-  const fragment = [nodes, document.createTextNode('')]
-  fragment._fragmentKey = true
-  return fragment
-}
-
-function isFragment(node) {
-  return (
-    node &&
-    typeof node === 'object' &&
-    (node._fragmentKey || (node.nodes && node.anchor))
-  )
-}
-
-function getFragmentNodes(fragment) {
-  return fragment._fragmentKey ? fragment[0] : fragment.nodes
-}
-
-function getFragmentAnchor(fragment) {
-  return fragment._fragmentKey ? fragment[1] : fragment.anchor
+  return {
+    nodes,
+    anchor: document.createTextNode(''),
+    [fragmentKey]: true,
+  }
 }
 
 function normalizeValue(value) {
   return value == null || typeof value === 'boolean'
     ? document.createTextNode('')
-    : value instanceof Node || isFragment(value)
+    : value instanceof Node || value[fragmentKey]
       ? value
       : Array.isArray(value)
         ? createFragment(value.map(normalizeValue))
@@ -35,15 +28,15 @@ function normalizeValue(value) {
 function resolveValue(current, value) {
   const node = normalizeValue(value)
   if (current) {
-    if (isFragment(current)) {
-      const anchor = getFragmentAnchor(current)
+    if (current[fragmentKey]) {
+      const { anchor } = current
       if (anchor.parentNode) {
-        remove(getFragmentNodes(current), anchor.parentNode)
+        remove(current.nodes, anchor.parentNode)
         insert(node, anchor.parentNode, anchor)
         anchor.remove()
       }
     } else if (current.nodeType) {
-      if (isFragment(node) && current.parentNode) {
+      if (node[fragmentKey] && current.parentNode) {
         insert(node, current.parentNode, current)
         current.remove()
       } else if (current.nodeType === 3 && node.nodeType === 3) {
