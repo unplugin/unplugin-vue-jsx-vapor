@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.6
+
+### Patch Changes
+
+- use fragmentKey for helper
+
 ## 1.2.5
 
 ### Patch Changes
