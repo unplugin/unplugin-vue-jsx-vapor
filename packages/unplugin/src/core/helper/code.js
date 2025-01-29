@@ -1,10 +1,4 @@
-import {
-  createBranch,
-  effectScope,
-  insert,
-  remove,
-  renderEffect,
-} from 'vue/vapor'
+import { createBranch, insert, remove, renderEffect } from 'vue/vapor'
 
 const fragmentKey = Object.getOwnPropertySymbols(createBranch(() => {}))[0]
 function createFragment(nodes) {
@@ -52,17 +46,18 @@ function resolveValue(current, value) {
 
 function resolveValues(values) {
   const nodes = []
-  const scopes = []
+  // const scopes = []
   for (const [index, value] of values.entries()) {
     if (typeof value === 'function') {
       renderEffect(() => {
-        if (scopes[index]) {
-          scopes[index].stop()
-        }
-        scopes[index] = effectScope()
-        scopes[index].run(() => {
-          nodes[index] = resolveValue(nodes[index], value())
-        })
+        // TODO effectScope cannot be used together with createFor
+        // if (scopes[index]) {
+        //   scopes[index].stop()
+        // }
+        // scopes[index] = effectScope()
+        // scopes[index].run(() => {
+        nodes[index] = resolveValue(nodes[index], value())
+        // })
       })
     } else {
       nodes[index] = resolveValue(nodes[index], value)
