@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.7
+
+### Patch Changes
+
+- remove effectScope for helper code
+
 ## 1.2.6
 
 ### Patch Changes
