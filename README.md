@@ -20,8 +20,10 @@ function Comp({ foo }) {
   return <div>{foo}</div>
 }
 
-const foo = ref('foo')
-export default <Comp foo={foo.value} />
+export default () => {
+  const foo = ref('foo')
+  return <Comp foo={foo.value} />
+}
 ```
 
 #### Two Solutions
@@ -33,8 +35,10 @@ function Comp({ foo }) {
   return <div>{foo.value}</div>
 }
 
-const foo = ref('foo')
-export default <Comp foo={foo} />
+export default () => {
+  const foo = ref('foo')
+  return <Comp foo={foo} />
+}
 ```
 
 2. ✅ Use the `defineComponent` macro from [@vue-macros/jsx-macros](https://github.com/vue-macros/vue-macros/pull/794) to wrapping.
@@ -48,8 +52,10 @@ const Comp = defineComponent((_props) => {
   return <>{_props.foo}</>
 }, { props: ['foo'] })
 
-const foo = ref('foo')
-export default <Comp foo={foo.value} />
+export default () => {
+  const foo = ref('foo')
+  return <Comp foo={foo.value} />
+}
 ```
 
 <details>
