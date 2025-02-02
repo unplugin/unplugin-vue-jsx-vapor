@@ -1,13 +1,14 @@
 import { type UnpluginFactory, createUnplugin } from 'unplugin'
 import { createFilter, transformWithEsbuild } from 'vite'
-import transformVueJsxVapor, { type Options } from './api'
+import { plugin } from './core/plugin'
+import type { Options } from './types'
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   options = {},
   meta,
 ) => {
   return [
-    transformVueJsxVapor(options, meta),
+    plugin(options, meta),
     {
       name: 'unplugin-esbuild',
       transformInclude: createFilter(

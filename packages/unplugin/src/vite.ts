@@ -1,4 +1,4 @@
-import { createVitePlugin } from 'unplugin'
-import { unpluginFactory } from '.'
+import { createRollupPlugin } from 'unplugin'
+import Raw from './raw'
 
-export default createVitePlugin(unpluginFactory)
+export default createRollupPlugin(Raw)

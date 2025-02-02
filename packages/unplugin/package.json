@@ -72,6 +72,11 @@
       "require": "./dist/api.cjs",
       "import": "./dist/api.js"
     },
+    "./raw": {
+      "dev": "./src/raw.ts",
+      "require": "./dist/raw.cjs",
+      "import": "./dist/raw.js"
+    },
     "./*": "./*"
   },
   "typesVersions": {
@@ -118,6 +123,10 @@
     "./api": {
       "require": "./dist/api.cjs",
       "import": "./dist/api.js"
+    },
+    "./raw": {
+      "require": "./dist/raw.cjs",
+      "import": "./dist/raw.js"
     },
     "./*": "./*"
   },
