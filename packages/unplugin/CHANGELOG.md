@@ -1,5 +1,12 @@
 # unplugin-vue-jsx-vapor
 
+## 1.2.8
+
+### Patch Changes
+
+- 4dc2ffc: expose raw to support browser environments
+- dfb640b: add effectScope for helper code
+
 ## 1.2.7
 
 ### Patch Changes
