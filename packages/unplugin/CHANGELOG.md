@@ -1,5 +1,17 @@
 # unplugin-vue-jsx-vapor
 
+## 1.3.0
+
+### Minor Changes
+
+- introducing babel-plugin
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-jsx-vapor/compiler@0.1.4
+  - @vue-jsx-vapor/babel@0.0.1
+
 ## 1.2.8
 
 ### Patch Changes

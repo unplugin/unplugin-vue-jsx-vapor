@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.1.4
+
+### Patch Changes
+
+- introducing babel-plugin
+
 ## 0.1.3
 
 ### Patch Changes
