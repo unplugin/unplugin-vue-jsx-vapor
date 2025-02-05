@@ -13,7 +13,6 @@ import {
 } from '@vue/compiler-dom'
 import {
   type BigIntLiteral,
-  type ConditionalExpression,
   type Expression,
   type Identifier,
   type JSXAttribute,
@@ -21,7 +20,6 @@ import {
   type JSXFragment,
   type JSXText,
   type Literal,
-  type LogicalExpression,
   type Node,
   type NumericLiteral,
   type SourceLocation,
