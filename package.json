@@ -22,7 +22,7 @@
     "dev": "pnpm run --filter=\"./packages/*\" --parallel dev",
     "build": "pnpm run --filter=\"./packages/*\" build",
     "typecheck": "tsc --noEmit",
-    "release": "pnpm changeset version && git add . && git commit -m \"chore: bump\" && pnpm build && changeset publish",
+    "release": "pnpm changeset version && git add . && git commit -m \"chore: bump\" && pnpm build && pnpm changeset publish",
     "lint": "eslint .",
     "play": "npm -C playground run dev",
     "test": "vitest"

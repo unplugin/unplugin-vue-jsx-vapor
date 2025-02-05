@@ -15,6 +15,9 @@ catalogs:
     '@babel/types':
       specifier: ^7.26.7
       version: 7.26.7
+    '@types/babel__core':
+      specifier: ^7.20.5
+      version: 7.20.5
     '@vue/compiler-core':
       specifier: https://pkg.pr.new/vuejs/vue-vapor/@vue/compiler-core@9f73dbf
       version: 3.5.13
@@ -112,7 +115,7 @@ importers:
         version: link:../compiler
     devDependencies:
       '@types/babel__core':
-        specifier: ^7.20.5
+        specifier: 'catalog:'
         version: 7.20.5
       '@types/babel__generator':
         specifier: ^7.6.8
@@ -184,6 +187,9 @@ importers:
       '@nuxt/schema':
         specifier: ^3.12.3
         version: 3.12.3(rollup@4.18.0)(webpack-sources@3.2.3)
+      '@types/babel__core':
+        specifier: 'catalog:'
+        version: 7.20.5
       rollup:
         specifier: ^4.18.0
         version: 4.18.0
