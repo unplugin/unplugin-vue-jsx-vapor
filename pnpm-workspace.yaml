@@ -5,8 +5,9 @@ catalog:
   '@vue/runtime-vapor': https://pkg.pr.new/vuejs/vue-vapor/@vue/runtime-vapor@9f73dbf
   '@vue/shared': https://pkg.pr.new/vuejs/vue-vapor/@vue/shared@9f73dbf
   vue: https://pkg.pr.new/vuejs/vue-vapor/vue@9f73dbf
-  '@babel/types': ^7.26.3
-  '@babel/parser': ^7.26.3
+  '@babel/types': ^7.26.7
+  '@babel/core': ^7.26.7
+  '@babel/parser': ^7.26.7
 packages:
   - packages/*
   - playground

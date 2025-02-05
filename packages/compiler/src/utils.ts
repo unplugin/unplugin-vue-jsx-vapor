@@ -373,30 +373,8 @@ export function overwrite(
   }
 }
 
-export function isJSXExpression(node?: Node | null): boolean {
-  return (
-    !!node &&
-    (isJSXElement(node) ||
-      isConditionalExpression(node) ||
-      isLogicalExpression(node))
-  )
-}
-
 export function isJSXElement(
   node?: Node | null,
 ): node is JSXElement | JSXFragment {
   return !!node && (node.type === 'JSXElement' || node.type === 'JSXFragment')
-}
-
-export function isConditionalExpression(
-  node: Node,
-): node is ConditionalExpression {
-  return (
-    node.type === 'ConditionalExpression' &&
-    (isJSXExpression(node.consequent) || isJSXExpression(node.alternate))
-  )
-}
-
-export function isLogicalExpression(node: Node): node is LogicalExpression {
-  return node.type === 'LogicalExpression' && isJSXExpression(node.right)
 }
