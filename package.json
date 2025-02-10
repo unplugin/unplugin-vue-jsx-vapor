@@ -1,5 +1,5 @@
 {
-  "packageManager": "pnpm@10.0.0",
+  "packageManager": "pnpm@10.2.1",
   "description": "Vue JSX Vapor",
   "type": "module",
   "keywords": [
@@ -45,5 +45,10 @@
     "typescript": "^5.7.0",
     "unplugin": "^1.11.0",
     "vitest": "^1.6.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "estree-walker": "2.0.2"
+    }
   }
 }

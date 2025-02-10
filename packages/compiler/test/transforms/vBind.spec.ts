@@ -20,7 +20,7 @@ describe('compiler v-bind', () => {
   test('basic', () => {
     const { ir, code } = compileWithVBind(`<div id={id}/>`)
     expect(code).toMatchInlineSnapshot(`
-      "import { setInheritAttrs as _setInheritAttrs, setDOMProp as _setDOMProp, renderEffect as _renderEffect, template as _template } from 'vue/vapor';
+      "import { setInheritAttrs as _setInheritAttrs, renderEffect as _renderEffect, setDOMProp as _setDOMProp, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
@@ -69,8 +69,8 @@ describe('compiler v-bind', () => {
                 isStatic: false,
                 loc: {
                   source: 'id',
-                  start: { line: 1, column: 9, offset: 8 },
-                  end: { line: 1, column: 13, offset: 12 },
+                  start: { line: 1, column: 10, offset: 9 },
+                  end: { line: 1, column: 12, offset: 11 },
                 },
               },
             ],

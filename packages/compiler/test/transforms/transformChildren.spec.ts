@@ -85,7 +85,7 @@ describe('compiler: children transform', () => {
   test('{...obj}', () => {
     const { code, ir } = compileWithElementTransform(`<div {...obj} />`)
     expect(code).toMatchInlineSnapshot(`
-      "import { setInheritAttrs as _setInheritAttrs, setDynamicProps as _setDynamicProps, renderEffect as _renderEffect, template as _template } from 'vue/vapor';
+      "import { setInheritAttrs as _setInheritAttrs, renderEffect as _renderEffect, setDynamicProps as _setDynamicProps, template as _template } from 'vue/vapor';
       const t0 = _template("<div></div>")
 
       export function render(_ctx) {
