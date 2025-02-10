@@ -22,6 +22,7 @@ export function transformVueJsxVapor(
         ? [babelTypescript, { isTSX: true, allowExtensions: true }]
         : null,
     ].filter((i) => i !== null),
+    filename: id,
     sourceMaps: true,
     sourceFileName: id,
     babelrc: false,
