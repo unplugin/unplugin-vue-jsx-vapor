@@ -4,7 +4,7 @@
 
 Vue JSX Vapor.
 
-[Playground](https://stackblitz.com/github/unplugin/unplugin-vue-jsx-vapor?file=playground%2FApp.vue)
+[REPL](https://repl.zmjs.dev/?preset=vue-jsx-vapor)
 
 ## Install
 
