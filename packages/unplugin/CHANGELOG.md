@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 1.3.2
+
+### Patch Changes
+
+- add filename option for source map
+
 ## 1.3.1
 
 ### Patch Changes
