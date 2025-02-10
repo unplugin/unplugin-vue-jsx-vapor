@@ -1,6 +1,6 @@
 // @ts-ignore
 import SyntaxJSX from '@babel/plugin-syntax-jsx'
-import template from '@babel/template'
+import { parse } from '@babel/parser'
 import { transformJSX } from './transform'
 import type { CompilerOptions } from '@vue-jsx-vapor/compiler'
 import type { Visitor } from '@babel/core'
@@ -73,7 +73,10 @@ export default (): {
             statements.unshift(`import { ${importResult} } from 'vue/vapor';\n`)
           }
 
-          path.node.body.unshift(...[template(statements.join('\n'))()].flat())
+          path.node.body.unshift(
+            ...parse(statements.join('\n'), { sourceType: 'module' }).program
+              .body,
+          )
         },
       },
     },

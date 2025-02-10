@@ -57,10 +57,12 @@
   "dependencies": {
     "@babel/core": "catalog:",
     "@babel/generator": "^7.26.5",
+    "@babel/parser": "catalog:",
     "@babel/plugin-syntax-jsx": "^7.25.9",
-    "@babel/template": "^7.25.9",
+    "@babel/traverse": "^7.26.7",
     "@babel/types": "catalog:",
-    "@vue-jsx-vapor/compiler": "workspace:*"
+    "@vue-jsx-vapor/compiler": "workspace:*",
+    "source-map-js": "^1.2.1"
   },
   "devDependencies": {
     "@types/babel__core": "catalog:",

@@ -1,8 +1,13 @@
 import { compile } from '@vue-jsx-vapor/compiler'
 import generate from '@babel/generator'
+import { parse } from '@babel/parser'
+import { SourceMapConsumer } from 'source-map-js'
+import traverse, {
+  type NodePath,
+  type VisitNodeFunction,
+} from '@babel/traverse'
 import type { Opts } from '.'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
-import type { NodePath, VisitNodeFunction } from '@babel/traverse'
 
 export const transformJSX: VisitNodeFunction<
   {
@@ -22,13 +27,17 @@ export const transformJSX: VisitNodeFunction<
     return
   }
 
-  let { code, vaporHelpers, preamble } = compile(generate(node).code, {
-    mode: 'module',
-    inline: true,
-    isTS: state.filename?.endsWith('tsx'),
-    filename: 'index.tsx',
-    ...state.opts?.compile,
-  })
+  let { code, vaporHelpers, preamble, map } = compile(
+    ' '.repeat(node.loc?.start.column || 0) + generate(node).code,
+    {
+      mode: 'module',
+      inline: true,
+      isTS: state.filename?.endsWith('tsx'),
+      filename: state.filename,
+      sourceMap: true,
+      ...state.opts?.compile,
+    },
+  )
   vaporHelpers.forEach((helper) => state.opts.importSet.add(helper))
 
   preamble = preamble.replaceAll(
@@ -57,7 +66,39 @@ export const transformJSX: VisitNodeFunction<
       .split(', ')
       .forEach((event: any) => state.opts.delegateEventSet.add(event))
   }
-  path.replaceWithSourceString(code)
+
+  const ast = parse(code, {
+    sourceFilename: state.filename,
+  })
+
+  if (map) {
+    const consumer = new SourceMapConsumer(map)
+    const line = (node.loc?.start.line ?? 1) - 1
+    traverse(ast, {
+      Identifier({ node: id }) {
+        const originalLoc = consumer.originalPositionFor(id.loc!.start)
+        if (originalLoc) {
+          id.loc = {
+            ...id.loc!,
+            start: {
+              line: line + originalLoc.line,
+              column: originalLoc.column,
+              index: originalLoc.column,
+            },
+            end: {
+              line: line + originalLoc.line,
+              column: originalLoc.column + id.name.length,
+              index: originalLoc.column + id.name.length,
+            },
+          }
+        }
+      },
+    })
+  }
+  // console.dir({ a }, { depth: 112 })
+  // path.replaceWith()
+  path.replaceWith(ast.program.body[0])
+  // path.replaceWithSourceString(code)
 }
 
 function isJSXElement(node?: Node | null): node is JSXElement | JSXFragment {
