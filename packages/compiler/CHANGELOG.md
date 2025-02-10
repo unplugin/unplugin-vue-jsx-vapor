@@ -1,5 +1,12 @@
 # @vue-jsx-vapor/compiler
 
+## 0.1.5
+
+### Patch Changes
+
+- 17d7ea7: support source map
+- revert vue/vapor
+
 ## 0.1.4
 
 ### Patch Changes

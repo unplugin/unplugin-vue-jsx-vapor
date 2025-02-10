@@ -1,5 +1,15 @@
 # unplugin-vue-jsx-vapor
 
+## 1.3.1
+
+### Patch Changes
+
+- revert vue/vapor
+- Updated dependencies [17d7ea7]
+- Updated dependencies
+  - @vue-jsx-vapor/babel@0.0.2
+  - @vue-jsx-vapor/compiler@0.1.5
+
 ## 1.3.0
 
 ### Minor Changes
