@@ -1,6 +1,6 @@
 {
   "name": "@vue-jsx-vapor/babel",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "packageManager": "pnpm@10.2.1",
   "description": "Vue JSX Vapor Babel Plugin",
   "type": "module",

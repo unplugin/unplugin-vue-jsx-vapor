@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/babel
 
+## 0.0.3
+
+### Patch Changes
+
+- 3e69eba: support nested source maps
+
 ## 0.0.2
 
 ### Patch Changes
