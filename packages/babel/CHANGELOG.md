@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/babel
 
+## 0.0.4
+
+### Patch Changes
+
+- c8b0171: prevent slot errors by excluding conditional expressions
+
 ## 0.0.3
 
 ### Patch Changes
