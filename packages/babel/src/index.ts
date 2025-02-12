@@ -1,44 +1,58 @@
 // @ts-ignore
 import SyntaxJSX from '@babel/plugin-syntax-jsx'
 import { parse } from '@babel/parser'
-import { transformJSX } from './transform'
+import { isJSXElement, transformJSX } from './transform'
+import type { VisitNodeFunction } from '@babel/traverse'
+import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { CompilerOptions } from '@vue-jsx-vapor/compiler'
 import type { Visitor } from '@babel/core'
 
-export type Opts = {
+export type Options = {
+  filename: string
   importSet: Set<string>
   delegateEventSet: Set<string>
   preambleMap: Map<string, string>
   preambleIndex: number
+  rootCodes: string[]
   compile?: CompilerOptions
 }
 
 export default (): {
   name: string
   inherits: any
-  visitor: Visitor<{ filename: string; opts: Opts }>
+  visitor: Visitor<Options>
 } => {
   return {
     name: 'Vue JSX Vapor',
     inherits: SyntaxJSX,
     visitor: {
-      JSXElement: {
-        exit: transformJSX,
-      },
-      JSXFragment: {
-        exit: transformJSX,
-      },
+      JSXElement: transformJSX,
+      JSXFragment: transformJSX,
       Program: {
-        enter: (_, state) => {
-          state.opts.importSet = new Set<string>()
-          state.opts.delegateEventSet = new Set<string>()
-          state.opts.preambleMap = new Map<string, string>()
-          state.opts.preambleIndex = 0
+        enter: (path, state) => {
+          state.importSet = new Set<string>()
+          state.delegateEventSet = new Set<string>()
+          state.preambleMap = new Map<string, string>()
+          state.preambleIndex = 0
+          state.rootCodes = []
+          const collectRoot: VisitNodeFunction<
+            Node,
+            JSXElement | JSXFragment
+          > = (path) => {
+            if (
+              (path.parent?.type !== 'JSXExpressionContainer' &&
+                !isJSXElement(path.parent)) ||
+              path.parentPath.parent?.type === 'JSXAttribute'
+            ) {
+              state.rootCodes.push(path.getSource())
+            }
+          }
+          path.traverse({
+            JSXElement: collectRoot,
+            JSXFragment: collectRoot,
+          })
         },
-        exit: (
-          path,
-          { opts: { delegateEventSet, importSet, preambleMap } },
-        ) => {
+        exit: (path, { delegateEventSet, importSet, preambleMap }) => {
           const statements: string[] = []
 
           if (delegateEventSet.size) {

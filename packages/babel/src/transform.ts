@@ -1,117 +1,87 @@
 import { compile } from '@vue-jsx-vapor/compiler'
-import generate from '@babel/generator'
 import { parse } from '@babel/parser'
 import { SourceMapConsumer } from 'source-map-js'
-import traverse, {
-  type NodePath,
-  type VisitNodeFunction,
-} from '@babel/traverse'
-import type { Opts } from '.'
+import traverse, { type VisitNodeFunction } from '@babel/traverse'
+import type { Options } from '.'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
 
 export const transformJSX: VisitNodeFunction<
-  {
-    filename: string
-    opts: Opts
-  },
+  Options,
   JSXElement | JSXFragment
 > = (path, state) => {
   const { parent, node } = path
-  if (
-    !(
-      parent?.type !== 'JSXExpressionContainer' &&
-      !isJSXElement(parent) &&
-      !isConditionalExpression(path.parentPath)
-    )
-  ) {
+  if (!(parent?.type !== 'JSXExpressionContainer' && !isJSXElement(parent))) {
     return
   }
 
   let { code, vaporHelpers, preamble, map } = compile(
-    ' '.repeat(node.loc?.start.column || 0) + generate(node).code,
+    state.rootCodes.shift()!,
     {
       mode: 'module',
       inline: true,
       isTS: state.filename?.endsWith('tsx'),
       filename: state.filename,
       sourceMap: true,
-      ...state.opts?.compile,
+      ...state?.compile,
     },
   )
-  vaporHelpers.forEach((helper) => state.opts.importSet.add(helper))
+  vaporHelpers.forEach((helper) => state.importSet.add(helper))
 
   preamble = preamble.replaceAll(
     /(?<=const )t(?=(\d))/g,
-    `_t${state.opts.preambleIndex}`,
+    `_t${state.preambleIndex}`,
   )
   code = code
-    .replaceAll(/(?<== )t(?=\d)/g, `_t${state.opts.preambleIndex}`)
+    .replaceAll(/(?<== )t(?=\d)/g, `_t${state.preambleIndex}`)
     .replaceAll('_ctx: any', '')
     .replaceAll('$event: any', '$event')
-  state.opts.preambleIndex++
+  state.preambleIndex++
 
   for (const [, key, value] of preamble.matchAll(
     /const (_t\d+) = (_template\(.*\))/g,
   )) {
-    const result = state.opts.preambleMap.get(value)
+    const result = state.preambleMap.get(value)
     if (result) {
       code = code.replaceAll(key, result)
     } else {
-      state.opts.preambleMap.set(value, key)
+      state.preambleMap.set(value, key)
     }
   }
 
   for (const [, events] of preamble.matchAll(/_delegateEvents\((.*)\)/g)) {
-    events
-      .split(', ')
-      .forEach((event: any) => state.opts.delegateEventSet.add(event))
+    events.split(', ').forEach((event) => state.delegateEventSet.add(event))
   }
 
   const ast = parse(code, {
     sourceFilename: state.filename,
+    startLine: node.loc!.start.line - 1,
+    plugins: ['jsx'],
   })
 
   if (map) {
     const consumer = new SourceMapConsumer(map)
-    const line = (node.loc?.start.line ?? 1) - 1
+    const line = node.loc!.start.line - 1
     traverse(ast, {
       Identifier({ node: id }) {
-        const originalLoc = consumer.originalPositionFor(id.loc!.start)
-        if (originalLoc) {
-          id.loc = {
-            ...id.loc!,
-            start: {
-              line: line + originalLoc.line,
-              column: originalLoc.column,
-              index: originalLoc.column,
-            },
-            end: {
-              line: line + originalLoc.line,
-              column: originalLoc.column + id.name.length,
-              index: originalLoc.column + id.name.length,
-            },
-          }
+        const originalLoc = consumer.originalPositionFor({
+          ...id.loc!.start,
+          line: id.loc!.start.line - line + 1,
+        })
+        const column = originalLoc.line === 1 ? node.loc!.start.column : 0
+        if (originalLoc.column) {
+          id.loc!.start.line = line + originalLoc.line + (path.hub ? 0 : 1)
+          id.loc!.start.column = column + originalLoc.column
+          id.loc!.end.line = line + originalLoc.line
+          id.loc!.end.column = column + originalLoc.column + id.name.length
         }
       },
     })
   }
-  // console.dir({ a }, { depth: 112 })
-  // path.replaceWith()
   path.replaceWith(ast.program.body[0])
-  // path.replaceWithSourceString(code)
 }
 
-function isJSXElement(node?: Node | null): node is JSXElement | JSXFragment {
+export function isJSXElement(
+  node?: Node | null,
+): node is JSXElement | JSXFragment {
   return !!node && (node.type === 'JSXElement' || node.type === 'JSXFragment')
-}
-
-function isConditionalExpression(path: NodePath<Node> | null): boolean {
-  return !!(
-    path &&
-    (path?.type === 'LogicalExpression' ||
-      path.type === 'ConditionalExpression') &&
-    (path.parent.type === 'JSXExpressionContainer' ||
-      (path.parent.type === 'ConditionalExpression' &&
-        isConditionalExpression(path.parentPath)))
-  )
 }
