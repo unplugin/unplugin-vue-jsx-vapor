@@ -2,7 +2,7 @@
 import SyntaxJSX from '@babel/plugin-syntax-jsx'
 import { parse } from '@babel/parser'
 import { isJSXElement, transformJSX } from './transform'
-import type { VisitNodeFunction } from '@babel/traverse'
+import type { NodePath, VisitNodeFunction } from '@babel/traverse'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { CompilerOptions } from '@vue-jsx-vapor/compiler'
 import type { Visitor } from '@babel/core'
@@ -41,7 +41,8 @@ export default (): {
           > = (path) => {
             if (
               (path.parent?.type !== 'JSXExpressionContainer' &&
-                !isJSXElement(path.parent)) ||
+                !isJSXElement(path.parent) &&
+                !isConditionalExpression(path.parentPath)) ||
               path.parentPath.parent?.type === 'JSXAttribute'
             ) {
               state.rootCodes.push(path.getSource())
@@ -95,4 +96,15 @@ export default (): {
       },
     },
   }
+}
+
+export function isConditionalExpression(path: NodePath<Node> | null): boolean {
+  return !!(
+    path &&
+    (path?.type === 'LogicalExpression' ||
+      path.type === 'ConditionalExpression') &&
+    (path.parent.type === 'JSXExpressionContainer' ||
+      (path.parent.type === 'ConditionalExpression' &&
+        isConditionalExpression(path.parentPath)))
+  )
 }
