@@ -1,8 +1,9 @@
 // @ts-ignore
 import SyntaxJSX from '@babel/plugin-syntax-jsx'
 import { parse } from '@babel/parser'
-import { isJSXElement, transformJSX } from './transform'
-import type { NodePath, VisitNodeFunction } from '@babel/traverse'
+import { transformJSX } from './transform'
+import { isConditionalExpression, isJSXElement } from './utils'
+import type { VisitNodeFunction } from '@babel/traverse'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { CompilerOptions } from '@vue-jsx-vapor/compiler'
 import type { Visitor } from '@babel/core'
@@ -13,7 +14,7 @@ export type Options = {
   delegateEventSet: Set<string>
   preambleMap: Map<string, string>
   preambleIndex: number
-  rootCodes: string[]
+  roots: { node: JSXElement | JSXFragment; source: string }[]
   compile?: CompilerOptions
 }
 
@@ -34,7 +35,7 @@ export default (): {
           state.delegateEventSet = new Set<string>()
           state.preambleMap = new Map<string, string>()
           state.preambleIndex = 0
-          state.rootCodes = []
+          state.roots = []
           const collectRoot: VisitNodeFunction<
             Node,
             JSXElement | JSXFragment
@@ -45,7 +46,10 @@ export default (): {
                 !isConditionalExpression(path.parentPath)) ||
               path.parentPath.parent?.type === 'JSXAttribute'
             ) {
-              state.rootCodes.push(path.getSource())
+              state.roots.push({
+                node: path.node,
+                source: path.getSource(),
+              })
             }
           }
           path.traverse({
@@ -53,9 +57,10 @@ export default (): {
             JSXFragment: collectRoot,
           })
         },
-        exit: (path, { delegateEventSet, importSet, preambleMap }) => {
-          const statements: string[] = []
+        exit: (path, state) => {
+          const { delegateEventSet, importSet, preambleMap } = state
 
+          const statements: string[] = []
           if (delegateEventSet.size) {
             statements.unshift(
               `_delegateEvents(${Array.from(delegateEventSet).join(', ')});`,
@@ -96,15 +101,4 @@ export default (): {
       },
     },
   }
-}
-
-export function isConditionalExpression(path: NodePath<Node> | null): boolean {
-  return !!(
-    path &&
-    (path?.type === 'LogicalExpression' ||
-      path.type === 'ConditionalExpression') &&
-    (path.parent.type === 'JSXExpressionContainer' ||
-      (path.parent.type === 'ConditionalExpression' &&
-        isConditionalExpression(path.parentPath)))
-  )
 }

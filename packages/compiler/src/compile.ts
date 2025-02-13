@@ -32,7 +32,7 @@ import { transformVSlot } from './transforms/vSlot'
 import { transformVModel } from './transforms/vModel'
 import { transformVShow } from './transforms/vShow'
 import { transformVHtml } from './transforms/vHtml'
-import type { JSXElement, JSXFragment, Program } from '@babel/types'
+import type { Expression, JSXElement, JSXFragment } from '@babel/types'
 
 export interface VaporCodegenResult
   extends Omit<BaseVaporCodegenResult, 'ast'> {
@@ -41,16 +41,11 @@ export interface VaporCodegenResult
 
 // code/AST -> IR (transform) -> JS (generate)
 export function compile(
-  source: string | Program,
+  source: string | JSXElement | JSXFragment,
   options: CompilerOptions = {},
 ): VaporCodegenResult {
   const onError = options.onError || defaultOnError
   const isModuleMode = options.mode === 'module'
-  const __BROWSER__ = false
-  /* istanbul ignore if */
-  if (__BROWSER__ && isModuleMode) {
-    onError(createCompilerError(ErrorCodes.X_MODULE_MODE_NOT_SUPPORTED))
-  }
 
   if (options.scopeId && !isModuleMode) {
     onError(createCompilerError(ErrorCodes.X_SCOPE_ID_NOT_SUPPORTED))
@@ -60,7 +55,7 @@ export function compile(
     prefixIdentifiers: false,
     expressionPlugins: options.expressionPlugins || ['jsx'],
   })
-  if (!__BROWSER__ && options.isTS) {
+  if (options.isTS) {
     const { expressionPlugins } = resolvedOptions
     if (!expressionPlugins.includes('typescript')) {
       resolvedOptions.expressionPlugins = [
@@ -70,27 +65,30 @@ export function compile(
     }
   }
 
-  const {
-    body: [statement],
-  } = isString(source)
-    ? parse(source, {
-        sourceType: 'module',
-        plugins: resolvedOptions.expressionPlugins,
-      }).program
-    : source
-  let children!: JSXElement[] | JSXFragment['children']
-  if (statement.type === 'ExpressionStatement') {
-    children =
-      statement.expression.type === 'JSXFragment'
-        ? statement.expression.children
-        : statement.expression.type === 'JSXElement'
-          ? [statement.expression]
-          : []
+  let expression!: Expression
+  if (isString(source)) {
+    const {
+      body: [statement],
+    } = parse(source, {
+      sourceType: 'module',
+      plugins: resolvedOptions.expressionPlugins,
+    }).program
+    if (statement.type === 'ExpressionStatement') {
+      expression = statement.expression
+    }
+  } else {
+    expression = source
   }
+  const children =
+    expression.type === 'JSXFragment'
+      ? expression.children
+      : expression.type === 'JSXElement'
+        ? [expression]
+        : []
   const ast: RootNode = {
     type: IRNodeTypes.ROOT,
     children,
-    source: isString(source) ? source : '', // TODO
+    source: isString(source) ? source : options.source || '',
     components: [],
     directives: [],
     helpers: new Set(),
@@ -116,7 +114,9 @@ export function compile(
   return generate(ir as any, resolvedOptions) as unknown as VaporCodegenResult
 }
 
-export type CompilerOptions = HackOptions<BaseCompilerOptions>
+export type CompilerOptions = HackOptions<BaseCompilerOptions> & {
+  source?: string
+}
 export type TransformPreset = [
   NodeTransform[],
   Record<string, DirectiveTransform>,
