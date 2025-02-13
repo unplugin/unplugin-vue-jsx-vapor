@@ -1,5 +1,13 @@
 # @vue-jsx-vapor/babel
 
+## 0.0.5
+
+### Patch Changes
+
+- 06eb0a3: support AST node compilation
+- Updated dependencies [06eb0a3]
+  - @vue-jsx-vapor/compiler@0.1.6
+
 ## 0.0.4
 
 ### Patch Changes

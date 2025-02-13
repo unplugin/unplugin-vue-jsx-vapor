@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.1.6
+
+### Patch Changes
+
+- 06eb0a3: support AST node compilation
+
 ## 0.1.5
 
 ### Patch Changes
