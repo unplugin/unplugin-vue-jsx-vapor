@@ -41,10 +41,8 @@ export default (): {
             JSXElement | JSXFragment
           > = (path) => {
             if (
-              (path.parent?.type !== 'JSXExpressionContainer' &&
-                !isJSXElement(path.parent) &&
-                !isConditionalExpression(path.parentPath)) ||
-              path.parentPath.parent?.type === 'JSXAttribute'
+              !isJSXElement(path.parent) &&
+              !isConditionalExpression(path.parentPath)
             ) {
               state.roots.push({
                 node: path.node,
@@ -90,7 +88,7 @@ export default (): {
             const importResult = Array.from(importSet)
               .map((i) => `${i} as _${i}`)
               .join(', ')
-            statements.unshift(`import { ${importResult} } from 'vue/vapor';\n`)
+            statements.unshift(`import { ${importResult} } from 'vue';\n`)
           }
 
           path.node.body.unshift(

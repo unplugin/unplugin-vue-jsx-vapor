@@ -13,7 +13,6 @@ export default {
   onSuccess: 'npm run build:fix',
   define: {
     __DEV__: 'true',
-    __BROWSER__: 'false',
   },
   esbuildPlugins: [Raw()],
 } satisfies Options

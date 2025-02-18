@@ -22,8 +22,8 @@ describe('compiler: template ref transform', () => {
       flags: DynamicFlag.REFERENCED,
     })
     expect(ir.template).toEqual(['<div></div>'])
-    expect(ir.block.operation).lengthOf(2)
-    expect(ir.block.operation[1]).toMatchObject({
+    expect(ir.block.operation).lengthOf(1)
+    expect(ir.block.operation[0]).toMatchObject({
       type: IRNodeTypes.SET_TEMPLATE_REF,
       element: 0,
       value: {
@@ -36,7 +36,8 @@ describe('compiler: template ref transform', () => {
       },
     })
     expect(code).matchSnapshot()
-    expect(code).contains('_setRef(n0, "foo")')
+    expect(code).contains('const _setTemplateRef = _createTemplateRefSetter()')
+    expect(code).contains('_setTemplateRef(n0, "foo")')
   })
 
   test('dynamic ref', () => {
@@ -48,7 +49,6 @@ describe('compiler: template ref transform', () => {
     })
     expect(ir.template).toEqual(['<div></div>'])
     expect(ir.block.operation).toMatchObject([
-      { type: IRNodeTypes.SET_INHERIT_ATTRS },
       {
         type: IRNodeTypes.DECLARE_OLD_REF,
         id: 0,
@@ -69,7 +69,7 @@ describe('compiler: template ref transform', () => {
       },
     ])
     expect(code).matchSnapshot()
-    expect(code).contains('_setRef(n0, foo, r0)')
+    expect(code).contains('_setTemplateRef(n0, foo, r0)')
   })
 
   // test('ref + v-if', () => {

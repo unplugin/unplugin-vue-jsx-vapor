@@ -17,7 +17,7 @@ const compileWithVHtml = makeCompile({
 
 describe('v-html', () => {
   test('should convert v-html to innerHTML', () => {
-    const { code, ir, helpers, vaporHelpers } = compileWithVHtml(
+    const { code, ir, helpers } = compileWithVHtml(
       `<div v-html={code}></div>`,
       {
         bindingMetadata: {
@@ -26,14 +26,9 @@ describe('v-html', () => {
       },
     )
 
-    expect(vaporHelpers).contains('setHtml')
-    expect(helpers.size).toBe(0)
+    expect(helpers).contains('setHtml')
 
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_INHERIT_ATTRS,
-      },
-    ])
+    expect(ir.block.operation).toMatchObject([])
     expect(ir.block.effect).toMatchObject([
       {
         expressions: [
@@ -62,24 +57,19 @@ describe('v-html', () => {
 
   test('should raise error and ignore children when v-html is present', () => {
     const onError = vi.fn()
-    const { code, ir, helpers, vaporHelpers } = compileWithVHtml(
+    const { ir, helpers, preamble } = compileWithVHtml(
       `<div v-html={test}>hello</div>`,
       {
         onError,
       },
     )
 
-    expect(vaporHelpers).contains('setHtml')
-    expect(helpers.size).toBe(0)
+    expect(helpers).contains('setHtml')
 
     // children should have been removed
     expect(ir.template).toEqual(['<div></div>'])
 
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_INHERIT_ATTRS,
-      },
-    ])
+    expect(ir.block.operation).toMatchObject([])
     expect(ir.block.effect).toMatchObject([
       {
         expressions: [
@@ -107,9 +97,8 @@ describe('v-html', () => {
       [{ code: DOMErrorCodes.X_V_HTML_WITH_CHILDREN }],
     ])
 
-    expect(code).matchSnapshot()
     // children should have been removed
-    expect(code).contains('template("<div></div>")')
+    expect(preamble).contains('template("<div></div>", true)')
   })
 
   test('should raise error if has no expression', () => {

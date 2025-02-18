@@ -1,4 +1,4 @@
-import { isGloballyAllowed, isString, makeMap } from '@vue/shared'
+import { isGloballyAllowed, isHTMLTag, isSVGTag, isString } from '@vue/shared'
 import {
   type AttributeNode,
   type DirectiveNode,
@@ -10,6 +10,7 @@ import {
   type TextNode,
   createSimpleExpression,
   isLiteralWhitelisted,
+  walkIdentifiers,
 } from '@vue/compiler-dom'
 import {
   type BigIntLiteral,
@@ -25,13 +26,8 @@ import {
   isLiteral,
 } from '@babel/types'
 import { EMPTY_EXPRESSION } from './transforms/utils'
-import type { ParseResult } from '@babel/parser'
 import type { TransformContext } from './transform'
 import type { VaporDirectiveNode } from './ir'
-
-import type { MagicString } from '@vue-macros/common'
-
-const __BROWSER__ = false
 
 export function propToExpression(prop: AttributeNode | VaporDirectiveNode) {
   return prop.type === NodeTypes.ATTRIBUTE
@@ -52,7 +48,7 @@ export function isConstantExpression(exp: SimpleExpressionNode) {
 export function getLiteralExpressionValue(
   exp: SimpleExpressionNode,
 ): number | string | boolean | null {
-  if (!__BROWSER__ && exp.ast) {
+  if (exp.ast) {
     if (
       ['StringLiteral', 'NumericLiteral', 'BigIntLiteral'].includes(
         exp.ast.type,
@@ -140,28 +136,33 @@ export function resolveExpression(
               ? node.name
               : context.ir.source.slice(node.start!, node.end!)
   const location = node ? node.loc : null
-  let ast
   if (source && !isStatic && effect && !isConstant(node)) {
     source = `() => (${source})`
-
-    // if (location) {
-    //   location.start.column -= 7
-    //   location.start.index -= 7
-    // }
-    // ast = parseExpression(source, {
-    //   sourceType: 'module',
-    //   startColumn: 1,
-    //   plugins: context.options.expressionPlugins,
-    // })
+    if (location && node) {
+      location.start.column -= 7
+      node.start! -= 7
+    }
   }
-  return resolveSimpleExpression(source, isStatic, location, ast)
+  if (node) {
+    const offset = node.start! - 1
+    walkIdentifiers(
+      node,
+      (id) => {
+        if (!id.loc) return
+        id.start = id.loc.start.index! - offset
+        id.end = id.loc.end.index! - offset
+      },
+      true,
+    )
+  }
+  return resolveSimpleExpression(source, isStatic, location, node)
 }
 
 export function resolveSimpleExpression(
   source: string,
   isStatic: boolean,
   location?: SourceLocation | null,
-  ast?: false | ParseResult<Expression>,
+  ast?: false | Node | null,
 ) {
   const result = createSimpleExpression(
     source,
@@ -292,21 +293,13 @@ export function resolveDirectiveNode(
   }
 }
 
-// Copy from https://github.com/sindresorhus/html-tags/blob/main/html-tags.json
-export const isHtmlTags = makeMap(
-  'a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,blockquote,body,br,button,canvas,caption,cite,code,col,colgroup,data,datalist,dd,del,details,dfn,dialog,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,head,header,hgroup,hr,html,i,iframe,img,input,ins,kbd,label,legend,li,link,main,map,mark,math,menu,menuitem,meta,meter,nav,noscript,object,ol,optgroup,option,output,p,param,picture,pre,progress,q,rb,rp,rt,rtc,ruby,s,samp,script,search,section,select,slot,small,source,span,strong,style,sub,summary,sup,svg,table,tbody,td,template,textarea,tfoot,th,thead,time,title,tr,track,u,ul,var,video,wbr',
-)
-// Copy from https://github.com/element-io/svg-tags/blob/master/lib/svg-tags.json
-export const isSvgTags = makeMap(
-  'a,altGlyph,altGlyphDef,altGlyphItem,animate,animateColor,animateMotion,animateTransform,circle,clipPath,color-profile,cursor,defs,desc,ellipse,feBlend,feColorMatrix,feComponentTransfer,feComposite,feConvolveMatrix,feDiffuseLighting,feDisplacementMap,feDistantLight,feFlood,feFuncA,feFuncB,feFuncG,feFuncR,feGaussianBlur,feImage,feMerge,feMergeNode,feMorphology,feOffset,fePointLight,feSpecularLighting,feSpotLight,feTile,feTurbulence,filter,font,font-face,font-face-format,font-face-name,font-face-src,font-face-uri,foreignObject,g,glyph,glyphRef,hkern,image,line,linearGradient,marker,mask,metadata,missing-glyph,mpath,path,pattern,polygon,polyline,radialGradient,rect,script,set,stop,style,svg,switch,symbol,text,textPath,title,tref,tspan,use,view,vkern',
-)
 export function isJSXComponent(node: Node): node is JSXElement {
   if (node.type !== 'JSXElement') return false
 
   const { openingElement } = node
   if (openingElement.name.type === 'JSXIdentifier') {
     const name = openingElement.name.name
-    return !isHtmlTags(name) && !isSvgTags(name)
+    return !isHTMLTag(name) && !isSVGTag(name)
   } else {
     return openingElement.name.type === 'JSXMemberExpression'
   }
@@ -319,50 +312,6 @@ export function findProp(expression: Expression | undefined, key: string) {
         return attr
       }
     }
-  }
-}
-
-export function getReturnExpression(node: Node): Expression | undefined {
-  if (
-    node.type === 'FunctionExpression' ||
-    node.type === 'ArrowFunctionExpression'
-  ) {
-    if (node.body.type !== 'BlockStatement') {
-      return node.body
-    } else {
-      for (const statement of node.body.body) {
-        if (statement.type === 'ReturnStatement' && statement.argument)
-          return statement.argument
-      }
-    }
-  }
-}
-
-export function addAttribute(node: Node, str: string, s: MagicString) {
-  const end =
-    node.type === 'JSXElement'
-      ? node.openingElement.name.end!
-      : node.type === 'JSXFragment'
-        ? node.openingFragment.end! - 1
-        : null
-  if (end) s.appendRight(end, str)
-}
-
-export function overwrite(
-  start: number | undefined,
-  end: number | undefined,
-  content: string,
-  s: MagicString,
-  method:
-    | 'prependLeft'
-    | 'prependRight'
-    | 'appendLeft'
-    | 'appendRight' = 'prependLeft',
-) {
-  if (start === end) {
-    s[method](start!, content)
-  } else {
-    s.overwrite(start!, end!, content)
   }
 }
 

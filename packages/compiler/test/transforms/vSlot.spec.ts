@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-// import { ErrorCodes, NodeTypes } from '@vue/compiler-core'
+// import { ErrorCodes, NodeTypes } from '@vue/compiler-dom'
 import {
   // IRNodeTypes,
   // IRSlotType,
@@ -35,20 +35,15 @@ describe('compiler: transform slot', () => {
   test('implicit default slot', () => {
     const { ir, code } = compileWithSlots(`<Comp><div/></Comp>`)
     expect(code).toMatchInlineSnapshot(`
-      "import { createComponent as _createComponent, template as _template } from 'vue/vapor';
-      const t0 = _template("<div></div>")
-
-      export function render(_ctx) {
-        const n1 = _createComponent(Comp, null, [
-          {
-            "default": () => {
-              const n0 = t0()
-              return n0
-            }
+      "
+        const n1 = _createComponent(Comp, null, {
+          "default": () => {
+            const n0 = t0()
+            return n0
           }
-        ])
+        })
         return n1
-      }"
+      "
     `)
 
     expect(ir.template).toEqual(['<div></div>'])
@@ -63,14 +58,14 @@ describe('compiler: transform slot', () => {
       `<Comp v-slots={{ default: ({ foo })=> <>{ foo + bar }</> }}></Comp>`,
     )
     expect(code).toMatchInlineSnapshot(`
-      "import { createComponent as _createComponent } from 'vue/vapor';
-
-      export function render(_ctx) {
-        const n0 = _createComponent(Comp, null, [
-          { default: ({ foo })=> <>{ foo + bar }</> }
-        ])
+      "
+        const n0 = _createComponent(Comp, null, {
+          $: [
+            { default: ({ foo })=> <>{ foo + bar }</> }
+          ]
+        })
         return n0
-      }"
+      "
     `)
 
     // expect(vaporHelpers).contains('withDestructure')

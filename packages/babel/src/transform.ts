@@ -10,21 +10,13 @@ export const transformJSX: VisitNodeFunction<
   Options,
   JSXElement | JSXFragment
 > = (path, state) => {
-  if (
-    !(
-      path.parent?.type !== 'JSXExpressionContainer' &&
-      !isJSXElement(path.parent)
-    )
-  ) {
-    return
-  }
+  if (isJSXElement(path.parent)) return
 
   const root = state.roots.shift()
   if (!root) return
+
   const isTS = state.filename?.endsWith('tsx')
-  let { code, vaporHelpers, preamble, map } = compile(root.node, {
-    mode: 'module',
-    inline: true,
+  let { code, helpers, preamble, map } = compile(root.node, {
     isTS,
     filename: state.filename,
     sourceMap: true,
@@ -32,16 +24,13 @@ export const transformJSX: VisitNodeFunction<
     ...state?.compile,
   })
 
-  vaporHelpers.forEach((helper) => state.importSet.add(helper))
+  helpers.forEach((helper) => state.importSet.add(helper))
 
   preamble = preamble.replaceAll(
     /(?<=const )t(?=(\d))/g,
     `_t${state.preambleIndex}`,
   )
-  code = code
-    .replaceAll(/(?<== )t(?=\d)/g, `_t${state.preambleIndex}`)
-    .replaceAll('_ctx: any', '')
-    .replaceAll('$event: any', '$event')
+  code = code.replaceAll(/(?<== )t(?=\d)/g, `_t${state.preambleIndex}`)
   state.preambleIndex++
 
   for (const [, key, value] of preamble.matchAll(
@@ -59,7 +48,7 @@ export const transformJSX: VisitNodeFunction<
     events.split(', ').forEach((event) => state.delegateEventSet.add(event))
   }
 
-  const ast = parse(code, {
+  const ast = parse(`(() => {${code}})()`, {
     sourceFilename: state.filename,
     plugins: isTS ? ['jsx', 'typescript'] : ['jsx'],
   })

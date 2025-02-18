@@ -70,7 +70,7 @@ function processTextLike(context: TransformContext<JSXExpressionContainer>) {
     type: IRNodeTypes.CREATE_TEXT_NODE,
     id: context.reference(),
     values: createTextLikeExpressions(nodes, context),
-    effect: false,
+    jsx: true,
   })
 }
 
@@ -87,6 +87,7 @@ function processTextLikeContainer(
       type: IRNodeTypes.SET_TEXT,
       element: context.reference(),
       values,
+      jsx: true,
     })
   }
 }

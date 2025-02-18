@@ -20,7 +20,7 @@ const compileWithVOn = makeCompile({
 
 describe('v-on', () => {
   test('simple expression', () => {
-    const { code, ir, helpers, vaporHelpers } = compileWithVOn(
+    const { code, ir, helpers } = compileWithVOn(
       `<div onClick={handleClick}></div>`,
       {
         bindingMetadata: {
@@ -30,18 +30,13 @@ describe('v-on', () => {
     )
 
     expect(code).toMatchInlineSnapshot(`
-      "import { delegate as _delegate, delegateEvents as _delegateEvents, template as _template } from 'vue/vapor';
-      const t0 = _template("<div></div>")
-      _delegateEvents("click")
-
-      export function render(_ctx, $props, $emit, $attrs, $slots) {
+      "
         const n0 = t0()
-        _delegate(n0, "click", () => handleClick)
+        n0.$evtclick = e => handleClick(e)
         return n0
-      }"
+      "
     `)
-    expect(vaporHelpers).contains('delegate')
-    expect(helpers.size).toBe(0)
+    expect(helpers).not.contains('delegate') // optimized as direct attachment
     expect(ir.block.effect).toEqual([])
     expect(ir.block.operation).toMatchObject([
       {
@@ -60,9 +55,6 @@ describe('v-on', () => {
         modifiers: { keys: [], nonKeys: [], options: [] },
         keyOverride: undefined,
         delegate: true,
-      },
-      {
-        type: IRNodeTypes.SET_INHERIT_ATTRS,
       },
     ])
   })

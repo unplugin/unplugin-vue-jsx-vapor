@@ -1,24 +1,16 @@
-import {
-  createBranch,
-  effectScope,
-  insert,
-  remove,
-  renderEffect,
-} from 'vue/vapor'
+import { createIf, effectScope, insert, remove, renderEffect } from 'vue'
 
-const fragmentKey = Object.getOwnPropertySymbols(createBranch(() => {}))[0]
+const VaporFragment = createIf(() => {}).__proto__.__proto__.constructor
 function createFragment(nodes) {
-  return {
-    nodes,
-    anchor: document.createTextNode(''),
-    [fragmentKey]: true,
-  }
+  const frag = new VaporFragment(nodes)
+  frag.anchor = document.createTextNode('')
+  return frag
 }
 
 function normalizeValue(value) {
   return value == null || typeof value === 'boolean'
     ? document.createTextNode('')
-    : value instanceof Node || value[fragmentKey]
+    : value instanceof Node || value instanceof VaporFragment
       ? value
       : Array.isArray(value)
         ? createFragment(value.map(normalizeValue))
@@ -28,7 +20,7 @@ function normalizeValue(value) {
 function resolveValue(current, value) {
   const node = normalizeValue(value)
   if (current) {
-    if (current[fragmentKey]) {
+    if (current instanceof VaporFragment) {
       const { anchor } = current
       if (anchor.parentNode) {
         remove(current.nodes, anchor.parentNode)
@@ -36,7 +28,7 @@ function resolveValue(current, value) {
         anchor.remove()
       }
     } else if (current.nodeType) {
-      if (node[fragmentKey] && current.parentNode) {
+      if (node instanceof VaporFragment && current.parentNode) {
         insert(node, current.parentNode, current)
         current.remove()
       } else if (current.nodeType === 3 && node.nodeType === 3) {
@@ -50,7 +42,7 @@ function resolveValue(current, value) {
   return node
 }
 
-function resolveValues(values) {
+function resolveValues(values = []) {
   const nodes = []
   const scopes = []
   for (const [index, value] of values.entries()) {
@@ -75,6 +67,6 @@ export function setText(parent, ...values) {
   insert(resolveValues(values), parent)
 }
 
-export function createTextNode(values) {
-  return createFragment(resolveValues(values))
+export function createTextNode(...values) {
+  return resolveValues(values)
 }

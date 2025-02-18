@@ -1,6 +1,9 @@
-export { generate } from '@vue/compiler-vapor'
-
-export { compile, type CompilerOptions, type TransformPreset } from './compile'
+export {
+  compile,
+  generate,
+  type CompilerOptions,
+  type TransformPreset,
+} from './compile'
 export * from './transform'
 
 export { resolveDirectiveNode, resolveNode } from './utils'

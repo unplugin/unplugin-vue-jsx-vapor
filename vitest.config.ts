@@ -4,11 +4,13 @@ export default defineConfig({
   resolve: {
     conditions: ['dev'],
   },
+  test: {
+    include: ['./packages/**/*.spec.ts'],
+  },
   define: {
     __DEV__: true,
     __TEST__: true,
     __VERSION__: '"test"',
-    __BROWSER__: false,
     __GLOBAL__: false,
     __ESM_BUNDLER__: true,
     __ESM_BROWSER__: false,

@@ -3,8 +3,8 @@ import { describe, expect, test } from 'vitest'
 //   type BindingMetadata,
 //   BindingTypes,
 //   NodeTypes,
-// } from '@vue/compiler-core'
-import { BindingTypes } from '@vue/compiler-core'
+// } from '@vue/compiler-dom'
+import { BindingTypes } from '@vue/compiler-dom'
 import {
   // IRDynamicPropsKind,
   // IRNodeTypes,
@@ -27,39 +27,31 @@ const compileWithElementTransform = makeCompile({
 describe('compiler: element transform', () => {
   describe('component', () => {
     test('import + resolve component', () => {
-      const { code, vaporHelpers } = compileWithElementTransform(`<Foo/>`)
+      const { code, helpers } = compileWithElementTransform(`<Foo/>`)
       expect(code).toMatchInlineSnapshot(`
-        "import { createComponent as _createComponent } from 'vue/vapor';
-
-        export function render(_ctx) {
+        "
           const n0 = _createComponent(Foo)
           return n0
-        }"
+        "
       `)
-      expect(vaporHelpers).contains.all.keys(
-        // 'resolveComponent',
-        'createComponent',
-      )
+      expect(helpers).contains.all.keys('createComponent')
     })
   })
 
   test('resolve namespaced component from setup bindings (inline const)', () => {
-    const { code, vaporHelpers } = compileWithElementTransform(
-      `<Foo.Example/>`,
-      {
-        inline: true,
-        bindingMetadata: {
-          Foo: BindingTypes.SETUP_CONST,
-        },
+    const { code, helpers } = compileWithElementTransform(`<Foo.Example/>`, {
+      inline: true,
+      bindingMetadata: {
+        Foo: BindingTypes.SETUP_CONST,
       },
-    )
+    })
     expect(code).toMatchInlineSnapshot(`
-      "((_ctx) => {
+      "
         const n0 = _createComponent(Foo.Example)
         return n0
-      })()"
+      "
     `)
     expect(code).contains(`Foo.Example`)
-    expect(vaporHelpers).not.toContain('resolveComponent')
+    expect(helpers).not.toContain('resolveComponent')
   })
 })

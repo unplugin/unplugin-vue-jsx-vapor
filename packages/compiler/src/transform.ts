@@ -7,8 +7,6 @@ import {
   defaultOnWarn,
 } from '@vue/compiler-dom'
 import { EMPTY_OBJ, NOOP, extend, isArray } from '@vue/shared'
-import { newBlock, newDynamic } from './transforms/utils'
-import { isConstantExpression } from './utils'
 import {
   type BlockIRNode,
   DynamicFlag,
@@ -19,7 +17,9 @@ import {
   type OperationNode,
   type RootIRNode,
   type RootNode,
-} from './ir/index'
+} from './ir'
+import { newBlock, newDynamic } from './transforms/utils'
+import { isConstantExpression } from './utils'
 import type { JSXAttribute, JSXElement, JSXFragment } from '@babel/types'
 
 export type NodeTransform = (
@@ -203,6 +203,7 @@ export function transform(
     component: new Set(),
     directive: new Set(),
     block: newBlock(node),
+    hasTemplateRef: false,
   }
 
   const context = new TransformContext(ir, node, options)

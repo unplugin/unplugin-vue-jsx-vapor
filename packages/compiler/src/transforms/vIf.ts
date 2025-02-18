@@ -1,3 +1,4 @@
+import { isStaticNode } from '@vue/compiler-dom'
 import { DynamicFlag, IRNodeTypes, type OperationNode } from '../ir'
 import { resolveExpression } from '../utils'
 import { type TransformContext, transformNode } from '../transform'
@@ -19,7 +20,7 @@ export function processConditionalExpression(
     id,
     condition,
     positive: branch,
-    once: context.inVOnce,
+    once: context.inVOnce || isStaticNode(test),
   }
 
   return [

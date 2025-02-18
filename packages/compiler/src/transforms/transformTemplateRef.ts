@@ -8,6 +8,8 @@ export const transformTemplateRef: NodeTransform = (node, context) => {
   const dir = findProp(node, 'ref')
   if (!dir?.value) return
 
+  context.ir.hasTemplateRef = true
+
   const value = resolveExpression(dir.value, context)
 
   return () => {

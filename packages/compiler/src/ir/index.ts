@@ -1,6 +1,5 @@
 import type { JSXFragment, Node } from '@babel/types'
 import type {
-  BindingTypes,
   CompoundExpressionNode,
   DirectiveNode,
   SimpleExpressionNode,
@@ -23,8 +22,6 @@ export enum IRNodeTypes {
   SET_DYNAMIC_EVENTS,
   SET_HTML,
   SET_TEMPLATE_REF,
-  SET_MODEL_VALUE,
-  SET_INHERIT_ATTRS,
 
   INSERT_NODE,
   PREPEND_NODE,
@@ -32,42 +29,33 @@ export enum IRNodeTypes {
   CREATE_COMPONENT_NODE,
   SLOT_OUTLET_NODE,
 
-  WITH_DIRECTIVE,
+  DIRECTIVE,
   DECLARE_OLD_REF, // consider make it more general
 
   IF,
   FOR,
+
+  GET_TEXT_CHILD,
 }
 
 export interface BaseIRNode {
   type: IRNodeTypes
 }
 
-export type VaporHelper = keyof typeof import('@vue/runtime-vapor')
-
 export interface RootNode {
   type: IRNodeTypes.ROOT
   source: string
   children: JSXFragment['children']
-  helpers: Set<symbol>
-  components: string[]
-  directives: string[]
-  // loc: JSXElement['loc']
-  // hoists: (JSChildNode | null)[]
-  // imports: ImportItem[]
-  // cached: (CacheExpression | null)[]
-  temps: number
-  ssrHelpers?: symbol[]
-  // codegenNode?: TemplateChildNode | JSChildNode | BlockStatement
-  transformed?: boolean
 }
 
 export interface BlockIRNode extends BaseIRNode {
   type: IRNodeTypes.BLOCK
   node: RootNode | Node
   dynamic: IRDynamicInfo
+  tempId: number
   effect: IREffect[]
   operation: OperationNode[]
+  expressions: SimpleExpressionNode[]
   returns: number[]
 }
 
@@ -76,9 +64,11 @@ export interface RootIRNode {
   node: RootNode
   source: string
   template: string[]
+  rootTemplateIndex?: number
   component: Set<string>
   directive: Set<string>
   block: BlockIRNode
+  hasTemplateRef: boolean
 }
 
 export interface IfIRNode extends BaseIRNode {
@@ -103,7 +93,8 @@ export interface ForIRNode extends BaseIRNode, IRFor {
   keyProp?: SimpleExpressionNode
   render: BlockIRNode
   once: boolean
-  container?: number
+  component: boolean
+  onlyChild: boolean
 }
 
 export interface SetPropIRNode extends BaseIRNode {
@@ -131,6 +122,8 @@ export interface SetTextIRNode extends BaseIRNode {
   type: IRNodeTypes.SET_TEXT
   element: number
   values: SimpleExpressionNode[]
+  generated?: boolean // whether this is a generated empty text node by `processTextLikeContainer`
+  jsx?: boolean
 }
 
 export type KeyOverride = [find: string, replacement: string]
@@ -167,26 +160,11 @@ export interface SetTemplateRefIRNode extends BaseIRNode {
   effect: boolean
 }
 
-export interface SetModelValueIRNode extends BaseIRNode {
-  type: IRNodeTypes.SET_MODEL_VALUE
-  element: number
-  key: SimpleExpressionNode
-  value: SimpleExpressionNode
-  bindingType?: BindingTypes
-  isComponent: boolean
-}
-
-export interface SetInheritAttrsIRNode extends BaseIRNode {
-  type: IRNodeTypes.SET_INHERIT_ATTRS
-  staticProps: boolean
-  dynamicProps: true | string[]
-}
-
 export interface CreateTextNodeIRNode extends BaseIRNode {
   type: IRNodeTypes.CREATE_TEXT_NODE
   id: number
-  values: SimpleExpressionNode[]
-  effect: boolean
+  values?: SimpleExpressionNode[]
+  jsx?: boolean
 }
 
 export interface InsertNodeIRNode extends BaseIRNode {
@@ -202,13 +180,14 @@ export interface PrependNodeIRNode extends BaseIRNode {
   parent: number
 }
 
-export interface WithDirectiveIRNode extends BaseIRNode {
-  type: IRNodeTypes.WITH_DIRECTIVE
+export interface DirectiveIRNode extends BaseIRNode {
+  type: IRNodeTypes.DIRECTIVE
   element: number
   dir: VaporDirectiveNode
   name: string
   builtin?: boolean
   asset?: boolean
+  modelType?: 'text' | 'dynamic' | 'radio' | 'checkbox' | 'select'
 }
 
 export interface CreateComponentIRNode extends BaseIRNode {
@@ -220,6 +199,7 @@ export interface CreateComponentIRNode extends BaseIRNode {
   asset: boolean
   root: boolean
   once: boolean
+  dynamic?: SimpleExpressionNode
 }
 
 export interface DeclareOldRefIRNode extends BaseIRNode {
@@ -235,6 +215,11 @@ export interface SlotOutletIRNode extends BaseIRNode {
   fallback?: BlockIRNode
 }
 
+export interface GetTextChildIRNode extends BaseIRNode {
+  type: IRNodeTypes.GET_TEXT_CHILD
+  parent: number
+}
+
 export type IRNode = OperationNode | RootIRNode
 export type OperationNode =
   | SetPropIRNode
@@ -244,17 +229,16 @@ export type OperationNode =
   | SetDynamicEventsIRNode
   | SetHtmlIRNode
   | SetTemplateRefIRNode
-  | SetModelValueIRNode
-  | SetInheritAttrsIRNode
   | CreateTextNodeIRNode
   | InsertNodeIRNode
   | PrependNodeIRNode
-  | WithDirectiveIRNode
+  | DirectiveIRNode
   | IfIRNode
   | ForIRNode
   | CreateComponentIRNode
   | DeclareOldRefIRNode
   | SlotOutletIRNode
+  | GetTextChildIRNode
 
 export enum DynamicFlag {
   NONE = 0,
@@ -278,6 +262,7 @@ export interface IRDynamicInfo {
   anchor?: number
   children: IRDynamicInfo[]
   template?: number
+  hasDynamicChild?: boolean
 }
 
 export interface IREffect {

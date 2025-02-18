@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 
-import { NodeTypes } from '@vue/compiler-core'
+import { NodeTypes } from '@vue/compiler-dom'
 import { IRDynamicPropsKind, IRNodeTypes } from '@vue/compiler-vapor'
 import {
   transformChildren,
@@ -17,22 +17,19 @@ const compileWithElementTransform = makeCompile({
 
 describe('compiler: children transform', () => {
   test('basic', () => {
-    const { code, vaporHelpers } = compileWithElementTransform(
+    const { code, helpers } = compileWithElementTransform(
       `<div>
         {foo} {bar}
        </div>`,
     )
     expect(code).toMatchInlineSnapshot(`
-      "import { setText as _setText, template as _template } from 'vue/vapor';
-      const t0 = _template("<div></div>")
-
-      export function render(_ctx) {
+      "
         const n0 = t0()
         _setText(n0, () => (foo), " ", () => (bar))
         return n0
-      }"
+      "
     `)
-    expect(vaporHelpers).contains.all.keys('setText')
+    expect(helpers).contains.all.keys('setText')
   })
 
   test('comments', () => {
@@ -40,42 +37,37 @@ describe('compiler: children transform', () => {
       '<>{/*foo*/}<div>{/*bar*/}</div></>',
     )
     expect(code).toMatchInlineSnapshot(`
-      "import { createTextNode as _createTextNode, template as _template } from 'vue/vapor';
-      const t0 = _template("<div></div>")
-
-      export function render(_ctx) {
+      "
         const n1 = t0()
-        const n0 = _createTextNode([])
+        const n0 = _createTextNode()
         return [n0, n1]
-      }"
+      "
     `)
   })
 
   test('children & sibling references', () => {
-    const { code, vaporHelpers } = compileWithElementTransform(
-      `<div>
+    const { code, helpers } = compileWithElementTransform(
+      `<div id={id}>
         <p>{ first }</p> 
-        { second }
+        123 { second } 456 {foo}
         <p>{ forth }</p>
       </div>`,
     )
     expect(code).toMatchInlineSnapshot(`
-      "import { setText as _setText, createTextNode as _createTextNode, insert as _insert, template as _template } from 'vue/vapor';
-      const t0 = _template("<div><p></p><!><p></p></div>")
-
-      export function render(_ctx) {
+      "
         const n4 = t0()
-        const n0 = n4.firstChild
-        const n3 = n0.nextSibling
-        const n2 = n3.nextSibling
+        const n0 = _child(n4)
+        const n3 = _nthChild(n4, 2)
+        const n2 = _next(n3)
         _setText(n0, () => (first))
-        const n1 = _createTextNode([() => (second)])
+        const n1 = _createTextNode(() => (second), " 456 ", () => (foo))
         _setText(n2, () => (forth))
         _insert(n1, n4, n3)
+        _renderEffect(() => _setProp(n4, "id", id))
         return n4
-      }"
+      "
     `)
-    expect(Array.from(vaporHelpers)).containSubset([
+    expect(Array.from(helpers)).containSubset([
       'createTextNode',
       'insert',
       'template',
@@ -85,15 +77,11 @@ describe('compiler: children transform', () => {
   test('{...obj}', () => {
     const { code, ir } = compileWithElementTransform(`<div {...obj} />`)
     expect(code).toMatchInlineSnapshot(`
-      "import { setInheritAttrs as _setInheritAttrs, renderEffect as _renderEffect, setDynamicProps as _setDynamicProps, template as _template } from 'vue/vapor';
-      const t0 = _template("<div></div>")
-
-      export function render(_ctx) {
+      "
         const n0 = t0()
-        _setInheritAttrs(true)
         _renderEffect(() => _setDynamicProps(n0, [obj], true))
         return n0
-      }"
+      "
     `)
     expect(ir.block.effect).toMatchObject([
       {

@@ -1,15 +1,9 @@
-import {
-  type CompilerOptions as BaseCompilerOptions,
-  ErrorCodes,
-  createCompilerError,
-  defaultOnError,
-} from '@vue/compiler-dom'
 import { extend, isString } from '@vue/shared'
+import { parse } from '@babel/parser'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
   generate,
-} from '@vue/compiler-vapor'
-import { parse } from '@babel/parser'
+} from './patched/compiler-vapor.js'
 import {
   type DirectiveTransform,
   type NodeTransform,
@@ -19,12 +13,6 @@ import {
 import { transformElement } from './transforms/transformElement'
 import { transformChildren } from './transforms/transformChildren'
 import { transformTemplateRef } from './transforms/transformTemplateRef'
-import {
-  type HackOptions,
-  IRNodeTypes,
-  type RootIRNode,
-  type RootNode,
-} from './ir'
 import { transformText } from './transforms/transformText'
 import { transformVBind } from './transforms/vBind'
 import { transformVOn } from './transforms/vOn'
@@ -32,7 +20,16 @@ import { transformVSlot } from './transforms/vSlot'
 import { transformVModel } from './transforms/vModel'
 import { transformVShow } from './transforms/vShow'
 import { transformVHtml } from './transforms/vHtml'
+import {
+  type HackOptions,
+  IRNodeTypes,
+  type RootIRNode,
+  type RootNode,
+} from './ir'
+import type { CompilerOptions as BaseCompilerOptions } from '@vue/compiler-dom'
 import type { Expression, JSXElement, JSXFragment } from '@babel/types'
+
+export { generate }
 
 export interface VaporCodegenResult
   extends Omit<BaseVaporCodegenResult, 'ast'> {
@@ -44,14 +41,8 @@ export function compile(
   source: string | JSXElement | JSXFragment,
   options: CompilerOptions = {},
 ): VaporCodegenResult {
-  const onError = options.onError || defaultOnError
-  const isModuleMode = options.mode === 'module'
-
-  if (options.scopeId && !isModuleMode) {
-    onError(createCompilerError(ErrorCodes.X_SCOPE_ID_NOT_SUPPORTED))
-  }
-
   const resolvedOptions = extend({}, options, {
+    inline: true,
     prefixIdentifiers: false,
     expressionPlugins: options.expressionPlugins || ['jsx'],
   })
@@ -89,10 +80,6 @@ export function compile(
     type: IRNodeTypes.ROOT,
     children,
     source: isString(source) ? source : options.source || '',
-    components: [],
-    directives: [],
-    helpers: new Set(),
-    temps: 0,
   }
   const [nodeTransforms, directiveTransforms] = getBaseTransformPreset()
 

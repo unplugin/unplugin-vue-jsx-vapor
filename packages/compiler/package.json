@@ -57,11 +57,8 @@
   "dependencies": {
     "@babel/parser": "catalog:",
     "@babel/types": "catalog:",
-    "@vue-macros/common": "^1.10.4",
-    "@vue/compiler-core": "catalog:",
     "@vue/compiler-dom": "catalog:",
     "@vue/compiler-vapor": "catalog:",
-    "@vue/runtime-vapor": "catalog:",
     "@vue/shared": "catalog:"
   }
 }

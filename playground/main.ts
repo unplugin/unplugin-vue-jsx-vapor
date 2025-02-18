@@ -1,4 +1,4 @@
-import { createVaporApp } from 'vue/vapor'
+import { createVaporApp } from 'vue'
 
 const modules = import.meta.glob<any>('./src/*.tsx')
 const mod = (

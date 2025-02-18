@@ -11,6 +11,5 @@ export default {
   splitting: true,
   define: {
     __DEV__: 'true',
-    __BROWSER__: 'false',
   },
 } satisfies Options

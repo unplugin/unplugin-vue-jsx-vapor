@@ -20,15 +20,11 @@ describe('compiler v-bind', () => {
   test('basic', () => {
     const { ir, code } = compileWithVBind(`<div id={id}/>`)
     expect(code).toMatchInlineSnapshot(`
-      "import { setInheritAttrs as _setInheritAttrs, renderEffect as _renderEffect, setDOMProp as _setDOMProp, template as _template } from 'vue/vapor';
-      const t0 = _template("<div></div>")
-
-      export function render(_ctx) {
+      "
         const n0 = t0()
-        _setInheritAttrs(["id"])
-        _renderEffect(() => _setDOMProp(n0, "id", id))
+        _renderEffect(() => _setProp(n0, "id", id))
         return n0
-      }"
+      "
     `)
 
     expect(ir.block.dynamic.children[0]).toMatchObject({
@@ -84,7 +80,7 @@ describe('compiler v-bind', () => {
       ],
     })
 
-    expect(code).contains('_setInheritAttrs(["id"])')
+    expect(code).contains('_setProp(n0, "id", id)')
   })
 
   /*

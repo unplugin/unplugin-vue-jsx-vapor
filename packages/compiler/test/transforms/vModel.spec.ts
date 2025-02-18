@@ -17,21 +17,15 @@ const compileWithVModel = makeCompile({
 
 describe('compiler: vModel transform', () => {
   test('should support simple expression', () => {
-    const { code, vaporHelpers } = compileWithVModel(
-      '<input v-model={model} />',
-    )
+    const { code, helpers } = compileWithVModel('<input v-model={model} />')
     expect(code).toMatchInlineSnapshot(`
-      "import { vModelText as _vModelText, withDirectives as _withDirectives, delegate as _delegate, template as _template } from 'vue/vapor';
-      const t0 = _template("<input>")
-
-      export function render(_ctx) {
+      "
         const n0 = t0()
-        _withDirectives(n0, [[_vModelText, () => model]])
-        _delegate(n0, "update:modelValue", () => $event => (model = $event))
+        _applyTextModel(n0, () => (model), _value => (model = _value))
         return n0
-      }"
+      "
     `)
-    expect(vaporHelpers).toContain('vModelText')
+    expect(helpers).toContain('applyTextModel')
   })
 
   /*

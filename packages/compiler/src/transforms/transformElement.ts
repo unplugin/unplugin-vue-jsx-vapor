@@ -1,5 +1,8 @@
 import { extend, isBuiltInDirective, isVoidTag, makeMap } from '@vue/shared'
-import { isValidHTMLNesting } from '../html-nesting'
+import {
+  type SimpleExpressionNode,
+  isValidHTMLNesting,
+} from '@vue/compiler-dom'
 import {
   DynamicFlag,
   IRDynamicPropsKind,
@@ -15,7 +18,6 @@ import {
   resolveSimpleExpression,
 } from '../utils'
 import { EMPTY_EXPRESSION } from './utils'
-import type { SimpleExpressionNode } from '@vue/compiler-dom'
 import type { JSXAttribute, JSXElement, JSXSpreadAttribute } from '@babel/types'
 import type {
   DirectiveTransformResult,
@@ -23,14 +25,10 @@ import type {
   TransformContext,
 } from '../transform'
 
-// import { EMPTY_EXPRESSION } from './utils'
-
 export const isReservedProp = /* #__PURE__ */ makeMap(
   // the leading comma is intentional so empty string "" is also included
   ',key,ref,ref_for,ref_key,',
 )
-
-const __BROWSER__ = false
 
 const isEventRegex = /^on[A-Z]/
 const isDirectiveRegex = /^v-[a-z]/
@@ -77,19 +75,17 @@ function transformComponentElement(
 ) {
   let asset = true
 
-  if (!__BROWSER__) {
-    const fromSetup = tag
-    if (fromSetup) {
-      tag = fromSetup
+  const fromSetup = tag
+  if (fromSetup) {
+    tag = fromSetup
+    asset = false
+  }
+  const dotIndex = tag.indexOf('.')
+  if (dotIndex > 0) {
+    const ns = tag.slice(0, dotIndex)
+    if (ns) {
+      tag = ns + tag.slice(dotIndex)
       asset = false
-    }
-    const dotIndex = tag.indexOf('.')
-    if (dotIndex > 0) {
-      const ns = tag.slice(0, dotIndex)
-      if (ns) {
-        tag = ns + tag.slice(dotIndex)
-        asset = false
-      }
     }
   }
   if (asset) {
@@ -124,7 +120,6 @@ function transformNativeElement(
   template += `<${tag}`
   if (scopeId) template += ` ${scopeId}`
 
-  let staticProps = false
   const dynamicProps: string[] = []
   if (propsResult[0] /* dynamic props */) {
     const [, dynamicArgs, expressions] = propsResult
@@ -138,7 +133,6 @@ function transformNativeElement(
     for (const prop of propsResult[1]) {
       const { key, values } = prop
       if (key.isStatic && values.length === 1 && values[0].isStatic) {
-        staticProps = true
         template += ` ${key.content}`
         if (values[0].content) template += `="${values[0].content}"`
       } else {
@@ -154,18 +148,14 @@ function transformNativeElement(
     }
   }
 
-  if (singleRoot) {
-    context.registerOperation({
-      type: IRNodeTypes.SET_INHERIT_ATTRS,
-      staticProps,
-      dynamicProps: propsResult[0] ? true : dynamicProps,
-    })
-  }
-
   template += `>${context.childrenTemplate.join('')}`
   // TODO remove unnecessary close tag, e.g. if it's the last element of the template
   if (!isVoidTag(tag)) {
     template += `</${tag}>`
+  }
+
+  if (singleRoot) {
+    context.ir.rootTemplateIndex = context.ir.template.length
   }
 
   if (
@@ -284,7 +274,7 @@ function transformProp(
   }
 
   if (!isBuiltInDirective(name)) {
-    const fromSetup = !__BROWSER__ && `v-${name}`
+    const fromSetup = `v-${name}`
     if (fromSetup) {
       name = fromSetup
     } else {
@@ -293,7 +283,7 @@ function transformProp(
 
     // TODO
     // context.registerOperation({
-    //   type: IRNodeTypes.WITH_DIRECTIVE,
+    //   type: IRNodeTypes.DIRECTIVE,
     //   element: context.reference(),
     //   dir: prop,
     //   name,

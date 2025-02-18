@@ -13,26 +13,26 @@ describe('transform', () => {
       },
     )!
     expect(code).toMatchInlineSnapshot(`
-      "import { delegate as _delegate, delegateEvents as _delegateEvents, template as _template, createIf as _createIf } from 'vue/vapor';
+      "import { delegateEvents as _delegateEvents, template as _template, createIf as _createIf } from 'vue';
       import { setText as _setText } from 'unplugin-vue-jsx-vapor/helper.js';
-      const _t00 = _template("<div></div>");
+      const _t00 = _template("<div></div>", true);
       const _t10 = _template("<div>Hello</div>");
       const _t11 = _template("<div>World</div>");
       _delegateEvents("click", "dblclick");
       const a = (() => {
         const n0 = _t00();
         _setText(n0, () => Hello);
-        _delegate(n0, "click", () => onClick);
+        n0.$evtclick = e => onClick(e);
         return n0;
       })();
       const b = (() => {
         const n0 = _createIf(() => foo, () => {
           const n2 = _t10();
-          _delegate(n2, "click", () => onClick);
+          n2.$evtclick = e => onClick(e);
           return n2;
         }, () => {
           const n4 = _t11();
-          _delegate(n4, "dblclick", () => onDblclick);
+          n4.$evtdblclick = e => onDblclick(e);
           return n4;
         });
         return n0;

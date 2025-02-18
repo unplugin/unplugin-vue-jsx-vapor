@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { NodeTypes } from '@vue/compiler-core'
+import { NodeTypes } from '@vue/compiler-dom'
 import {
   IRNodeTypes,
   type IfIRNode,
@@ -29,16 +29,12 @@ const compileWithVIf = makeCompile({
 
 describe('compiler: v-if', () => {
   test('conditional expression', () => {
-    const { code, vaporHelpers, helpers, ir } = compileWithVIf(
+    const { code, helpers, ir } = compileWithVIf(
       `<>{ok? <div>{msg}</div> : fail ? <div>fail</div>  : null }</>`,
     )
 
     expect(code).toMatchInlineSnapshot(`
-      "import { setText as _setText, createTextNode as _createTextNode, createIf as _createIf, template as _template } from 'vue/vapor';
-      const t0 = _template("<div></div>")
-      const t1 = _template("<div>fail</div>")
-
-      export function render(_ctx) {
+      "
         const n0 = _createIf(() => (ok), () => {
           const n2 = t0()
           _setText(n2, () => (msg))
@@ -48,17 +44,16 @@ describe('compiler: v-if', () => {
             const n6 = t1()
             return n6
           }, () => {
-            const n8 = _createTextNode([null])
+            const n8 = _createTextNode(null)
             return n8
           })
           return n4
         })
         return n0
-      }"
+      "
     `)
 
-    expect(vaporHelpers).contains('createIf')
-    expect(helpers.size).toBe(0)
+    expect(helpers).contains('createIf')
 
     expect(ir.template).toEqual(['<div></div>', '<div>fail</div>'])
     expect(ir.block.operation).toMatchObject([
@@ -89,28 +84,24 @@ describe('compiler: v-if', () => {
     // expect(code).matchSnapshot()
   })
   test('logical expression', () => {
-    const { code, vaporHelpers, helpers, ir } = compileWithVIf(
+    const { code, helpers, ir } = compileWithVIf(
       `<>{ok && <div>{msg}</div>}</>`,
     )
     expect(code).toMatchInlineSnapshot(`
-      "import { setText as _setText, createTextNode as _createTextNode, createIf as _createIf, template as _template } from 'vue/vapor';
-      const t0 = _template("<div></div>")
-
-      export function render(_ctx) {
+      "
         const n0 = _createIf(() => (ok), () => {
           const n2 = t0()
           _setText(n2, () => (msg))
           return n2
         }, () => {
-          const n4 = _createTextNode([() => (ok)])
+          const n4 = _createTextNode(() => (ok))
           return n4
         })
         return n0
-      }"
+      "
     `)
 
-    expect(vaporHelpers).contains('createIf')
-    expect(helpers.size).toBe(0)
+    expect(helpers).contains('createIf')
 
     expect(ir.template).toEqual(['<div></div>'])
     expect(ir.block.operation).toMatchObject([

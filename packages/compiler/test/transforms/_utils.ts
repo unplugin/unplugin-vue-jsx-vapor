@@ -1,5 +1,5 @@
 import { parse } from '@babel/parser'
-import { type CompilerOptions, generate, transform } from '../../src/'
+import { type CompilerOptions, generate, transform } from '../../src'
 import { IRNodeTypes, type RootNode } from '../../src/ir'
 import type { JSXElement, JSXFragment } from '@babel/types'
 
@@ -24,20 +24,20 @@ export function makeCompile(options: CompilerOptions = {}) {
       type: IRNodeTypes.ROOT,
       children,
       source,
-      components: [],
-      directives: [],
-      helpers: new Set(),
-      temps: 0,
     }
     const ir = transform(ast, {
       expressionPlugins: ['typescript', 'jsx'],
       ...options,
       ...overrideOptions,
+      inline: true,
+      prefixIdentifiers: false,
     }) as any
-    const { code, helpers, vaporHelpers } = generate(ir, {
+    const { code, helpers, preamble } = generate(ir, {
       ...options,
       ...overrideOptions,
+      inline: true,
+      prefixIdentifiers: false,
     })
-    return { ast, ir, code, helpers, vaporHelpers }
+    return { ast, ir, code, helpers, preamble }
   }
 }
