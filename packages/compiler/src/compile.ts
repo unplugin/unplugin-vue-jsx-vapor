@@ -3,7 +3,7 @@ import { parse } from '@babel/parser'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
   generate,
-} from './patched/compiler-vapor.js'
+} from '../patched/compiler-vapor.js'
 import {
   type DirectiveTransform,
   type NodeTransform,
