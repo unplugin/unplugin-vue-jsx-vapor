@@ -4,7 +4,7 @@
 
 Vue JSX Vapor.
 
-[REPL](https://repl.zmjs.dev/?preset=vue-jsx-vapor)
+[REPL](https://repl.zmjs.dev/vue-jsx-vapor)
 
 ## Install
 
