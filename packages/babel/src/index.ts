@@ -14,8 +14,15 @@ export type Options = {
   delegateEventSet: Set<string>
   preambleMap: Map<string, string>
   preambleIndex: number
-  roots: { node: JSXElement | JSXFragment; source: string }[]
-  compile?: CompilerOptions
+  roots: {
+    node: JSXElement | JSXFragment
+    source: string
+    inVaporComponent: boolean
+  }[]
+  opts: {
+    interop?: boolean
+    compile?: CompilerOptions
+  }
 }
 
 export default (): {
@@ -47,6 +54,18 @@ export default (): {
               state.roots.push({
                 node: path.node,
                 source: path.getSource(),
+                inVaporComponent: !state.opts.interop
+                  ? true
+                  : (
+                      path.findParent(
+                        ({ node }) =>
+                          node.type === 'CallExpression' &&
+                          node.callee.type === 'Identifier' &&
+                          ['defineVaporComponent', 'defineComponent'].includes(
+                            node.callee.name,
+                          ),
+                      ) as any
+                    )?.node.callee.name === 'defineVaporComponent',
               })
             }
           }

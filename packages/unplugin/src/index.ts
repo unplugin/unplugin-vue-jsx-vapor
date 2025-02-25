@@ -9,29 +9,31 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 ) => {
   return [
     plugin(options, meta),
-    {
-      name: 'unplugin-esbuild',
-      transformInclude: createFilter(
-        options?.include || /\.[jt]sx$/,
-        options?.exclude,
-      ),
-      transform(code, id) {
-        return transformWithEsbuild(code, id, {
-          target: 'esnext',
-          charset: 'utf8',
-          minify: false,
-          minifyIdentifiers: false,
-          minifySyntax: false,
-          minifyWhitespace: false,
-          treeShaking: false,
-          keepNames: false,
-          supported: {
-            'dynamic-import': true,
-            'import-meta': true,
+    options.interop
+      ? { name: 'interop' }
+      : {
+          name: 'unplugin-esbuild',
+          transformInclude: createFilter(
+            options?.include || /\.[jt]sx$/,
+            options?.exclude,
+          ),
+          transform(code, id) {
+            return transformWithEsbuild(code, id, {
+              target: 'esnext',
+              charset: 'utf8',
+              minify: false,
+              minifyIdentifiers: false,
+              minifySyntax: false,
+              minifyWhitespace: false,
+              treeShaking: false,
+              keepNames: false,
+              supported: {
+                'dynamic-import': true,
+                'import-meta': true,
+              },
+            })
           },
-        })
-      },
-    },
+        },
   ]
 }
 

@@ -13,7 +13,7 @@ export const transformJSX: VisitNodeFunction<
   if (isJSXElement(path.parent)) return
 
   const root = state.roots.shift()
-  if (!root) return
+  if (!root || !root.inVaporComponent) return
 
   const isTS = state.filename?.endsWith('tsx')
   let { code, helpers, preamble, map } = compile(root.node, {
@@ -21,7 +21,7 @@ export const transformJSX: VisitNodeFunction<
     filename: state.filename,
     sourceMap: true,
     source: ' '.repeat(root.node.start || 0) + root.source,
-    ...state?.compile,
+    ...state.opts.compile,
   })
 
   helpers.forEach((helper) => state.importSet.add(helper))

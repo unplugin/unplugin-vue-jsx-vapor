@@ -5,5 +5,6 @@ export interface Options {
   // define your plugin options here
   include?: FilterPattern
   exclude?: FilterPattern
+  interop?: boolean
   compile?: CompilerOptions
 }
