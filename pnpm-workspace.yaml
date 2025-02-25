@@ -1,8 +1,8 @@
 catalog:
-  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@3eccc60
-  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@3eccc60
-  '@vue/shared': https://pkg.pr.new/@vue/shared@3eccc60
-  vue: https://pkg.pr.new/vue@3eccc60
+  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@12927
+  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@12893
+  '@vue/shared': https://pkg.pr.new/@vue/shared@12927
+  vue: https://pkg.pr.new/vue@12927
   '@babel/types': ^7.26.7
   '@babel/core': ^7.26.7
   '@babel/parser': ^7.26.7

@@ -1,9 +1,8 @@
-import { extend, isString } from '@vue/shared'
-import { parse } from '@babel/parser'
+import { extend } from '@vue/shared'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
   generate,
-} from '../patched/compiler-vapor.js'
+} from '@vue/compiler-vapor'
 import {
   type DirectiveTransform,
   type NodeTransform,
@@ -38,7 +37,7 @@ export interface VaporCodegenResult
 
 // code/AST -> IR (transform) -> JS (generate)
 export function compile(
-  source: string | JSXElement | JSXFragment,
+  root: JSXElement | JSXFragment,
   options: CompilerOptions = {},
 ): VaporCodegenResult {
   const resolvedOptions = extend({}, options, {
@@ -56,30 +55,16 @@ export function compile(
     }
   }
 
-  let expression!: Expression
-  if (isString(source)) {
-    const {
-      body: [statement],
-    } = parse(source, {
-      sourceType: 'module',
-      plugins: resolvedOptions.expressionPlugins,
-    }).program
-    if (statement.type === 'ExpressionStatement') {
-      expression = statement.expression
-    }
-  } else {
-    expression = source
-  }
   const children =
-    expression.type === 'JSXFragment'
-      ? expression.children
-      : expression.type === 'JSXElement'
-        ? [expression]
+    root.type === 'JSXFragment'
+      ? root.children
+      : root.type === 'JSXElement'
+        ? [root]
         : []
   const ast: RootNode = {
     type: IRNodeTypes.ROOT,
     children,
-    source: isString(source) ? source : options.source || '',
+    source: options.source || '',
   }
   const [nodeTransforms, directiveTransforms] = getBaseTransformPreset()
 

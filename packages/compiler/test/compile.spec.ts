@@ -1,9 +1,34 @@
 import { describe, expect, test } from 'vitest'
-import { type CompilerOptions, compile as _compile } from '../src'
+import {
+  transformChildren,
+  transformElement,
+  transformTemplateRef,
+  transformText,
+  transformVBind,
+  transformVHtml,
+  transformVModel,
+  transformVOn,
+  transformVShow,
+  transformVSlot,
+} from '../src'
+import { makeCompile } from './transforms/_utils'
 
-export function compile(template: string, options: CompilerOptions = {}) {
-  return _compile(template, options)
-}
+const compile = makeCompile({
+  nodeTransforms: [
+    transformTemplateRef,
+    transformText,
+    transformElement,
+    transformVSlot,
+    transformChildren,
+  ],
+  directiveTransforms: {
+    bind: transformVBind,
+    on: transformVOn,
+    model: transformVModel,
+    show: transformVShow,
+    html: transformVHtml,
+  },
+})
 
 describe('compile', () => {
   test('static template', () => {

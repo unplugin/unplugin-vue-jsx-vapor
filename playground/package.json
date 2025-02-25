@@ -6,6 +6,7 @@
     "dev": "node vite.js --port 5174"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
     "unplugin-vue-jsx-vapor": "workspace:*",
     "vite": "^6.0.0",
     "vite-hyper-config": "^0.5.0",
