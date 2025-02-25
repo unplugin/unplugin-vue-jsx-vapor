@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.1
+
+### Patch Changes
+
+- use hash instead of id for pkg.pr.new
+
 ## 0.2.0
 
 ### Minor Changes

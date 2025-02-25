@@ -1,5 +1,14 @@
 # unplugin-vue-jsx-vapor
 
+## 1.4.1
+
+### Patch Changes
+
+- use hash instead of id for pkg.pr.new
+- Updated dependencies
+  - @vue-jsx-vapor/babel@0.1.1
+  - @vue-jsx-vapor/compiler@0.2.1
+
 ## 1.4.0
 
 ### Minor Changes

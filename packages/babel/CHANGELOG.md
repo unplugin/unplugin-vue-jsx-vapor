@@ -1,5 +1,13 @@
 # @vue-jsx-vapor/babel
 
+## 0.1.1
+
+### Patch Changes
+
+- use hash instead of id for pkg.pr.new
+- Updated dependencies
+  - @vue-jsx-vapor/compiler@0.2.1
+
 ## 0.1.0
 
 ### Minor Changes
