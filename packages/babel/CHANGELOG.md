@@ -1,5 +1,17 @@
 # @vue-jsx-vapor/babel
 
+## 0.1.0
+
+### Minor Changes
+
+- 141c8af: migrate to vue/core's vapor branch
+
+### Patch Changes
+
+- add interop mode
+- Updated dependencies [141c8af]
+  - @vue-jsx-vapor/compiler@0.2.0
+
 ## 0.0.5
 
 ### Patch Changes

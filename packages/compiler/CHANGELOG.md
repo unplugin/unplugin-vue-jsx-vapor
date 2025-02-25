@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.0
+
+### Minor Changes
+
+- 141c8af: migrate to vue/core's vapor branch
+
 ## 0.1.6
 
 ### Patch Changes
