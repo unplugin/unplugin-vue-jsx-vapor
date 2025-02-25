@@ -26,7 +26,7 @@ import {
   type RootNode,
 } from './ir'
 import type { CompilerOptions as BaseCompilerOptions } from '@vue/compiler-dom'
-import type { Expression, JSXElement, JSXFragment } from '@babel/types'
+import type { JSXElement, JSXFragment } from '@babel/types'
 
 export { generate }
 
