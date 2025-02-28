@@ -1,10 +1,13 @@
 import { compile } from '@vue-jsx-vapor/compiler'
 import { parse } from '@babel/parser'
 import { SourceMapConsumer } from 'source-map-js'
-import traverse, { type VisitNodeFunction } from '@babel/traverse'
+import _traverse, { type VisitNodeFunction } from '@babel/traverse'
 import { isJSXElement } from './utils'
 import type { Options } from '.'
 import type { JSXElement, JSXFragment } from '@babel/types'
+
+// @ts-ignore
+const traverse = (_traverse.default || _traverse) as typeof _traverse
 
 export const transformJSX: VisitNodeFunction<
   Options,

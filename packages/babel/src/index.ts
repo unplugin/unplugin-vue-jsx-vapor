@@ -1,5 +1,5 @@
 // @ts-ignore
-import SyntaxJSX from '@babel/plugin-syntax-jsx'
+import _SyntaxJSX from '@babel/plugin-syntax-jsx'
 import { parse } from '@babel/parser'
 import { transformJSX } from './transform'
 import { isConditionalExpression, isJSXElement } from './utils'
@@ -7,6 +7,8 @@ import type { VisitNodeFunction } from '@babel/traverse'
 import type { JSXElement, JSXFragment, Node } from '@babel/types'
 import type { CompilerOptions } from '@vue-jsx-vapor/compiler'
 import type { Visitor } from '@babel/core'
+
+const SyntaxJSX = _SyntaxJSX.default || _SyntaxJSX
 
 export type Options = {
   filename: string
