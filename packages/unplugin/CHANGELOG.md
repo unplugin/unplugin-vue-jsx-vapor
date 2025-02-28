@@ -1,5 +1,12 @@
 # unplugin-vue-jsx-vapor
 
+## 1.4.2
+
+### Patch Changes
+
+- Updated dependencies
+  - @vue-jsx-vapor/babel@0.1.2
+
 ## 1.4.1
 
 ### Patch Changes

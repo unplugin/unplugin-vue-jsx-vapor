@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/babel
 
+## 0.1.2
+
+### Patch Changes
+
+- compatibility with CommonJS
+
 ## 0.1.1
 
 ### Patch Changes
