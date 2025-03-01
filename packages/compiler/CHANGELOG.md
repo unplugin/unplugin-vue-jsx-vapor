@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.2
+
+### Patch Changes
+
+- support nested component slot
+
 ## 0.2.1
 
 ### Patch Changes
