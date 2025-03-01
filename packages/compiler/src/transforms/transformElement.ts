@@ -101,7 +101,7 @@ function transformComponentElement(
     props: propsResult[0] ? propsResult[1] : [propsResult[1]],
     asset,
     root: singleRoot,
-    slots: context.slots,
+    slots: [...context.slots],
     once: context.inVOnce,
   })
   context.slots = []

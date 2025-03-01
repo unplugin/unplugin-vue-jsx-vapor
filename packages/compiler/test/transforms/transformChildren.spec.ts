@@ -112,4 +112,28 @@ describe('compiler: children transform', () => {
     ])
     expect(code).contains('_setDynamicProps(n0, [obj], true)')
   })
+
+  test('efficient traversal', () => {
+    const { code } = compileWithElementTransform(
+      `<div>
+    <div>x</div>
+    <div><span>{{ msg }}</span></div>
+    <div><span>{{ msg }}</span></div>
+    <div><span>{{ msg }}</span></div>
+  </div>`,
+    )
+    expect(code).toMatchSnapshot()
+  })
+
+  test('efficient find', () => {
+    const { code } = compileWithElementTransform(
+      `<div>
+        <div>x</div>
+        <div>x</div>
+        <div>{{ msg }}</div>
+      </div>`,
+    )
+    expect(code).contains(`const n0 = _nthChild(n1, 2)`)
+    expect(code).toMatchSnapshot()
+  })
 })

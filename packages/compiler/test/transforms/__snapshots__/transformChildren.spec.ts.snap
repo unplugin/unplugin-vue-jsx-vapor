@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compiler: children transform > efficient find 1`] = `
+"
+  const n1 = t0()
+  const n0 = _nthChild(n1, 2)
+  _setText(n0, () => ({ msg: msg }))
+  return n1
+"
+`;
+
+exports[`compiler: children transform > efficient traversal 1`] = `
+"
+  const n3 = t0()
+  const p0 = _next(_child(n3))
+  const n0 = _child(p0)
+  const p1 = _next(p0)
+  const n1 = _child(p1)
+  const p2 = _next(p1)
+  const n2 = _child(p2)
+  _setText(n0, () => ({ msg: msg }))
+  _setText(n1, () => ({ msg: msg }))
+  _setText(n2, () => ({ msg: msg }))
+  return n3
+"
+`;

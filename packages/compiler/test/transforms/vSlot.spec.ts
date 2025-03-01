@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 // import { ErrorCodes, NodeTypes } from '@vue/compiler-dom'
+import { IRNodeTypes, IRSlotType } from '@vue/compiler-vapor'
 import {
   // IRNodeTypes,
   // IRSlotType,
@@ -97,6 +98,34 @@ describe('compiler: transform slot', () => {
     //     ],
     //   },
     // ])
+  })
+
+  test('nested component slot', () => {
+    const { ir, code } = compileWithSlots(`<A><B/></A>`)
+    expect(code).toMatchSnapshot()
+    expect(ir.block.operation).toMatchObject([
+      {
+        type: IRNodeTypes.CREATE_COMPONENT_NODE,
+        tag: 'A',
+        slots: [
+          {
+            slotType: IRSlotType.STATIC,
+            slots: {
+              default: {
+                type: IRNodeTypes.BLOCK,
+                operation: [
+                  {
+                    type: IRNodeTypes.CREATE_COMPONENT_NODE,
+                    tag: 'B',
+                    slots: [],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ])
   })
 
   /*
