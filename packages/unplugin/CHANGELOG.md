@@ -1,5 +1,11 @@
 # unplugin-vue-jsx-vapor
 
+## 1.4.4
+
+### Patch Changes
+
+- 0890bbd: use VaporFragment from vue
+
 ## 1.4.3
 
 ### Patch Changes
