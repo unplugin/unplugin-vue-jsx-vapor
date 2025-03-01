@@ -1,6 +1,12 @@
-import { createIf, effectScope, insert, remove, renderEffect } from 'vue'
+import {
+  VaporFragment,
+  effectScope,
+  insert,
+  isFragment,
+  remove,
+  renderEffect,
+} from 'vue'
 
-const VaporFragment = createIf(() => {}).__proto__.__proto__.constructor
 function createFragment(nodes) {
   const frag = new VaporFragment(nodes)
   frag.anchor = document.createTextNode('')
@@ -10,7 +16,7 @@ function createFragment(nodes) {
 function normalizeValue(value) {
   return value == null || typeof value === 'boolean'
     ? document.createTextNode('')
-    : value instanceof Node || value instanceof VaporFragment
+    : value instanceof Node || isFragment(value)
       ? value
       : Array.isArray(value)
         ? createFragment(value.map(normalizeValue))
@@ -20,7 +26,7 @@ function normalizeValue(value) {
 function resolveValue(current, value) {
   const node = normalizeValue(value)
   if (current) {
-    if (current instanceof VaporFragment) {
+    if (isFragment(current)) {
       const { anchor } = current
       if (anchor.parentNode) {
         remove(current.nodes, anchor.parentNode)
@@ -28,7 +34,7 @@ function resolveValue(current, value) {
         anchor.remove()
       }
     } else if (current.nodeType) {
-      if (node instanceof VaporFragment && current.parentNode) {
+      if (isFragment(node) && current.parentNode) {
         insert(node, current.parentNode, current)
         current.remove()
       } else if (current.nodeType === 3 && node.nodeType === 3) {
