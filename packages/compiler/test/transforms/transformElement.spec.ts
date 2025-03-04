@@ -54,4 +54,18 @@ describe('compiler: element transform', () => {
     expect(code).contains(`Foo.Example`)
     expect(helpers).not.toContain('resolveComponent')
   })
+
+  test('props merging: style', () => {
+    const { code } = compileWithElementTransform(
+      `<Foo style="color: green" style={{ color: 'red' }} />`,
+    )
+    expect(code).toMatchSnapshot()
+  })
+
+  test('props merging: class', () => {
+    const { code } = compileWithElementTransform(
+      `<Foo class="foo" class={{ bar: isBar }} />`,
+    )
+    expect(code).toMatchSnapshot()
+  })
 })
