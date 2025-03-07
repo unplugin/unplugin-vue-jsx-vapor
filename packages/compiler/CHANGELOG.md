@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.4
+
+### Patch Changes
+
+- support string source
+
 ## 0.2.3
 
 ### Patch Changes
