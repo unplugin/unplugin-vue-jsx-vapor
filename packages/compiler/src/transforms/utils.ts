@@ -45,8 +45,7 @@ export function createBranch(
   context: TransformContext,
   isVFor?: boolean,
 ): [BlockIRNode, () => void] {
-  context.node = node = wrapFragment(node, isVFor)
-
+  context.node = node = wrapFragment(node)
   const branch: BlockIRNode = newBlock(node)
   const exitBlock = context.enterBlock(branch, isVFor)
   context.reference()
@@ -55,35 +54,9 @@ export function createBranch(
 
 export function wrapFragment(
   node: JSXElement | JSXFragment | Expression,
-  isVFor?: boolean,
 ): JSXFragment {
   if (node.type === 'JSXFragment') {
     return node
-  }
-
-  if (
-    isVFor &&
-    (node.type === 'ArrowFunctionExpression' ||
-      node.type === 'FunctionExpression')
-  ) {
-    if (isJSXElement(node.body)) {
-      node = node.body
-    } else if (
-      node.body.type === 'BlockStatement' &&
-      node.body.body[0].type === 'ReturnStatement' &&
-      node.body.body[0].argument
-    ) {
-      node = node.body.body[0].argument
-    } else {
-      node = {
-        ...callExpression(
-          parenthesizedExpression(arrowFunctionExpression([], node.body)),
-          [],
-        ),
-        start: node.body.start,
-        end: node.body.end,
-      }
-    }
   }
 
   return jsxFragment(jsxOpeningFragment(), jsxClosingFragment(), [

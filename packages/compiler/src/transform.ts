@@ -6,7 +6,7 @@ import {
   defaultOnError,
   defaultOnWarn,
 } from '@vue/compiler-dom'
-import { EMPTY_OBJ, NOOP, extend, isArray } from '@vue/shared'
+import { EMPTY_OBJ, NOOP, extend, isArray, isString } from '@vue/shared'
 import {
   type BlockIRNode,
   DynamicFlag,
@@ -19,7 +19,7 @@ import {
   type RootNode,
 } from './ir'
 import { newBlock, newDynamic } from './transforms/utils'
-import { isConstantExpression } from './utils'
+import { findProp, getText, isConstantExpression } from './utils'
 import type { JSXAttribute, JSXElement, JSXFragment } from '@babel/types'
 
 export type NodeTransform = (
@@ -42,6 +42,14 @@ export interface DirectiveTransformResult {
   model?: boolean
   modelModifiers?: string[]
 }
+
+// A structural directive transform is technically also a NodeTransform;
+// Only v-if and v-for fall into this category.
+export type StructuralDirectiveTransform = (
+  node: JSXElement,
+  dir: JSXAttribute,
+  context: TransformContext,
+) => void | (() => void)
 
 export type TransformOptions = HackOptions<BaseTransformOptions>
 const defaultOptions = {
@@ -246,5 +254,38 @@ export function transformNode(context: TransformContext<BlockIRNode['node']>) {
 
   if (context.node.type === IRNodeTypes.ROOT) {
     context.registerTemplate()
+  }
+}
+
+export function createStructuralDirectiveTransform(
+  name: string | string[],
+  fn: StructuralDirectiveTransform,
+): NodeTransform {
+  const matches = (n: string) =>
+    isString(name) ? n === name : name.includes(n)
+
+  return (node, context) => {
+    if (node.type === 'JSXElement') {
+      const {
+        openingElement: { attributes, name },
+      } = node
+      // structural directive transforms are not concerned with slots
+      // as they are handled separately in vSlot.ts
+      if (getText(name, context) === 'template' && findProp(node, 'v-slot')) {
+        return
+      }
+      const exitFns = []
+      for (const prop of attributes) {
+        if (prop.type !== 'JSXAttribute') continue
+        const propName = getText(prop.name, context)
+        if (propName.startsWith('v-') && matches(propName.slice(2))) {
+          attributes.splice(attributes.indexOf(prop), 1)
+          const onExit = fn(node, prop, context as TransformContext)
+          if (onExit) exitFns.push(onExit)
+          break
+        }
+      }
+      return exitFns
+    }
   }
 }

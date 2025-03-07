@@ -29,12 +29,14 @@ import { EMPTY_EXPRESSION } from './transforms/utils'
 import type { TransformContext } from './transform'
 import type { VaporDirectiveNode } from './ir'
 
-export function propToExpression(prop: AttributeNode | VaporDirectiveNode) {
-  return prop.type === NodeTypes.ATTRIBUTE
-    ? prop.value
-      ? createSimpleExpression(prop.value.content, true, prop.value.loc)
-      : EMPTY_EXPRESSION
-    : prop.exp
+export function propToExpression(
+  prop: JSXAttribute,
+  context: TransformContext,
+) {
+  return prop.type === 'JSXAttribute' &&
+    prop.value?.type === 'JSXExpressionContainer'
+    ? resolveExpression(prop.value.expression, context)
+    : EMPTY_EXPRESSION
 }
 
 export function isConstantExpression(exp: SimpleExpressionNode) {
@@ -319,4 +321,8 @@ export function isJSXElement(
   node?: Node | null,
 ): node is JSXElement | JSXFragment {
   return !!node && (node.type === 'JSXElement' || node.type === 'JSXFragment')
+}
+
+export function getText(node: Node, content: TransformContext) {
+  return content.ir.source.slice(node.start!, node.end!)
 }

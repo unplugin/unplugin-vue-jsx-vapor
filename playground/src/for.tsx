@@ -13,7 +13,7 @@ export default () => {
             </>
           )
         } else {
-          return [<br />, <span>({index}) lt 1</span>]
+          return [<span>({index}) lt 1</span>, <br />]
         }
       })}
     </>
@@ -23,7 +23,17 @@ export default () => {
     <div>
       <input v-model={count.value} type="number" />
 
-      {Arr}
+      <div style="display: flex;">
+        <fieldset>
+          <legend>map</legend>
+          {Arr}
+        </fieldset>
+
+        <fieldset>
+          <legend>v-for</legend>
+          <div v-for={(_, index) in count.value}>{index}</div>
+        </fieldset>
+      </div>
     </div>
   )
 }

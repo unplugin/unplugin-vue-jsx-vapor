@@ -25,6 +25,7 @@ import {
   type RootIRNode,
   type RootNode,
 } from './ir'
+import { transformVFor } from './transforms/vFor'
 import type { CompilerOptions as BaseCompilerOptions } from '@vue/compiler-dom'
 import type { JSXElement, JSXFragment } from '@babel/types'
 
@@ -97,6 +98,7 @@ export type TransformPreset = [
 export function getBaseTransformPreset(): TransformPreset {
   return [
     [
+      transformVFor,
       transformTemplateRef,
       transformText,
       transformElement,
