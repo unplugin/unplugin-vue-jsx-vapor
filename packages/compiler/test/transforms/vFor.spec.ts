@@ -1,7 +1,6 @@
 import { NodeTypes } from '@vue/compiler-dom'
 import { describe, expect, test } from 'vitest'
 import {
-  type ForIRNode,
   IRNodeTypes,
   transformChildren,
   transformElement,

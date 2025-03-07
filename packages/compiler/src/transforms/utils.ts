@@ -3,13 +3,10 @@ import {
   type Expression,
   type JSXElement,
   type JSXFragment,
-  arrowFunctionExpression,
-  callExpression,
   jsxClosingFragment,
   jsxExpressionContainer,
   jsxFragment,
   jsxOpeningFragment,
-  parenthesizedExpression,
 } from '@babel/types'
 import {
   type BlockIRNode,
@@ -17,7 +14,6 @@ import {
   type IRDynamicInfo,
   type IRNodeTypes,
 } from '../ir/index'
-import { isJSXElement } from '../utils'
 import type { TransformContext } from '../transform'
 
 export function newDynamic(): IRDynamicInfo {
