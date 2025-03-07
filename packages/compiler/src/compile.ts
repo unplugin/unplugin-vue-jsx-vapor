@@ -1,8 +1,9 @@
-import { extend } from '@vue/shared'
+import { extend, isString } from '@vue/shared'
 import {
   type VaporCodegenResult as BaseVaporCodegenResult,
   generate,
 } from '@vue/compiler-vapor'
+import { parse } from '@babel/parser'
 import {
   type DirectiveTransform,
   type NodeTransform,
@@ -27,7 +28,7 @@ import {
 } from './ir'
 import { transformVFor } from './transforms/vFor'
 import type { CompilerOptions as BaseCompilerOptions } from '@vue/compiler-dom'
-import type { JSXElement, JSXFragment } from '@babel/types'
+import type { ExpressionStatement, JSXElement, JSXFragment } from '@babel/types'
 
 export { generate }
 
@@ -38,7 +39,7 @@ export interface VaporCodegenResult
 
 // code/AST -> IR (transform) -> JS (generate)
 export function compile(
-  root: JSXElement | JSXFragment,
+  source: JSXElement | JSXFragment | string,
   options: CompilerOptions = {},
 ): VaporCodegenResult {
   const resolvedOptions = extend({}, options, {
@@ -46,7 +47,10 @@ export function compile(
     prefixIdentifiers: false,
     expressionPlugins: options.expressionPlugins || ['jsx'],
   })
-  if (options.isTS) {
+  if (!resolvedOptions.source && isString(source)) {
+    resolvedOptions.source = source
+  }
+  if (resolvedOptions.isTS) {
     const { expressionPlugins } = resolvedOptions
     if (!expressionPlugins.includes('typescript')) {
       resolvedOptions.expressionPlugins = [
@@ -55,7 +59,14 @@ export function compile(
       ]
     }
   }
-
+  const root = isString(source)
+    ? (
+        parse(source, {
+          sourceType: 'module',
+          plugins: resolvedOptions.expressionPlugins,
+        }).program.body[0] as ExpressionStatement
+      ).expression
+    : source
   const children =
     root.type === 'JSXFragment'
       ? root.children
@@ -65,7 +76,7 @@ export function compile(
   const ast: RootNode = {
     type: IRNodeTypes.ROOT,
     children,
-    source: options.source || '',
+    source: resolvedOptions.source || '',
   }
   const [nodeTransforms, directiveTransforms] = getBaseTransformPreset()
 
@@ -74,12 +85,12 @@ export function compile(
     extend({}, resolvedOptions, {
       nodeTransforms: [
         ...nodeTransforms,
-        ...(options.nodeTransforms || []), // user transforms
+        ...(resolvedOptions.nodeTransforms || []), // user transforms
       ],
       directiveTransforms: extend(
         {},
         directiveTransforms,
-        options.directiveTransforms || {}, // user transforms
+        resolvedOptions.directiveTransforms || {}, // user transforms
       ),
     }),
   )

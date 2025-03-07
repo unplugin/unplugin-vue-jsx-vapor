@@ -169,7 +169,7 @@
   },
   "dependencies": {
     "@babel/core": "catalog:",
-    "@babel/plugin-transform-typescript": "^7.26.7",
+    "@babel/plugin-transform-typescript": "^7.26.8",
     "@vue-jsx-vapor/babel": "workspace:*",
     "@vue-jsx-vapor/compiler": "workspace:*",
     "@vue-macros/common": "^1.16.1",

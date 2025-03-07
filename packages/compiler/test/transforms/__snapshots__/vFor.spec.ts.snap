@@ -52,28 +52,6 @@ exports[`compiler: v-for > nested v-for 1`] = `
 "
 `;
 
-exports[`compiler: v-for > object de-structured index 1`] = `
-"
-  const n0 = _createFor(() => (items), (_for_item0, _for_key0, _for_index0) => {
-    const n2 = t0()
-    _setText(n2, () => (_for_item0.value.id), () => (_for_item0.value.value), () => (_for_index0.value))
-    return n2
-  }, ({ id, value }, key, index) => (id))
-  return n0
-"
-`;
-
-exports[`compiler: v-for > object de-structured value (with key and index) 1`] = `
-"
-  const n0 = _createFor(() => (items), (_for_item0, _for_key0, _for_index0) => {
-    const n2 = t0()
-    _setText(n2, () => (_for_item0.value.id), () => (_for_item0.value.value), () => (_for_index0.value))
-    return n2
-  }, ({ id, value }, key, index) => (id))
-  return n0
-"
-`;
-
 exports[`compiler: v-for > object de-structured value (with rest) 1`] = `
 "
   const n0 = _createFor(() => (list), (_for_item0, _for_key0) => {
@@ -97,17 +75,6 @@ exports[`compiler: v-for > object de-structured value 1`] = `
 `;
 
 exports[`compiler: v-for > object value, key and index 1`] = `
-"
-  const n0 = _createFor(() => (items), (_for_item0, _for_key0, _for_index0) => {
-    const n2 = t0()
-    _setText(n2, () => (id), () => (_for_item0.value), () => (_for_index0.value))
-    return n2
-  }, (value, key, index) => (id))
-  return n0
-"
-`;
-
-exports[`compiler: v-for > object value, key, index) 1`] = `
 "
   const n0 = _createFor(() => (items), (_for_item0, _for_key0, _for_index0) => {
     const n2 = t0()
