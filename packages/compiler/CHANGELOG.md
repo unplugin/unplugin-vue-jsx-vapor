@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.3
+
+### Patch Changes
+
+- support native v-for directive
+
 ## 0.2.2
 
 ### Patch Changes
