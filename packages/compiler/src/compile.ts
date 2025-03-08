@@ -28,6 +28,7 @@ import {
   type RootNode,
 } from './ir'
 import { transformVFor } from './transforms/vFor'
+import { transformVOnce } from './transforms/vOnce'
 import type { CompilerOptions as BaseCompilerOptions } from '@vue/compiler-dom'
 import type { ExpressionStatement, JSXElement, JSXFragment } from '@babel/types'
 
@@ -110,6 +111,7 @@ export type TransformPreset = [
 export function getBaseTransformPreset(): TransformPreset {
   return [
     [
+      transformVOnce,
       transformVFor,
       transformTemplateRef,
       transformText,

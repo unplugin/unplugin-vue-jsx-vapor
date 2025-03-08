@@ -1,0 +1,55 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compiler: v-once > as root node 1`] = `
+"
+  const n0 = t0()
+  _setProp(n0, "id", foo)
+  return n0
+"
+`;
+
+exports[`compiler: v-once > basic 1`] = `
+"
+  const n2 = t0()
+  const n1 = _child(n2)
+  const n0 = _createTextNode(msg.value)
+  _setClass(n1, clz.value)
+  _prepend(n2, n0)
+  return n2
+"
+`;
+
+exports[`compiler: v-once > inside v-once 1`] = `
+"
+  const n0 = t0()
+  return n0
+"
+`;
+
+exports[`compiler: v-once > on component 1`] = `
+"
+  const n1 = t0()
+  const n0 = _createComponent(Comp, { id: () => (foo) }, null, null, true)
+  _insert(n0, n1)
+  return n1
+"
+`;
+
+exports[`compiler: v-once > on nested plain element 1`] = `
+"
+  const n1 = t0()
+  const n0 = _child(n1)
+  _setProp(n0, "id", foo)
+  return n1
+"
+`;
+
+exports[`compiler: v-once > with v-for 1`] = `
+"
+  const n0 = _createFor(() => (list), (_for_item0) => {
+    const n2 = t0()
+    return n2
+  }, null, 4)
+  return n0
+"
+`;

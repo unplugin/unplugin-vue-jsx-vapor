@@ -6,6 +6,7 @@ import Slot from './slot'
 import Model from './model'
 import Show from './show'
 import Html from './html'
+import Once from './once'
 
 export default () => {
   const count = ref('1')
@@ -60,6 +61,11 @@ export default () => {
       <fieldset>
         <legend>v-html</legend>
         <Html />
+      </fieldset>
+
+      <fieldset>
+        <legend>v-once</legend>
+        <Once />
       </fieldset>
     </>
   )
