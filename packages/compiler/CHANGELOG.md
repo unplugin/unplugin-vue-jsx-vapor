@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.5
+
+### Patch Changes
+
+- support native v-slot directive
+
 ## 0.2.4
 
 ### Patch Changes
