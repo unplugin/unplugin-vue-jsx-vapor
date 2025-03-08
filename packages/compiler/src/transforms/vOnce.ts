@@ -1,4 +1,3 @@
-import { NodeTypes, findDir } from '@vue/compiler-dom'
 import { findProp } from '../utils'
 import type { NodeTransform } from '../transform'
 
