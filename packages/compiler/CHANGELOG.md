@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.6
+
+### Patch Changes
+
+- support v-once directive
+
 ## 0.2.5
 
 ### Patch Changes
