@@ -22,6 +22,18 @@ exports[`compiler: v-for > array de-structured value 1`] = `
 "
 `;
 
+exports[`compiler: v-for > basic v-for 1`] = `
+"
+  const n0 = _createFor(() => (items), (_for_item0) => {
+    const n2 = t0()
+    _setText(n2, () => (_for_item0.value))
+    n2.$evtclick = () => remove(_for_item0.value)
+    return n2
+  }, (item) => (item.id))
+  return n0
+"
+`;
+
 exports[`compiler: v-for > multi effect 1`] = `
 "
   const n0 = _createFor(() => (items), (_for_item0, _for_key0) => {

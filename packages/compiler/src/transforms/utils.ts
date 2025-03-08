@@ -14,6 +14,7 @@ import {
   type IRDynamicInfo,
   type IRNodeTypes,
 } from '../ir/index'
+import { isTemplate } from '../utils'
 import type { TransformContext } from '../transform'
 
 export function newDynamic(): IRDynamicInfo {
@@ -48,10 +49,8 @@ export function createBranch(
   return [branch, exitBlock]
 }
 
-export function wrapFragment(
-  node: JSXElement | JSXFragment | Expression,
-): JSXFragment {
-  if (node.type === 'JSXFragment') {
+export function wrapFragment(node: JSXElement | JSXFragment | Expression) {
+  if (node.type === 'JSXFragment' || isTemplate(node)) {
     return node
   }
 

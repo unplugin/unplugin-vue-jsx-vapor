@@ -14,6 +14,7 @@ import {
 } from '../ir'
 import {
   isJSXComponent,
+  isTemplate,
   resolveExpression,
   resolveSimpleExpression,
 } from '../utils'
@@ -36,7 +37,7 @@ const isDirectiveRegex = /^v-[a-z]/
 export const transformElement: NodeTransform = (node, context) => {
   return function postTransformElement() {
     ;({ node } = context)
-    if (node.type !== 'JSXElement') return
+    if (node.type !== 'JSXElement' || isTemplate(node)) return
 
     const {
       openingElement: { name },
@@ -54,10 +55,19 @@ export const transformElement: NodeTransform = (node, context) => {
       isComponent,
     )
 
+    let { parent } = context
+    while (
+      parent &&
+      parent.parent &&
+      parent.node.type === 'JSXElement' &&
+      isTemplate(parent.node)
+    ) {
+      parent = parent.parent
+    }
     const singleRoot =
-      context.root === context.parent &&
-      context.parent.node.children.filter((child) => !isJSXComponent(child))
-        .length === 1
+      context.root === parent &&
+      parent.node.children.filter((child) => !isJSXComponent(child)).length ===
+        1
     ;(isComponent ? transformComponentElement : transformNativeElement)(
       tag,
       propsResult,
@@ -248,6 +258,7 @@ function transformProp(
       : prop.name.type === 'JSXNamespacedName'
         ? prop.name.namespace.name
         : ''
+  name = name.split('_')[0]
 
   if (
     !isDirectiveRegex.test(name) &&

@@ -19,7 +19,7 @@ import {
   type RootNode,
 } from './ir'
 import { newBlock, newDynamic } from './transforms/utils'
-import { findProp, getText, isConstantExpression } from './utils'
+import { findProp, getText, isConstantExpression, isTemplate } from './utils'
 import type { JSXAttribute, JSXElement, JSXFragment } from '@babel/types'
 
 export type NodeTransform = (
@@ -267,11 +267,11 @@ export function createStructuralDirectiveTransform(
   return (node, context) => {
     if (node.type === 'JSXElement') {
       const {
-        openingElement: { attributes, name },
+        openingElement: { attributes },
       } = node
       // structural directive transforms are not concerned with slots
       // as they are handled separately in vSlot.ts
-      if (getText(name, context) === 'template' && findProp(node, 'v-slot')) {
+      if (isTemplate(node) && findProp(node, 'v-slot')) {
         return
       }
       const exitFns = []

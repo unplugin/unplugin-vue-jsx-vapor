@@ -21,11 +21,31 @@ describe('compiler: vModel transform', () => {
     expect(code).toMatchInlineSnapshot(`
       "
         const n0 = t0()
-        _applyTextModel(n0, () => (model), _value => (model = _value))
+        _applyTextModel(n0, () => (model), _value => (model = _value), { undefined: true })
         return n0
       "
     `)
     expect(helpers).toContain('applyTextModel')
+  })
+
+  describe('modifiers', () => {
+    test('.number', () => {
+      const { code } = compileWithVModel('<input v-model_number={model} />')
+
+      expect(code).toMatchSnapshot()
+    })
+
+    test('.trim', () => {
+      const { code } = compileWithVModel('<input v-model_trim={model} />')
+
+      expect(code).toMatchSnapshot()
+    })
+
+    test('.lazy', () => {
+      const { code } = compileWithVModel('<input v-model_lazy={model} />')
+
+      expect(code).toMatchSnapshot()
+    })
   })
 
   /*
@@ -156,26 +176,6 @@ describe('compiler: vModel transform', () => {
         onError,
       })
       expect(onError).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('modifiers', () => {
-    test('.number', () => {
-      const { code } = compileWithVModel('<input v-model.number="model" />')
-
-      expect(code).toMatchSnapshot()
-    })
-
-    test('.trim', () => {
-      const { code } = compileWithVModel('<input v-model.trim="model" />')
-
-      expect(code).toMatchSnapshot()
-    })
-
-    test('.lazy', () => {
-      const { code } = compileWithVModel('<input v-model.lazy="model" />')
-
-      expect(code).toMatchSnapshot()
     })
   })
 

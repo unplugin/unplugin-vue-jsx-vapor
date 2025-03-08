@@ -17,6 +17,7 @@ import { transformText } from './transforms/transformText'
 import { transformVBind } from './transforms/vBind'
 import { transformVOn } from './transforms/vOn'
 import { transformVSlot } from './transforms/vSlot'
+import { transformVSlots } from './transforms/vSlots'
 import { transformVModel } from './transforms/vModel'
 import { transformVShow } from './transforms/vShow'
 import { transformVHtml } from './transforms/vHtml'
@@ -113,6 +114,7 @@ export function getBaseTransformPreset(): TransformPreset {
       transformTemplateRef,
       transformText,
       transformElement,
+      transformVSlots,
       transformVSlot,
       transformChildren,
     ],

@@ -21,7 +21,7 @@ export default () => {
 
   return (
     <div>
-      <input v-model={count.value} type="number" />
+      <input v-model_number={count.value} />
 
       <div style="display: flex;">
         <fieldset>

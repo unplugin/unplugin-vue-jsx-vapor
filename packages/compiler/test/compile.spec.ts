@@ -10,6 +10,7 @@ import {
   transformVOn,
   transformVShow,
   transformVSlot,
+  transformVSlots,
 } from '../src'
 import { makeCompile } from './transforms/_utils'
 
@@ -18,6 +19,7 @@ const compile = makeCompile({
     transformTemplateRef,
     transformText,
     transformElement,
+    transformVSlots,
     transformVSlot,
     transformChildren,
   ],

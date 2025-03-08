@@ -25,6 +25,7 @@ import {
   type StringLiteral,
   isLiteral,
 } from '@babel/types'
+import { parseExpression } from '@babel/parser'
 import { EMPTY_EXPRESSION } from './transforms/utils'
 import type { TransformContext } from './transform'
 import type { VaporDirectiveNode } from './ir'
@@ -112,6 +113,18 @@ export function isEmptyText(node: Node) {
     (node.type === 'JSXExpressionContainer' &&
       node.expression.type === 'JSXEmptyExpression')
   )
+}
+
+export function resolveSimpleExpressionNode(
+  exp: SimpleExpressionNode,
+): SimpleExpressionNode {
+  if (!exp.isStatic) {
+    const value = getLiteralExpressionValue(exp)
+    if (value !== null) {
+      return createSimpleExpression(`${value}`, true, exp.loc)
+    }
+  }
+  return exp
 }
 
 export function resolveExpression(
@@ -268,31 +281,74 @@ export function resolveNode(
   }
 }
 
+const namespaceRE = /^(?:\$([\w-]+)\$)?([\w-]+)?/
 export function resolveDirectiveNode(
   node: JSXAttribute,
   context: TransformContext,
+  withFn = false,
 ): VaporDirectiveNode {
   const { value, name } = node
-  const nameString = name.type === 'JSXIdentifier' ? name.name : ''
-  const argString = name.type === 'JSXNamespacedName' ? name.namespace.name : ''
+  const nameString =
+    name.type === 'JSXNamespacedName'
+      ? name.namespace.name
+      : name.type === 'JSXIdentifier'
+        ? name.name
+        : ''
+  let argString = name.type === 'JSXNamespacedName' ? name.name.name : ''
+  if (name.type !== 'JSXNamespacedName' && !argString) {
+    const [, modifiers] = nameString.split('_')
+    argString = `_${modifiers}`
+  }
+
+  let modifiers: string[] = []
+  let isStatic = true
+  const result = argString.match(namespaceRE)
+  if (result) {
+    let modifierString = ''
+    ;[, argString, modifierString] = result
+    if (argString) {
+      argString = argString.replaceAll('_', '.')
+      isStatic = false
+      if (modifierString && modifierString.startsWith('_'))
+        modifiers = modifierString.slice(1).split('_')
+    } else if (modifierString) {
+      ;[argString, ...modifiers] = modifierString.split('_')
+    }
+  }
 
   const arg =
-    name.type === 'JSXNamespacedName'
-      ? resolveSimpleExpression(argString, true, name.namespace.loc)
+    argString && name.type === 'JSXNamespacedName'
+      ? resolveSimpleExpression(argString, isStatic, name.name.loc)
       : undefined
-  const exp = value ? resolveExpression(value, context) : undefined
-
-  const [tag, ...modifiers] = argString.split('_')
+  const exp = value
+    ? withFn && value.type === 'JSXExpressionContainer'
+      ? resolveExpressionWithFn(value.expression, context)
+      : resolveExpression(value, context)
+    : undefined
 
   return {
     type: NodeTypes.DIRECTIVE,
     name: nameString,
-    rawName: `${name}:${tag}`,
+    rawName: `${nameString}:${argString}`,
     exp,
     arg,
     loc: resolveLocation(node.loc, context),
     modifiers: modifiers.map((modifier) => createSimpleExpression(modifier)),
   }
+}
+
+export function resolveExpressionWithFn(node: Node, context: TransformContext) {
+  const text = getText(node, context)
+  return node.type === 'Identifier'
+    ? resolveSimpleExpression(text, false, node.loc)
+    : resolveSimpleExpression(
+        text,
+        false,
+        node.loc,
+        parseExpression(`(${text})=>{}`, {
+          plugins: ['typescript'],
+        }),
+      )
 }
 
 export function isJSXComponent(node: Node): node is JSXElement {
@@ -307,10 +363,21 @@ export function isJSXComponent(node: Node): node is JSXElement {
   }
 }
 
-export function findProp(expression: Expression | undefined, key: string) {
+export function findProp(
+  expression: Expression | undefined,
+  key: string | RegExp,
+) {
   if (expression?.type === 'JSXElement') {
     for (const attr of expression.openingElement.attributes) {
-      if (attr.type === 'JSXAttribute' && attr.name.name === key) {
+      const name =
+        attr.type === 'JSXAttribute' &&
+        (attr.name.type === 'JSXIdentifier'
+          ? attr.name.name
+          : attr.name.type === 'JSXNamespacedName'
+            ? attr.name.namespace.name
+            : ''
+        ).split('_')[0]
+      if (name && (isString(key) ? name === key : key.test(name))) {
         return attr
       }
     }
@@ -325,4 +392,13 @@ export function isJSXElement(
 
 export function getText(node: Node, content: TransformContext) {
   return content.ir.source.slice(node.start!, node.end!)
+}
+
+export function isTemplate(node: Node) {
+  if (
+    node.type === 'JSXElement' &&
+    node.openingElement.name.type === 'JSXIdentifier'
+  ) {
+    return node.openingElement.name.name === 'template'
+  }
 }

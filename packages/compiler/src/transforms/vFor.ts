@@ -2,19 +2,16 @@ import {
   ErrorCodes,
   type SimpleExpressionNode,
   createCompilerError,
-  forAliasRE,
   isConstantNode,
 } from '@vue/compiler-dom'
-import { parseExpression } from '@babel/parser'
 import { DynamicFlag, IRNodeTypes } from '../ir'
 import {
   findProp,
-  getText,
   isJSXComponent,
   propToExpression,
   resolveExpression,
+  resolveExpressionWithFn,
   resolveLocation,
-  resolveSimpleExpression,
 } from '../utils'
 import {
   type NodeTransform,
@@ -22,7 +19,7 @@ import {
   createStructuralDirectiveTransform,
 } from '../transform'
 import { createBranch } from './utils'
-import type { JSXAttribute, JSXElement, Node } from '@babel/types'
+import type { JSXAttribute, JSXElement } from '@babel/types'
 
 export const transformVFor: NodeTransform = createStructuralDirectiveTransform(
   'for',
@@ -34,16 +31,8 @@ export function processFor(
   dir: JSXAttribute,
   context: TransformContext,
 ) {
-  if (!dir.value) {
-    context.options.onError(
-      createCompilerError(
-        ErrorCodes.X_V_FOR_NO_EXPRESSION,
-        resolveLocation(dir.loc, context),
-      ),
-    )
-    return
-  }
-  if (!forAliasRE) {
+  const { value, index, key, source } = getForParseResult(dir, context)
+  if (!source) {
     context.options.onError(
       createCompilerError(
         ErrorCodes.X_V_FOR_MALFORMED_EXPRESSION,
@@ -51,25 +40,6 @@ export function processFor(
       ),
     )
     return
-  }
-
-  let value: SimpleExpressionNode | undefined,
-    index: SimpleExpressionNode | undefined,
-    key: SimpleExpressionNode | undefined,
-    source: SimpleExpressionNode
-  if (
-    dir.value.type === 'JSXExpressionContainer' &&
-    dir.value.expression.type === 'BinaryExpression'
-  ) {
-    if (dir.value.expression.left.type === 'SequenceExpression') {
-      const expressions = dir.value.expression.left.expressions
-      value = expressions[0] && resolveValueExpression(expressions[0], context)
-      key = expressions[1] && resolveExpression(expressions[1], context)
-      index = expressions[2] && resolveExpression(expressions[2], context)
-    } else {
-      value = resolveValueExpression(dir.value.expression.left, context)
-    }
-    source = resolveExpression(dir.value.expression.right, context)
   }
 
   const keyProp = findProp(node, 'key')
@@ -106,16 +76,43 @@ export function processFor(
   }
 }
 
-function resolveValueExpression(node: Node, context: TransformContext) {
-  const text = getText(node, context)
-  return node.type === 'Identifier'
-    ? resolveSimpleExpression(text, false, node.loc)
-    : resolveSimpleExpression(
-        text,
-        false,
-        node.loc,
-        parseExpression(`(${text})=>{}`, {
-          plugins: ['typescript'],
-        }),
-      )
+export function getForParseResult(
+  dir: JSXAttribute,
+  context: TransformContext,
+) {
+  let value: SimpleExpressionNode | undefined,
+    index: SimpleExpressionNode | undefined,
+    key: SimpleExpressionNode | undefined,
+    source: SimpleExpressionNode | undefined
+  if (dir.value) {
+    if (
+      dir.value.type === 'JSXExpressionContainer' &&
+      dir.value.expression.type === 'BinaryExpression'
+    ) {
+      if (dir.value.expression.left.type === 'SequenceExpression') {
+        const expressions = dir.value.expression.left.expressions
+        value =
+          expressions[0] && resolveExpressionWithFn(expressions[0], context)
+        key = expressions[1] && resolveExpression(expressions[1], context)
+        index = expressions[2] && resolveExpression(expressions[2], context)
+      } else {
+        value = resolveExpressionWithFn(dir.value.expression.left, context)
+      }
+      source = resolveExpression(dir.value.expression.right, context)
+    }
+  } else {
+    context.options.onError(
+      createCompilerError(
+        ErrorCodes.X_V_FOR_NO_EXPRESSION,
+        resolveLocation(dir.loc, context),
+      ),
+    )
+  }
+
+  return {
+    value,
+    index,
+    key,
+    source,
+  }
 }

@@ -30,17 +30,7 @@ describe('compiler: v-for', () => {
       `<div v-for={item in items} key={item.id} onClick={() => remove(item)}>{item}</div>`,
     )
 
-    expect(code).toMatchInlineSnapshot(`
-      "
-        const n0 = _createFor(() => (items), (_for_item0) => {
-          const n2 = t0()
-          _setText(n2, () => (_for_item0.value))
-          n2.$evtclick = () => remove(_for_item0.value)
-          return n2
-        }, (item) => (item.id))
-        return n0
-      "
-    `)
+    expect(code).toMatchSnapshot()
 
     expect(helpers).contains('createFor')
     expect(ir.template).toEqual(['<div></div>'])

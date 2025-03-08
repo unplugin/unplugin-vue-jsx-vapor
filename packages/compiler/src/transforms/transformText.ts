@@ -8,6 +8,7 @@ import {
   getLiteralExpressionValue,
   isEmptyText,
   isJSXComponent,
+  isTemplate,
   resolveExpression,
   resolveJSXText,
 } from '../utils'
@@ -35,6 +36,7 @@ export const transformText: NodeTransform = (node, context) => {
 
   if (
     node.type === 'JSXElement' &&
+    !isTemplate(node) &&
     !(isJSXComponent(node) as boolean) &&
     isAllTextLike(node.children)
   ) {

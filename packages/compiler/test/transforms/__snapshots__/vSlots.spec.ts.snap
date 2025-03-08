@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compiler: transform v-slots > basic 1`] = `
+"
+  const n0 = _createComponent(Comp, null, {
+    $: [
+      { default: ({ foo })=> <>{ foo + bar }</> }
+    ]
+  })
+  return n0
+"
+`;
