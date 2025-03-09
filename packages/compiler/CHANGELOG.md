@@ -1,5 +1,11 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.8
+
+### Patch Changes
+
+- 5919124: prevent handle comment node for v-slot
+
 ## 0.2.7
 
 ### Patch Changes

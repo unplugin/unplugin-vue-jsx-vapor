@@ -1,5 +1,12 @@
 # @vue-jsx-vapor/babel
 
+## 0.1.9
+
+### Patch Changes
+
+- Updated dependencies [5919124]
+  - @vue-jsx-vapor/compiler@0.2.8
+
 ## 0.1.8
 
 ### Patch Changes
