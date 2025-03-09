@@ -1,4 +1,4 @@
-import { createFilter, normalizePath } from '@vue-macros/common'
+import { createFilter, normalizePath } from 'unplugin-utils'
 import { helperCode, helperId, helperPrefix, transformVueJsxVapor } from '.'
 import type { Options } from '../types'
 import type { UnpluginFactory } from 'unplugin'
@@ -6,10 +6,10 @@ import type { UnpluginFactory } from 'unplugin'
 export const plugin: UnpluginFactory<Options | undefined, false> = (
   options: Options = {},
 ) => {
-  const transformInclude = createFilter({
-    include: options?.include || /\.[jt]sx$/,
-    exclude: options?.exclude,
-  })
+  const transformInclude = createFilter(
+    options?.include || /\.[jt]sx$/,
+    options?.exclude,
+  )
   return {
     name: 'unplugin-vue-jsx-vapor',
     vite: {

@@ -172,9 +172,9 @@
     "@babel/plugin-transform-typescript": "^7.26.8",
     "@vue-jsx-vapor/babel": "workspace:*",
     "@vue-jsx-vapor/compiler": "workspace:*",
-    "@vue-macros/common": "^1.16.1",
     "magic-string-stack": "^0.1.1",
-    "unplugin": "^1.11.0"
+    "unplugin": "^1.11.0",
+    "unplugin-utils": "^0.2.4"
   },
   "devDependencies": {
     "@nuxt/kit": "^3.12.3",

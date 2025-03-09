@@ -1,4 +1,4 @@
-import type { FilterPattern } from 'vite'
+import type { FilterPattern } from 'unplugin-utils'
 import type { CompilerOptions } from '@vue-jsx-vapor/compiler'
 
 export interface Options {
