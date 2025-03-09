@@ -1,5 +1,12 @@
 # @vue-jsx-vapor/compiler
 
+## 0.2.7
+
+### Patch Changes
+
+- support v-text directive
+- support native v-if directive
+
 ## 0.2.6
 
 ### Patch Changes

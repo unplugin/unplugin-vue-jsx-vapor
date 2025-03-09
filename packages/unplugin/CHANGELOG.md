@@ -1,5 +1,14 @@
 # unplugin-vue-jsx-vapor
 
+## 1.4.9
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies
+  - @vue-jsx-vapor/compiler@0.2.7
+  - @vue-jsx-vapor/babel@0.1.8
+
 ## 1.4.8
 
 ### Patch Changes
