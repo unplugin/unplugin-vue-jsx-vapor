@@ -2,6 +2,7 @@
 
 exports[`compiler: v-if > comment between branches 1`] = `
 "
+  const n17 = t3()
   const n1 = _createIf(() => ("ok"), () => {
     const n3 = t0()
     return n3
@@ -12,7 +13,7 @@ exports[`compiler: v-if > comment between branches 1`] = `
     const n14 = t2()
     return n14
   }), true)
-  return n1
+  return [n1, n17]
 "
 `;
 
@@ -36,7 +37,8 @@ exports[`compiler: v-if > template v-if 1`] = `
     const n2 = t0()
     const n3 = t1()
     const n4 = t2()
-    _setText(n4, () => (msg))
+    const x4 = _child(n4)
+    _renderEffect(() => _setText(x4, _toDisplayString(msg)))
     return [n2, n3, n4]
   })
   return n0

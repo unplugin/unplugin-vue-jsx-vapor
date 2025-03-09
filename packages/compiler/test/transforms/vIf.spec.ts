@@ -8,7 +8,7 @@ import {
   transformElement,
   transformText,
   transformVIf,
-  // transformVText,
+  transformVText,
 } from '../../src'
 import { makeCompile } from './_utils'
 
@@ -21,7 +21,7 @@ const compileWithVIf = makeCompile({
     transformChildren,
   ],
   directiveTransforms: {
-    // text: transformVText,
+    text: transformVText,
   },
 })
 
@@ -69,12 +69,28 @@ describe('compiler: v-if', () => {
 
   test('template v-if', () => {
     const { code, ir } = compileWithVIf(
-      `<template v-if={ok}><div/>hello<p>{msg}</p></template>`,
+      `<template v-if={ok}><div/>hello<p v-text={msg}></p></template>`,
     )
     expect(code).matchSnapshot()
 
-    expect(ir.template).toEqual(['<div></div>', 'hello', '<p></p>'])
-    expect(ir.block.effect).toEqual([])
+    expect(ir.template).toEqual(['<div></div>', 'hello', '<p> </p>'])
+    expect((ir.block.operation[0] as IfIRNode).positive.effect).toMatchObject([
+      {
+        operations: [
+          {
+            type: IRNodeTypes.SET_TEXT,
+            element: 4,
+            values: [
+              {
+                content: 'msg',
+                type: NodeTypes.SIMPLE_EXPRESSION,
+                isStatic: false,
+              },
+            ],
+          },
+        ],
+      },
+    ])
     expect((ir.block.operation[0] as IfIRNode).positive.dynamic).toMatchObject({
       id: 1,
       children: {
@@ -218,11 +234,17 @@ describe('compiler: v-if', () => {
         <p v-else-if="orNot"/>
         {/* bar */}
         <template v-else>fine</template>
+        <div v-text="text" />
       </>
     `,
     )
     expect(code).toMatchSnapshot()
-    expect(ir.template).toEqual(['<div></div>', '<p></p>', 'fine'])
+    expect(ir.template).toEqual([
+      '<div></div>',
+      '<p></p>',
+      'fine',
+      '<div>text</div>',
+    ])
   })
 
   describe.todo('errors')
