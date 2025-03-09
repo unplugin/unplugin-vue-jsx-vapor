@@ -79,6 +79,18 @@ exports[`compiler: transform slot > implicit default slot 1`] = `
 "
 `;
 
+exports[`compiler: transform slot > named slots w/ comment 1`] = `
+"
+  const n6 = _createComponent(Comp, null, {
+    "one": () => {
+      const n3 = t0()
+      return n3
+    }
+  })
+  return n6
+"
+`;
+
 exports[`compiler: transform slot > named slots w/ implicit default slot 1`] = `
 "
   const n6 = _createComponent(Comp, null, {

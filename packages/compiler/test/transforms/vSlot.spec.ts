@@ -199,6 +199,17 @@ describe('compiler: transform slot', () => {
     ])
   })
 
+  test('named slots w/ comment', () => {
+    const { ir, code } = compileWithSlots(
+      `<Comp>
+        {/* foo */}
+        <template v-slot:one>foo</template>
+      </Comp>`,
+    )
+    expect(code).toMatchSnapshot()
+    expect(ir.block.operation[0].slots.length).toEqual(1)
+  })
+
   test('nested slots scoping', () => {
     const { ir, code } = compileWithSlots(
       `<Comp>

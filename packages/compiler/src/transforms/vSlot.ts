@@ -17,6 +17,7 @@ import {
 } from '../ir'
 import {
   findProp,
+  isEmptyText,
   isJSXComponent,
   isTemplate,
   resolveDirectiveNode,
@@ -70,8 +71,7 @@ function transformComponentSlot(
   const arg = dir && dir.arg
   const nonSlotTemplateChildren = children.filter(
     (n) =>
-      isNonWhitespaceContent(n) &&
-      !(n.type === 'JSXElement' && findProp(n, 'v-slot')),
+      !isEmptyText(n) && !(n.type === 'JSXElement' && findProp(n, 'v-slot')),
   )
 
   const [block, onExit] = createSlotBlock(node, dir, context)
@@ -241,11 +241,4 @@ function createSlotBlock(
   block.props = dir && dir.exp
   const exitBlock = context.enterBlock(block)
   return [block, exitBlock]
-}
-
-export function isNonWhitespaceContent(
-  node: JSXElement['children'][0],
-): boolean {
-  if (node.type !== 'JSXText') return true
-  return !!node.value.trim()
 }
