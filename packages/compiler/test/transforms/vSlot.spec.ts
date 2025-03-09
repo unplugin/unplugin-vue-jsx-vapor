@@ -8,7 +8,7 @@ import {
   transformText,
   transformVBind,
   transformVFor,
-  // transformVIf,
+  transformVIf,
   transformVOn,
   transformVSlot,
 } from '../../src'
@@ -17,7 +17,7 @@ import { makeCompile } from './_utils'
 const compileWithSlots = makeCompile({
   nodeTransforms: [
     transformText,
-    // transformVIf,
+    transformVIf,
     transformVFor,
     transformElement,
     transformVSlot,
@@ -320,43 +320,43 @@ describe('compiler: transform slot', () => {
     ])
   })
 
-  // test('dynamic slots name w/ v-if / v-else[-if]', () => {
-  //   const { ir, code } = compileWithSlots(
-  //     `<Comp>
-  //       <template v-if="condition" #condition>condition slot</template>
-  //       <template v-else-if="anotherCondition" #condition="{ foo, bar }">another condition</template>
-  //       <template v-else #condition>else condition</template>
-  //     </Comp>`,
-  //   )
-  //   expect(code).toMatchSnapshot()
+  test('dynamic slots name w/ v-if / v-else[-if]', () => {
+    const { ir, code } = compileWithSlots(
+      `<Comp>
+        <template v-if={condition} v-slot:condition>condition slot</template>
+        <template v-else-if={anotherCondition} v-slot:condition={{ foo, bar }}>another condition</template>
+        <template v-else v-slot:condition>else condition</template>
+      </Comp>`,
+    )
+    expect(code).toMatchSnapshot()
 
-  //   expect(code).contains(`fn: (_slotProps0) =>`)
+    expect(code).contains(`fn: (_slotProps0) =>`)
 
-  //   expect(ir.block.operation[0].type).toBe(IRNodeTypes.CREATE_COMPONENT_NODE)
-  //   expect(ir.block.operation).toMatchObject([
-  //     {
-  //       type: IRNodeTypes.CREATE_COMPONENT_NODE,
-  //       tag: 'Comp',
-  //       slots: [
-  //         {
-  //           slotType: IRSlotType.CONDITIONAL,
-  //           condition: { content: 'condition' },
-  //           positive: {
-  //             slotType: IRSlotType.DYNAMIC,
-  //           },
-  //           negative: {
-  //             slotType: IRSlotType.CONDITIONAL,
-  //             condition: { content: 'anotherCondition' },
-  //             positive: {
-  //               slotType: IRSlotType.DYNAMIC,
-  //             },
-  //             negative: { slotType: IRSlotType.DYNAMIC },
-  //           },
-  //         },
-  //       ],
-  //     },
-  //   ])
-  // })
+    expect(ir.block.operation[0].type).toBe(IRNodeTypes.CREATE_COMPONENT_NODE)
+    expect(ir.block.operation).toMatchObject([
+      {
+        type: IRNodeTypes.CREATE_COMPONENT_NODE,
+        tag: 'Comp',
+        slots: [
+          {
+            slotType: IRSlotType.CONDITIONAL,
+            condition: { content: 'condition' },
+            positive: {
+              slotType: IRSlotType.DYNAMIC,
+            },
+            negative: {
+              slotType: IRSlotType.CONDITIONAL,
+              condition: { content: 'anotherCondition' },
+              positive: {
+                slotType: IRSlotType.DYNAMIC,
+              },
+              negative: { slotType: IRSlotType.DYNAMIC },
+            },
+          },
+        ],
+      },
+    ])
+  })
 
   test('quote slot name', () => {
     const { code } = compileWithSlots(

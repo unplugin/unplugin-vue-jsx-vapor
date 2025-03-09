@@ -12,7 +12,10 @@ import {
   resolveExpression,
   resolveJSXText,
 } from '../utils'
-import { processConditionalExpression, processLogicalExpression } from './vIf'
+import {
+  processConditionalExpression,
+  processLogicalExpression,
+} from './expression'
 import type { NodeTransform, TransformContext } from '../transform'
 import type {
   JSXElement,
@@ -67,9 +70,13 @@ function processTextLike(context: TransformContext<JSXExpressionContainer>) {
   const idx = nexts.findIndex((n) => !isTextLike(n))
   const nodes = (idx > -1 ? nexts.slice(0, idx) : nexts) as Array<TextLike>
 
-  const id = context.reference()
   const values = createTextLikeExpressions(nodes, context)
+  if (!values.length) {
+    context.dynamic.flags |= DynamicFlag.NON_TEMPLATE
+    return
+  }
 
+  const id = context.reference()
   context.dynamic.flags |= DynamicFlag.INSERT | DynamicFlag.NON_TEMPLATE
 
   context.registerOperation({

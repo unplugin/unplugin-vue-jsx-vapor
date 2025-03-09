@@ -34,6 +34,39 @@ exports[`compiler: transform slot > dynamic slots name w/ v-for 1`] = `
 "
 `;
 
+exports[`compiler: transform slot > dynamic slots name w/ v-if / v-else[-if] 1`] = `
+"
+  const n10 = _createComponent(Comp, null, {
+    $: [
+      () => (condition
+        ? {
+          name: "condition", 
+          fn: () => {
+            const n1 = t0()
+            return n1
+          }
+        }
+        : anotherCondition
+          ? {
+            name: "condition", 
+            fn: (_slotProps0) => {
+              const n4 = t1()
+              return n4
+            }
+          }
+          : {
+            name: "condition", 
+            fn: () => {
+              const n7 = t2()
+              return n7
+            }
+          })
+    ]
+  })
+  return n10
+"
+`;
+
 exports[`compiler: transform slot > implicit default slot 1`] = `
 "
   const n1 = _createComponent(Comp, null, {

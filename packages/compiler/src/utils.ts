@@ -288,7 +288,7 @@ export function resolveDirectiveNode(
   withFn = false,
 ): VaporDirectiveNode {
   const { value, name } = node
-  const nameString =
+  let nameString =
     name.type === 'JSXNamespacedName'
       ? name.namespace.name
       : name.type === 'JSXIdentifier'
@@ -296,7 +296,8 @@ export function resolveDirectiveNode(
         : ''
   let argString = name.type === 'JSXNamespacedName' ? name.name.name : ''
   if (name.type !== 'JSXNamespacedName' && !argString) {
-    const [, modifiers] = nameString.split('_')
+    const [newName, modifiers] = nameString.split('_')
+    nameString = newName
     argString = `_${modifiers}`
   }
 
@@ -328,7 +329,7 @@ export function resolveDirectiveNode(
 
   return {
     type: NodeTypes.DIRECTIVE,
-    name: nameString,
+    name: nameString.slice(2),
     rawName: `${nameString}:${argString}`,
     exp,
     arg,

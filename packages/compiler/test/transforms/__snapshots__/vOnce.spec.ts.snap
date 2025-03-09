@@ -53,3 +53,26 @@ exports[`compiler: v-once > with v-for 1`] = `
   return n0
 "
 `;
+
+exports[`compiler: v-once > with v-if 1`] = `
+"
+  const n0 = _createIf(() => (expr), () => {
+    const n2 = t0()
+    return n2
+  }, null, true)
+  return n0
+"
+`;
+
+exports[`compiler: v-once > with v-if/else 1`] = `
+"
+  const n0 = _createIf(() => (expr), () => {
+    const n2 = t0()
+    return n2
+  }, () => {
+    const n4 = t1()
+    return n4
+  }, true)
+  return n0
+"
+`;

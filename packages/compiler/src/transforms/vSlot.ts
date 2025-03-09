@@ -108,7 +108,7 @@ function transformComponentSlot(
   }
 }
 
-const elseIfRE = /^else(-if)?$/
+const elseIfRE = /^v-else(-if)?$/
 // <template #foo>
 function transformTemplateSlot(
   node: JSXElement,
