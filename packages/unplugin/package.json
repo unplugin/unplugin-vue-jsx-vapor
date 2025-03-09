@@ -9,7 +9,9 @@
     "vite",
     "webpack",
     "rollup",
-    "transform"
+    "transform",
+    "vue-jsx",
+    "volar"
   ],
   "license": "MIT",
   "homepage": "https://github.com/unplugin/unplugin-vue-jsx-vapor#readme",
@@ -23,9 +25,6 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "dev": "./src/index.ts",
@@ -76,6 +75,11 @@
       "dev": "./src/raw.ts",
       "require": "./dist/raw.cjs",
       "import": "./dist/raw.js"
+    },
+    "./volar": {
+      "dev": "./src/volar.ts",
+      "require": "./dist/volar.cjs",
+      "import": "./dist/volar.js"
     },
     "./*": "./*"
   },
@@ -128,6 +132,10 @@
       "require": "./dist/raw.cjs",
       "import": "./dist/raw.js"
     },
+    "./volar": {
+      "require": "./dist/volar.cjs",
+      "import": "./dist/volar.js"
+    },
     "./*": "./*"
   },
   "scripts": {
@@ -172,6 +180,7 @@
     "@babel/plugin-transform-typescript": "^7.26.8",
     "@vue-jsx-vapor/babel": "workspace:*",
     "@vue-jsx-vapor/compiler": "workspace:*",
+    "@vue-macros/volar": "3.0.0-beta.4",
     "magic-string-stack": "^0.1.1",
     "unplugin": "^1.11.0",
     "unplugin-utils": "^0.2.4"
