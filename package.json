@@ -51,5 +51,6 @@
     "overrides": {
       "estree-walker": "2.0.2"
     }
-  }
+  },
+  "version": "1.6.0"
 }
