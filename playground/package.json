@@ -1,5 +1,6 @@
 {
   "name": "playground",
+  "version": "1.6.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +13,5 @@
     "vite-hyper-config": "^0.5.0",
     "vite-plugin-inspect": "^0.8.4",
     "vue": "catalog:"
-  },
-  "version": "1.6.0"
+  }
 }

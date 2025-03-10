@@ -1,3 +1,12 @@
+# [1.6.0](https://github.com/unplugin/unplugin-vue-jsx-vapor/compare/v1.5.0...v1.6.0) (2025-03-10)
+
+
+### Features
+
+* **volar:** auto infer type for useRef ([0e44f13](https://github.com/unplugin/unplugin-vue-jsx-vapor/commit/0e44f131a0138f869c0ffd17e24b04a3e93c0c5f))
+
+
+
 # [](https://github.com/unplugin/unplugin-vue-jsx-vapor/compare/v1.0.9...v) (2025-03-09)
 
 
