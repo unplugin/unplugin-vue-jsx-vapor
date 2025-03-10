@@ -11,7 +11,8 @@
     "rollup",
     "transform",
     "vue-jsx",
-    "volar"
+    "volar",
+    "vapor"
   ],
   "license": "MIT",
   "homepage": "https://github.com/unplugin/unplugin-vue-jsx-vapor#readme",
@@ -25,6 +26,9 @@
   "files": [
     "dist"
   ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "dev": "./src/index.ts",
@@ -182,6 +186,7 @@
     "@vue-jsx-vapor/compiler": "workspace:*",
     "@vue-macros/volar": "3.0.0-beta.4",
     "magic-string-stack": "^0.1.1",
+    "ts-macro": "0.1.19",
     "unplugin": "^1.11.0",
     "unplugin-utils": "^0.2.4"
   },
@@ -195,6 +200,7 @@
     "unplugin-raw": "^0.3.1",
     "vite": "^6.0.0",
     "vitest": "^1.6.0",
+    "vue": "catalog:",
     "webpack": "^5.92.1"
   }
 }

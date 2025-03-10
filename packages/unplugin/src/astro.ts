@@ -1,4 +1,4 @@
-import unplugin from '.'
+import unplugin from './core/unplugin'
 import type { Options } from './types'
 
 export default (options: Options) => ({

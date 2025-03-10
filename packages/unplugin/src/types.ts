@@ -7,4 +7,9 @@ export interface Options {
   exclude?: FilterPattern
   interop?: boolean
   compile?: CompilerOptions
+  ref?:
+    | {
+        alias?: string[]
+      }
+    | boolean
 }

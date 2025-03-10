@@ -1,4 +1,5 @@
 import { type Ref, ref } from 'vue'
+import { useRef } from 'unplugin-vue-jsx-vapor'
 import Count2 from './count'
 import If from './if'
 import For from './for'
@@ -19,11 +20,14 @@ export default () => {
     return <div>{value.value}</div>
   }
 
+  const inputRef = useRef()
+
   return (
     <>
       <fieldset>
         <legend>Component</legend>
         <input
+          ref={inputRef}
           value_prop={count.value}
           onInput={(e) => (count.value = e.target.value)}
         />
