@@ -43,7 +43,8 @@
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
     "unplugin-raw": "^0.4.4",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vitest": "catalog:"
   },
   "pnpm": {
     "overrides": {

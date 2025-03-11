@@ -101,6 +101,9 @@ importers:
       vite:
         specifier: 'catalog:'
         version: 6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0)
+      vitest:
+        specifier: 'catalog:'
+        version: 3.0.8(@types/debug@4.1.12)(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0)
 
   packages/babel:
     dependencies:
@@ -138,9 +141,6 @@ importers:
       '@types/babel__traverse':
         specifier: ^7.20.6
         version: 7.20.6
-      vitest:
-        specifier: 'catalog:'
-        version: 3.0.8(@types/debug@4.1.12)(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0)
 
   packages/compiler:
     dependencies:
@@ -159,9 +159,6 @@ importers:
       '@vue/shared':
         specifier: 'catalog:'
         version: https://pkg.pr.new/@vue/shared@ce35a8c
-      vitest:
-        specifier: 'catalog:'
-        version: 3.0.8(@types/debug@4.1.12)(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0)
 
   packages/macros:
     dependencies:
@@ -214,9 +211,6 @@ importers:
       '@vue-macros/test-utils':
         specifier: 3.0.0-beta.4
         version: 3.0.0-beta.4(@types/node@22.13.10)(esbuild@0.25.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0))(vitest@3.0.8(@types/debug@4.1.12)(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0))(vue@https://pkg.pr.new/vue@ce35a8c(typescript@5.8.2))(yaml@2.7.0)
-      vitest:
-        specifier: 'catalog:'
-        version: 3.0.8(@types/debug@4.1.12)(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0)
       vue:
         specifier: 'catalog:'
         version: https://pkg.pr.new/vue@ce35a8c(typescript@5.8.2)
@@ -275,9 +269,6 @@ importers:
       '@types/babel__core':
         specifier: 'catalog:'
         version: 7.20.5
-      vitest:
-        specifier: 'catalog:'
-        version: 3.0.8(@types/debug@4.1.12)(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0)
       vue:
         specifier: 'catalog:'
         version: https://pkg.pr.new/vue@ce35a8c(typescript@5.8.2)
