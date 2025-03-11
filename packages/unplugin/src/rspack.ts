@@ -1,4 +1,3 @@
-import { createRspackPlugin } from 'unplugin'
-import { unpluginFactory } from './core/unplugin'
+import unplugin from './unplugin'
 
-export default createRspackPlugin(unpluginFactory)
+export default unplugin.rspack

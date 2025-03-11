@@ -1,8 +1,5 @@
-export default {
-  props: {
-    value: String,
-  },
-  setup(props) {
-    return <div>{props.value}</div>
-  },
-}
+import { defineComponent } from 'vue'
+
+export default defineComponent(({ value = '' }) => {
+  return <div>{value}</div>
+})

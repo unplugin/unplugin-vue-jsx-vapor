@@ -1,12 +1,15 @@
+packages:
+  - packages/*
+  - playground
+
 catalog:
   '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@ce35a8c
   '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@ce35a8c
   '@vue/shared': https://pkg.pr.new/@vue/shared@ce35a8c
+  '@vue/compiler-sfc': https://pkg.pr.new/@vue/compiler-sfc@ce35a8c
   vue: https://pkg.pr.new/vue@ce35a8c
   '@babel/types': ^7.26.8
   '@babel/core': ^7.26.8
   '@babel/parser': ^7.26.8
   '@types/babel__core': ^7.20.5
-packages:
-  - packages/*
-  - playground
+  ts-macro: 0.1.21

@@ -1,4 +1,3 @@
-import { createWebpackPlugin } from 'unplugin'
-import { unpluginFactory } from './core/unplugin'
+import unplugin from './unplugin'
 
-export default createWebpackPlugin(unpluginFactory)
+export default unplugin.webpack

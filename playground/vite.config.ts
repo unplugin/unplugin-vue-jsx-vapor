@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [
     VueJsxVapor({
       // interop: true,
+      macros: true,
     }),
     // VueJsx(),
     Inspect(),

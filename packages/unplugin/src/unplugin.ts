@@ -1,14 +1,15 @@
 import { type UnpluginFactory, createUnplugin } from 'unplugin'
 import { createFilter, transformWithEsbuild } from 'vite'
-import { plugin } from './plugin'
-import type { Options } from '../types'
+import plugin from './raw'
+import type { Options } from './types'
 
-export const unpluginFactory: UnpluginFactory<Options | undefined> = (
+export * from './types'
+
+export const unpluginFactory: UnpluginFactory<Options | undefined, true> = (
   options = {},
-  meta,
 ) => {
   return [
-    plugin(options, meta),
+    ...plugin(options),
     options.interop
       ? { name: 'interop' }
       : {
