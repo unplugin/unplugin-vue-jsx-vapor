@@ -1,3 +1,12 @@
+# [1.7.0](https://github.com/unplugin/unplugin-vue-jsx-vapor/compare/v1.6.0...v1.7.0) (2025-03-11)
+
+
+### Bug Fixes
+
+* lint ([a93b1e0](https://github.com/unplugin/unplugin-vue-jsx-vapor/commit/a93b1e0f511a2f739d765b922383a09a64f19ae0))
+
+
+
 # [1.6.0](https://github.com/unplugin/unplugin-vue-jsx-vapor/compare/v1.5.0...v1.6.0) (2025-03-10)
 
 
