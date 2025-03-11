@@ -1,7 +1,7 @@
+import jsxMacros from '@vue-jsx-vapor/macros/volar'
 import jsxDirective from '@vue-macros/volar/jsx-directive'
 import jsxRef from '@vue-macros/volar/jsx-ref'
-import { type PluginReturn, createPlugin } from 'ts-macro'
-import jsxMacros from '@vue-jsx-vapor/macros/volar'
+import { createPlugin, type PluginReturn } from 'ts-macro'
 import type { Options } from './options'
 
 const plugin: PluginReturn<Options | undefined, true> = createPlugin(

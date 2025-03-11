@@ -1,8 +1,8 @@
-import { DynamicFlag, type IRDynamicInfo, IRNodeTypes } from '../ir/index'
+import { DynamicFlag, IRNodeTypes, type IRDynamicInfo } from '../ir/index'
 import {
+  transformNode,
   type NodeTransform,
   type TransformContext,
-  transformNode,
 } from '../transform'
 import { isJSXComponent, isTemplate } from '../utils'
 import type { Node } from '@babel/types'

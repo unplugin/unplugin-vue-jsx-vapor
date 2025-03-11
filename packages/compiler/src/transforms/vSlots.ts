@@ -1,8 +1,8 @@
-import { ErrorCodes, createCompilerError } from '@vue/compiler-dom'
+import { createCompilerError, ErrorCodes } from '@vue/compiler-dom'
 import { IRSlotType } from '../ir'
 import { isJSXComponent, resolveExpression, resolveLocation } from '../utils'
-import type { JSXAttribute } from '@babel/types'
 import type { NodeTransform } from '../transform'
+import type { JSXAttribute } from '@babel/types'
 
 export const transformVSlots: NodeTransform = (node, context) => {
   if (node.type !== 'JSXElement' || !isJSXComponent(node)) return

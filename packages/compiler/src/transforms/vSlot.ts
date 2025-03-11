@@ -1,15 +1,15 @@
 import {
+  createCompilerError,
   ErrorCodes,
   type SimpleExpressionNode,
-  createCompilerError,
 } from '@vue/compiler-dom'
 import {
   DynamicFlag,
+  IRSlotType,
   type IRFor,
   type IRSlotDynamic,
   type IRSlotDynamicBasic,
   type IRSlotDynamicConditional,
-  IRSlotType,
   type IRSlots,
   type IRSlotsStatic,
   type SlotBlockIRNode,
@@ -24,10 +24,10 @@ import {
   resolveLocation,
   resolveSimpleExpressionNode,
 } from '../utils'
+import type { NodeTransform, TransformContext } from '../transform'
 import { newBlock } from './utils'
 import { getForParseResult } from './vFor'
 import type { JSXElement } from '@babel/types'
-import type { NodeTransform, TransformContext } from '../transform'
 
 export const transformVSlot: NodeTransform = (node, context) => {
   if (node.type !== 'JSXElement') return
@@ -71,7 +71,7 @@ function transformComponentSlot(
   const arg = dir && dir.arg
   const nonSlotTemplateChildren = children.filter(
     (n) =>
-      !isEmptyText(n) && !(n.type === 'JSXElement' && findProp(n, 'v-slot')),
+      !isEmptyText(n) && (n.type !== 'JSXElement' || !findProp(n, 'v-slot')),
   )
 
   const [block, onExit] = createSlotBlock(node, dir, context)

@@ -1,18 +1,6 @@
-import { isGloballyAllowed, isHTMLTag, isSVGTag, isString } from '@vue/shared'
+import { parseExpression } from '@babel/parser'
 import {
-  type AttributeNode,
-  type DirectiveNode,
-  type ElementNode,
-  ElementTypes,
-  Namespaces,
-  NodeTypes,
-  type SimpleExpressionNode,
-  type TextNode,
-  createSimpleExpression,
-  isLiteralWhitelisted,
-  walkIdentifiers,
-} from '@vue/compiler-dom'
-import {
+  isLiteral,
   type BigIntLiteral,
   type Expression,
   type JSXAttribute,
@@ -23,12 +11,24 @@ import {
   type NumericLiteral,
   type SourceLocation,
   type StringLiteral,
-  isLiteral,
 } from '@babel/types'
-import { parseExpression } from '@babel/parser'
+import {
+  createSimpleExpression,
+  ElementTypes,
+  isLiteralWhitelisted,
+  Namespaces,
+  NodeTypes,
+  walkIdentifiers,
+  type AttributeNode,
+  type DirectiveNode,
+  type ElementNode,
+  type SimpleExpressionNode,
+  type TextNode,
+} from '@vue/compiler-dom'
+import { isGloballyAllowed, isHTMLTag, isString, isSVGTag } from '@vue/shared'
 import { EMPTY_EXPRESSION } from './transforms/utils'
-import type { TransformContext } from './transform'
 import type { VaporDirectiveNode } from './ir'
+import type { TransformContext } from './transform'
 
 export function propToExpression(
   prop: JSXAttribute,
@@ -90,11 +90,12 @@ export const isConstant = (node: Node | null | undefined): boolean => {
   return false
 }
 
-const EMPTY_TEXT_REGEX = /^\s*[\n\r]\s*$/
+const EMPTY_TEXT_REGEX =
+  /^[\t\v\f \u00A0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000\uFEFF]*[\n\r]\s*$/
 const START_EMPTY_TEXT_REGEX = /^\s*[\n\r]/
 const END_EMPTY_TEXT_REGEX = /[\n\r]\s*$/
 export function resolveJSXText(node: JSXText) {
-  if (EMPTY_TEXT_REGEX.test(`${node.extra?.raw}`)) {
+  if (EMPTY_TEXT_REGEX.test(String(node.extra?.raw))) {
     return ''
   }
   let value = node.value
@@ -109,7 +110,8 @@ export function resolveJSXText(node: JSXText) {
 
 export function isEmptyText(node: Node) {
   return (
-    (node.type === 'JSXText' && EMPTY_TEXT_REGEX.test(`${node.extra?.raw}`)) ||
+    (node.type === 'JSXText' &&
+      EMPTY_TEXT_REGEX.test(String(node.extra?.raw))) ||
     (node.type === 'JSXExpressionContainer' &&
       node.expression.type === 'JSXEmptyExpression')
   )
@@ -121,7 +123,7 @@ export function resolveSimpleExpressionNode(
   if (!exp.isStatic) {
     const value = getLiteralExpressionValue(exp)
     if (value !== null) {
-      return createSimpleExpression(`${value}`, true, exp.loc)
+      return createSimpleExpression(String(value), true, exp.loc)
     }
   }
   return exp
@@ -256,7 +258,7 @@ export function resolveNode(
         } else {
           result.push({
             type: NodeTypes.ATTRIBUTE,
-            name: `${attr.name.name}`,
+            name: String(attr.name.name),
             nameLoc: resolveLocation(attr.name.loc, context),
             value: resolveValue(attr.value, context),
             loc: resolveLocation(attr.loc, context),

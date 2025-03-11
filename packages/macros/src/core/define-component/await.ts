@@ -1,9 +1,9 @@
 // Modified from: https://github.com/vuejs/core/blob/main/packages/compiler-sfc/src/script/topLevelAwait.ts
 
 import {
-  type MagicStringAST,
   importHelperFn,
   walkAST,
+  type MagicStringAST,
 } from '@vue-macros/common'
 import type { FunctionalNode } from '..'
 import type { AwaitExpression, Function, Node, Statement } from '@babel/types'

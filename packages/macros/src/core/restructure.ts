@@ -1,7 +1,7 @@
 import {
   HELPER_PREFIX,
-  type MagicString,
   importHelperFn,
+  type MagicString,
 } from '@vue-macros/common'
 import { walkIdentifiers } from '@vue/compiler-sfc'
 import { withDefaultsHelperId } from './helper'

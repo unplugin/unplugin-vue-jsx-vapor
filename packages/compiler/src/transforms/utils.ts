@@ -1,16 +1,16 @@
-import { createSimpleExpression } from '@vue/compiler-dom'
 import {
-  type Expression,
-  type JSXElement,
-  type JSXFragment,
   jsxClosingFragment,
   jsxExpressionContainer,
   jsxFragment,
   jsxOpeningFragment,
+  type Expression,
+  type JSXElement,
+  type JSXFragment,
 } from '@babel/types'
+import { createSimpleExpression } from '@vue/compiler-dom'
 import {
-  type BlockIRNode,
   DynamicFlag,
+  type BlockIRNode,
   type IRDynamicInfo,
   type IRNodeTypes,
 } from '../ir/index'

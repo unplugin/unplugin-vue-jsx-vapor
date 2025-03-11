@@ -1,4 +1,4 @@
-import { MagicStringAST, babelParse, walkAST } from '@vue-macros/common'
+import { babelParse, MagicStringAST, walkAST } from '@vue-macros/common'
 import { describe, expect, test } from 'vitest'
 import { restructure } from '../src/api'
 

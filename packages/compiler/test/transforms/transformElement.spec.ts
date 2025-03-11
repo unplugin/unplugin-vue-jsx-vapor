@@ -1,10 +1,10 @@
-import { describe, expect, test } from 'vitest'
 // import {
 //   type BindingMetadata,
 //   BindingTypes,
 //   NodeTypes,
 // } from '@vue/compiler-dom'
 import { BindingTypes } from '@vue/compiler-dom'
+import { describe, expect, test } from 'vitest'
 import {
   // IRDynamicPropsKind,
   // IRNodeTypes,

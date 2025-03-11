@@ -4,9 +4,9 @@ import {
   type Overwrite,
 } from '@vue-macros/common'
 import { toValidAssetId } from '@vue/compiler-dom'
-import { type TsmVirtualCode, replaceRange } from 'ts-macro'
-import { transformDefineComponent } from './define-component'
+import { replaceRange, type TsmVirtualCode } from 'ts-macro'
 import type { Options } from '../options'
+import { transformDefineComponent } from './define-component'
 
 export { transformJsxMacros } from './transform'
 export { getGlobalTypes } from './global-types'

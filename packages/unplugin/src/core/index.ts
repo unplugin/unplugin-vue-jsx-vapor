@@ -1,9 +1,9 @@
 import { transformSync } from '@babel/core'
-import jsx from '@vue-jsx-vapor/babel'
 // @ts-ignore missing type
 import babelTypescript from '@babel/plugin-transform-typescript'
-import * as helper from './helper'
+import jsx from '@vue-jsx-vapor/babel'
 import type { Options } from '../options'
+import * as helper from './helper'
 
 export type { Options }
 export const helperCode = helper.helperCode

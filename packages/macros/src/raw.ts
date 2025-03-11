@@ -1,7 +1,5 @@
-import {
-  createFilter,
-  normalizePath,
-} from '@vue-macros/common'
+import { createFilter, normalizePath } from '@vue-macros/common'
+import { transformJsxMacros } from './core'
 import {
   helperPrefix,
   useModelHelperCode,
@@ -10,7 +8,6 @@ import {
   withDefaultsHelperId,
 } from './core/helper'
 import { transformStyle } from './core/style'
-import { transformJsxMacros } from './core'
 import { resolveOptions, type Options } from './options'
 import type { UnpluginOptions } from 'unplugin'
 

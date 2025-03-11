@@ -1,18 +1,18 @@
 import {
+  defaultOnError,
+  defaultOnWarn,
   type TransformOptions as BaseTransformOptions,
   type CommentNode,
   type CompilerCompatOptions,
   type SimpleExpressionNode,
-  defaultOnError,
-  defaultOnWarn,
 } from '@vue/compiler-dom'
-import { EMPTY_OBJ, NOOP, extend, isArray, isString } from '@vue/shared'
+import { EMPTY_OBJ, extend, isArray, isString, NOOP } from '@vue/shared'
 import {
-  type BlockIRNode,
   DynamicFlag,
+  IRNodeTypes,
+  type BlockIRNode,
   type HackOptions,
   type IRDynamicInfo,
-  IRNodeTypes,
   type IRSlots,
   type OperationNode,
   type RootIRNode,

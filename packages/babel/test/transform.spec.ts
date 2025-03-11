@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'vitest'
 import { transformSync } from '@babel/core'
+import { describe, expect, test } from 'vitest'
 import jsx from '../src/index'
 
 describe('transform', () => {

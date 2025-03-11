@@ -1,8 +1,8 @@
-import { type MagicStringAST, importHelperFn } from '@vue-macros/common'
+import { importHelperFn, type MagicStringAST } from '@vue-macros/common'
 import { walkIdentifiers } from '@vue/compiler-sfc'
 import { restructure } from '../restructure'
-import { transformAwait } from './await'
 import type { FunctionalNode, RootMapValue } from '..'
+import { transformAwait } from './await'
 import type { ObjectExpression } from '@babel/types'
 
 export function transformDefineComponent(

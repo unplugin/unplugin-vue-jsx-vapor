@@ -1,5 +1,5 @@
-import { describe, expect, test } from 'vitest'
 import { BindingTypes, NodeTypes } from '@vue/compiler-dom'
+import { describe, expect, test } from 'vitest'
 import { IRNodeTypes } from '../../src'
 import { getBaseTransformPreset } from '../../src/compile'
 import { makeCompile } from './_utils'

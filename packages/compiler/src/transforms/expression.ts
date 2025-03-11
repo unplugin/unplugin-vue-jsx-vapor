@@ -1,7 +1,7 @@
 import { isStaticNode } from '@vue/compiler-dom'
 import { DynamicFlag, IRNodeTypes, type OperationNode } from '../ir'
+import { transformNode, type TransformContext } from '../transform'
 import { resolveExpression } from '../utils'
-import { type TransformContext, transformNode } from '../transform'
 import { createBranch } from './utils'
 import type { ConditionalExpression, LogicalExpression } from '@babel/types'
 

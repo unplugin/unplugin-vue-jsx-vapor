@@ -1,18 +1,18 @@
 import {
-  type CodeTransform,
-  HELPER_PREFIX,
-  MagicStringAST,
   babelParse,
   generateTransform,
   getLang,
+  HELPER_PREFIX,
+  MagicStringAST,
   walkAST,
+  type CodeTransform,
 } from '@vue-macros/common'
+import type { OptionsResolved } from '../options'
 import { transformDefineComponent } from './define-component'
 import { transformDefineExpose } from './define-expose'
 import { transformDefineModel } from './define-model'
 import { transformDefineSlots } from './define-slots'
 import { transformDefineStyle } from './define-style'
-import type { OptionsResolved } from '../options'
 import type {
   ArrowFunctionExpression,
   CallExpression,

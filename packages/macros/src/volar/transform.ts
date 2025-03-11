@@ -30,8 +30,8 @@ export function transformJsxMacros(
       : '{}'
     replaceRange(
       codes,
-      root.parameters[0].getStart(ast),
-      root.parameters[0].getStart(ast),
+      root.parameters.pos,
+      root.parameters.pos,
       ts.isArrowFunction(root) && root.parameters.pos === root.pos ? '(' : '',
       `${HELPER_PREFIX}props: Awaited<ReturnType<typeof ${HELPER_PREFIX}setup>>['props'] & ${propsType}, `,
       `${HELPER_PREFIX}placeholder?: {}, `,

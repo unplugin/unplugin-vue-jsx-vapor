@@ -1,7 +1,7 @@
 import {
-  ErrorCodes,
   createCompilerError,
   createSimpleExpression,
+  ErrorCodes,
   resolveModifiers,
 } from '@vue/compiler-dom'
 import { extend, makeMap } from '@vue/shared'
@@ -12,8 +12,8 @@ import {
   resolveLocation,
   resolveSimpleExpression,
 } from '../utils'
-import { EMPTY_EXPRESSION } from './utils'
 import type { DirectiveTransform } from '../transform'
+import { EMPTY_EXPRESSION } from './utils'
 
 const delegatedEvents = /*#__PURE__*/ makeMap(
   'beforeinput,click,dblclick,contextmenu,focusin,focusout,input,keydown,' +

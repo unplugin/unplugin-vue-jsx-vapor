@@ -1,4 +1,11 @@
-import { detectVueVersion, REGEX_NODE_MODULES, REGEX_SETUP_SFC, REGEX_SRC_FILE, type BaseOptions, type MarkRequired } from '@vue-macros/common'
+import {
+  detectVueVersion,
+  REGEX_NODE_MODULES,
+  REGEX_SETUP_SFC,
+  REGEX_SRC_FILE,
+  type BaseOptions,
+  type MarkRequired,
+} from '@vue-macros/common'
 
 export type Options = BaseOptions & {
   lib?: 'vue' | 'vue/vapor' | (string & {})

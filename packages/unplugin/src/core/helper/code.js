@@ -1,10 +1,10 @@
 import {
-  VaporFragment,
   effectScope,
   insert,
   isFragment,
   remove,
   renderEffect,
+  VaporFragment,
 } from 'vue'
 
 function createFragment(nodes) {

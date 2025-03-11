@@ -1,37 +1,37 @@
-import { extend, isString } from '@vue/shared'
-import {
-  type VaporCodegenResult as BaseVaporCodegenResult,
-  generate,
-} from '@vue/compiler-vapor'
 import { parse } from '@babel/parser'
 import {
-  type DirectiveTransform,
-  type NodeTransform,
-  transform,
-} from './transform'
-
-import { transformElement } from './transforms/transformElement'
-import { transformChildren } from './transforms/transformChildren'
-import { transformTemplateRef } from './transforms/transformTemplateRef'
-import { transformText } from './transforms/transformText'
-import { transformVBind } from './transforms/vBind'
-import { transformVOn } from './transforms/vOn'
-import { transformVSlot } from './transforms/vSlot'
-import { transformVSlots } from './transforms/vSlots'
-import { transformVModel } from './transforms/vModel'
-import { transformVShow } from './transforms/vShow'
-import { transformVHtml } from './transforms/vHtml'
+  generate,
+  type VaporCodegenResult as BaseVaporCodegenResult,
+} from '@vue/compiler-vapor'
+import { extend, isString } from '@vue/shared'
 import {
-  type HackOptions,
   IRNodeTypes,
+  type HackOptions,
   type RootIRNode,
   type RootNode,
 } from './ir'
+
+import {
+  transform,
+  type DirectiveTransform,
+  type NodeTransform,
+} from './transform'
+import { transformChildren } from './transforms/transformChildren'
+import { transformElement } from './transforms/transformElement'
+import { transformTemplateRef } from './transforms/transformTemplateRef'
+import { transformText } from './transforms/transformText'
+import { transformVBind } from './transforms/vBind'
 import { transformVFor } from './transforms/vFor'
-import { transformVOnce } from './transforms/vOnce'
+import { transformVHtml } from './transforms/vHtml'
 import { transformVIf } from './transforms/vIf'
-import type { CompilerOptions as BaseCompilerOptions } from '@vue/compiler-dom'
+import { transformVModel } from './transforms/vModel'
+import { transformVOn } from './transforms/vOn'
+import { transformVOnce } from './transforms/vOnce'
+import { transformVShow } from './transforms/vShow'
+import { transformVSlot } from './transforms/vSlot'
+import { transformVSlots } from './transforms/vSlots'
 import type { ExpressionStatement, JSXElement, JSXFragment } from '@babel/types'
+import type { CompilerOptions as BaseCompilerOptions } from '@vue/compiler-dom'
 
 export { generate }
 

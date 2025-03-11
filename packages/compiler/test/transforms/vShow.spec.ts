@@ -1,5 +1,5 @@
-import { describe, expect, test, vi } from 'vitest'
 import { DOMErrorCodes } from '@vue/compiler-dom'
+import { describe, expect, test, vi } from 'vitest'
 import { transformChildren, transformElement, transformVShow } from '../../src'
 import { makeCompile } from './_utils'
 

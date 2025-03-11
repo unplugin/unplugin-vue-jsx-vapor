@@ -1,14 +1,14 @@
-import { describe, expect, test } from 'vitest'
 import { NodeTypes } from '@vue/compiler-dom'
+import { describe, expect, test } from 'vitest'
 import {
   IRNodeTypes,
-  type IfIRNode,
   transformChildren,
   // transformComment,
   transformElement,
   transformText,
   transformVIf,
   transformVText,
+  type IfIRNode,
 } from '../../src'
 import { makeCompile } from './_utils'
 

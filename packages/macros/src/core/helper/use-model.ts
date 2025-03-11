@@ -1,4 +1,4 @@
-import { type ModelRef, customRef, watchSyncEffect } from 'vue'
+import { customRef, watchSyncEffect, type ModelRef } from 'vue'
 
 type DefineModelOptions<T = Record<string, any>> = {
   default?: any

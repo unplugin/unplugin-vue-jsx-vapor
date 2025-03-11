@@ -1,8 +1,8 @@
-import { extend, isBuiltInDirective, isVoidTag, makeMap } from '@vue/shared'
 import {
-  type SimpleExpressionNode,
   isValidHTMLNesting,
+  type SimpleExpressionNode,
 } from '@vue/compiler-dom'
+import { extend, isBuiltInDirective, isVoidTag, makeMap } from '@vue/shared'
 import {
   DynamicFlag,
   IRDynamicPropsKind,
@@ -18,13 +18,13 @@ import {
   resolveExpression,
   resolveSimpleExpression,
 } from '../utils'
-import { EMPTY_EXPRESSION } from './utils'
-import type { JSXAttribute, JSXElement, JSXSpreadAttribute } from '@babel/types'
 import type {
   DirectiveTransformResult,
   NodeTransform,
   TransformContext,
 } from '../transform'
+import { EMPTY_EXPRESSION } from './utils'
+import type { JSXAttribute, JSXElement, JSXSpreadAttribute } from '@babel/types'
 
 export const isReservedProp = /* #__PURE__ */ makeMap(
   // the leading comma is intentional so empty string "" is also included

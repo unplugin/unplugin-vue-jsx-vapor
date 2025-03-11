@@ -1,15 +1,15 @@
 import {
-  ErrorCodes,
   createCompilerError,
   createSimpleExpression,
+  ErrorCodes,
   isConstantNode,
 } from '@vue/compiler-dom'
+import { DynamicFlag, IRNodeTypes } from '../ir'
 import {
+  createStructuralDirectiveTransform,
   type NodeTransform,
   type TransformContext,
-  createStructuralDirectiveTransform,
 } from '../transform'
-import { DynamicFlag, IRNodeTypes } from '../ir'
 import { isEmptyText, resolveDirectiveNode, resolveLocation } from '../utils'
 import { createBranch } from './utils'
 import type { JSXAttribute, JSXElement } from '@babel/types'

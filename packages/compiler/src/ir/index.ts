@@ -1,13 +1,13 @@
+import type { DirectiveTransform, NodeTransform } from '../transform'
+import type { IRProp, IRProps, IRSlots } from './component'
+
 import type { JSXFragment, Node } from '@babel/types'
 import type {
   CompoundExpressionNode,
   DirectiveNode,
   SimpleExpressionNode,
 } from '@vue/compiler-dom'
-
 import type { Prettify } from '@vue/shared'
-import type { DirectiveTransform, NodeTransform } from '../transform'
-import type { IRProp, IRProps, IRSlots } from './component'
 
 export * from './component'
 

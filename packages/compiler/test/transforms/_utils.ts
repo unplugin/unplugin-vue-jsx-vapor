@@ -1,5 +1,5 @@
 import { parse } from '@babel/parser'
-import { type CompilerOptions, generate, transform } from '../../src'
+import { generate, transform, type CompilerOptions } from '../../src'
 import { IRNodeTypes, type RootNode } from '../../src/ir'
 import type { JSXElement, JSXFragment } from '@babel/types'
 

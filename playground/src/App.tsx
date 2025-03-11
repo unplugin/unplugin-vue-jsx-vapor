@@ -1,13 +1,13 @@
-import { type Ref, ref } from 'vue'
 import { useRef } from 'unplugin-vue-jsx-vapor'
+import { ref, type Ref } from 'vue'
 import Count2 from './count'
-import If from './if'
 import For from './for'
-import Slot from './slot'
-import Model from './model'
-import Show from './show'
 import Html from './html'
+import If from './if'
+import Model from './model'
 import Once from './once'
+import Show from './show'
+import Slot from './slot'
 
 export default () => {
   const count = ref('1')
@@ -20,21 +20,21 @@ export default () => {
     return <div>{value.value}</div>
   }
 
-  const inputRef = useRef()
+  const compRef = useRef()
 
   return (
     <>
       <fieldset>
         <legend>Component</legend>
         <input
-          ref={inputRef}
           value_prop={count.value}
           onInput={(e) => (count.value = e.target.value)}
         />
 
         <Count value={count.value} />
         <Count1 value={count} />
-        <Count2 value={count.value} />
+        <Count2 value={count.value} ref={compRef} />
+        {compRef.value?.double}
       </fieldset>
 
       <fieldset>

@@ -61,7 +61,7 @@ function addEmbeddedCode(
   const styleText = style
     .getText(ast)
     .slice(1, -1)
-    .replaceAll(/\${.*}/g, (str) => '_'.repeat(str.length))
+    .replaceAll(/\$\{.*\}/g, (str) => '_'.repeat(str.length))
   options.embeddedCodes.push({
     id: `style_${index}`,
     languageId,

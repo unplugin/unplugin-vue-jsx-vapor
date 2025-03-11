@@ -1,6 +1,6 @@
 import process from 'node:process'
+import { defineConfig, type Options } from 'tsup'
 import Raw from 'unplugin-raw/esbuild'
-import { type Options, defineConfig } from 'tsup'
 
 export const config = (options: Options = {}) =>
   defineConfig({

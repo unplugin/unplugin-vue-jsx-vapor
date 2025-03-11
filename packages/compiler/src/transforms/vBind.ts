@@ -1,7 +1,7 @@
 import { camelize, extend } from '@vue/shared'
 import { resolveExpression, resolveSimpleExpression } from '../utils'
-import { isReservedProp } from './transformElement'
 import type { DirectiveTransform } from '../transform'
+import { isReservedProp } from './transformElement'
 
 export const transformVBind: DirectiveTransform = (dir, node, context) => {
   const { name, value, loc } = dir

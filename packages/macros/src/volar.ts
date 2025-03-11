@@ -1,7 +1,7 @@
 import { createFilter } from '@vue-macros/common'
-import { type PluginReturn, createPlugin } from 'ts-macro'
-import { getGlobalTypes, getRootMap, transformJsxMacros } from './volar/index'
+import { createPlugin, type PluginReturn } from 'ts-macro'
 import { resolveOptions, type Options } from './options'
+import { getGlobalTypes, getRootMap, transformJsxMacros } from './volar/index'
 
 const plugin: PluginReturn<Options | undefined> = createPlugin(
   ({ ts }, userOptions = {}) => {

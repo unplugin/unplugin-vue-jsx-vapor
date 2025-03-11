@@ -1,4 +1,4 @@
-import { type UnpluginInstance, createUnplugin } from 'unplugin'
+import { createUnplugin, type UnpluginInstance } from 'unplugin'
 import plugin from './raw'
 import type { Options } from './options'
 

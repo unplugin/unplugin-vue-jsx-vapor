@@ -1,7 +1,7 @@
 import {
-  type BlockIRNode,
   DynamicFlag,
   IRNodeTypes,
+  type BlockIRNode,
   type RootNode,
 } from '../ir'
 import {
@@ -12,11 +12,11 @@ import {
   resolveExpression,
   resolveJSXText,
 } from '../utils'
+import type { NodeTransform, TransformContext } from '../transform'
 import {
   processConditionalExpression,
   processLogicalExpression,
 } from './expression'
-import type { NodeTransform, TransformContext } from '../transform'
 import type {
   JSXElement,
   JSXExpressionContainer,
@@ -68,7 +68,7 @@ export const transformText: NodeTransform = (node, context) => {
 function processTextLike(context: TransformContext<JSXExpressionContainer>) {
   const nexts = context.parent!.node.children?.slice(context.index)
   const idx = nexts.findIndex((n) => !isTextLike(n))
-  const nodes = (idx > -1 ? nexts.slice(0, idx) : nexts) as Array<TextLike>
+  const nodes = (idx !== -1 ? nexts.slice(0, idx) : nexts) as Array<TextLike>
 
   const values = createTextLikeExpressions(nodes, context)
   if (!values.length) {
@@ -130,10 +130,8 @@ function isAllTextLike(children: Node[]): children is TextLike[] {
 function isTextLike(node: Node): node is TextLike {
   return (
     (node.type === 'JSXExpressionContainer' &&
-      !(
-        node.expression.type === 'ConditionalExpression' ||
-        node.expression.type === 'LogicalExpression'
-      )) ||
+      node.expression.type !== 'ConditionalExpression' &&
+      node.expression.type !== 'LogicalExpression') ||
     node.type === 'JSXText'
   )
 }
