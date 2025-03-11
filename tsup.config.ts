@@ -10,11 +10,12 @@ export const config = (options: Options = {}) =>
     watch: !!process.env.DEV,
     dts: !process.env.DEV,
     cjsInterop: true,
+    splitting: true,
     external: ['vue'],
     define: {
       __DEV__: 'true',
     },
-    esbuildPlugins: [Raw()],
+    esbuildPlugins: [Raw() as any],
     ...options,
   })
 

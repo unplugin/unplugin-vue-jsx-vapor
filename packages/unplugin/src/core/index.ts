@@ -3,7 +3,7 @@ import jsx from '@vue-jsx-vapor/babel'
 // @ts-ignore missing type
 import babelTypescript from '@babel/plugin-transform-typescript'
 import * as helper from './helper'
-import type { Options } from '../types'
+import type { Options } from '../options'
 
 export type { Options }
 export const helperCode = helper.helperCode

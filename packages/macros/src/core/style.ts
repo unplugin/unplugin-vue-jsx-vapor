@@ -1,5 +1,5 @@
 import { compileStyleAsync } from '@vue/compiler-sfc'
-import type { OptionsResolved } from '../types'
+import type { OptionsResolved } from '../options'
 
 export async function transformStyle(
   code: string,

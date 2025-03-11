@@ -1,9 +1,9 @@
 import { type UnpluginFactory, createUnplugin } from 'unplugin'
 import { createFilter, transformWithEsbuild } from 'vite'
 import plugin from './raw'
-import type { Options } from './types'
+import type { Options } from './options'
 
-export * from './types'
+export * from './options'
 
 export const unpluginFactory: UnpluginFactory<Options | undefined, true> = (
   options = {},

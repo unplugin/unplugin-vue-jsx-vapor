@@ -33,38 +33,47 @@
       "import": "./dist/index.js"
     },
     "./astro": {
+      "dev": "./src/astro.ts",
       "require": "./dist/astro.cjs",
       "import": "./dist/astro.js"
     },
     "./rspack": {
+      "dev": "./src/rspack.ts",
       "require": "./dist/rspack.cjs",
       "import": "./dist/rspack.js"
     },
     "./vite": {
+      "dev": "./src/vite.ts",
       "require": "./dist/vite.cjs",
       "import": "./dist/vite.js"
     },
     "./webpack": {
+      "dev": "./src/webpack.ts",
       "require": "./dist/webpack.cjs",
       "import": "./dist/webpack.js"
     },
     "./rollup": {
+      "dev": "./src/rollup.ts",
       "require": "./dist/rollup.cjs",
       "import": "./dist/rollup.js"
     },
     "./esbuild": {
+      "dev": "./src/esbuild.ts",
       "require": "./dist/esbuild.cjs",
       "import": "./dist/esbuild.js"
     },
     "./nuxt": {
+      "dev": "./src/nuxt.ts",
       "require": "./dist/nuxt.cjs",
       "import": "./dist/nuxt.js"
     },
     "./api": {
+      "dev": "./src/api.ts",
       "require": "./dist/api.cjs",
       "import": "./dist/api.js"
     },
     "./raw": {
+      "dev": "./src/raw.ts",
       "require": "./dist/raw.cjs",
       "import": "./dist/raw.js"
     },
@@ -134,6 +143,14 @@
     "build": "tsup",
     "dev": "DEV=true tsup"
   },
+  "peerDependencies": {
+    "@nuxt/kit": "^3",
+    "@nuxt/schema": "^3",
+    "esbuild": "*",
+    "rollup": "^3",
+    "vite": ">=3",
+    "webpack": "^4 || ^5"
+  },
   "peerDependenciesMeta": {
     "@nuxt/kit": {
       "optional": true
@@ -156,16 +173,18 @@
   },
   "dependencies": {
     "@vue-macros/common": "3.0.0-beta.4",
+    "@vue/compiler-dom": "catalog:",
     "@vue/compiler-sfc": "catalog:",
+    "@vue/language-core": "^2.2.8",
     "hash-sum": "^2.0.0",
     "ts-macro": "catalog:"
   },
   "devDependencies": {
     "@babel/types": "7.26.9",
-    "@nuxt/kit": "^3.12.3",
-    "@nuxt/schema": "^3.12.3",
     "@types/hash-sum": "^1.0.2",
     "@vue-macros/test-utils": "3.0.0-beta.4",
-    "vue": "catalog:"
+    "vue": "catalog:",
+    "@nuxt/kit": "^3.12.3",
+    "@nuxt/schema": "^3.12.3"
   }
 }

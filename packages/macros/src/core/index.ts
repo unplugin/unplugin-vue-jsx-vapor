@@ -12,7 +12,7 @@ import { transformDefineExpose } from './define-expose'
 import { transformDefineModel } from './define-model'
 import { transformDefineSlots } from './define-slots'
 import { transformDefineStyle } from './define-style'
-import type { OptionsResolved } from '../types'
+import type { OptionsResolved } from '../options'
 import type {
   ArrowFunctionExpression,
   CallExpression,

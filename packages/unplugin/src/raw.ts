@@ -6,7 +6,7 @@ import {
   helperPrefix,
   transformVueJsxVapor,
 } from './core'
-import type { Options } from './types'
+import type { Options } from './options'
 import type { UnpluginOptions } from 'unplugin'
 
 const plugin = (options: Options = {}): UnpluginOptions[] => {
