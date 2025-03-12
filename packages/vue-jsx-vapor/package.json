@@ -90,6 +90,11 @@
       "require": "./dist/unplugin.cjs",
       "import": "./dist/unplugin.js"
     },
+    "./jsx-runtime": {
+      "dev": "./src/jsx-runtime.ts",
+      "require": "./dist/jsx-runtime.cjs",
+      "default": "./dist/jsx-runtime.js"
+    },
     "./volar": {
       "dev": "./src/volar.ts",
       "require": "./dist/volar.cjs",
@@ -154,6 +159,10 @@
       "require": "./dist/raw.cjs",
       "import": "./dist/raw.js"
     },
+    "./jsx-runtime": {
+      "require": "./dist/jsx-runtime.cjs",
+      "default": "./dist/jsx-runtime.js"
+    },
     "./volar": {
       "require": "./dist/volar.cjs",
       "import": "./dist/volar.js"
@@ -212,6 +221,7 @@
     "@nuxt/kit": "catalog:",
     "@nuxt/schema": "catalog:",
     "@types/babel__core": "catalog:",
+    "csstype": "^3.1.3",
     "vue": "catalog:"
   }
 }

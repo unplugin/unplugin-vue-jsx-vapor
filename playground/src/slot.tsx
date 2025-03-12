@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-const Comp = (props, { slots }) => {
+const Comp = (props: { foo: string }, { slots }) => {
   return (
     <>
       {slots.default ? (
@@ -16,16 +16,18 @@ const slots = {
   default: (scope) => <div>{scope.foo}</div>,
 }
 
+// eslint-disable-next-line unused-imports/no-unused-vars
 const slotName = ref('default')
 export default () => {
   const foo = ref('foo')
   return (
     <>
-      <input value={foo.value} onInput={(e) => (foo.value = e.target.value)} />
+      <input v-model={foo.value} />
       <div style="display: flex;">
         <fieldset>
           <legend>v-slots</legend>
           <Comp v-slots={slots} foo={foo.value} />
+
           <Comp
             v-slots={{ default: (scope) => <div>{scope.foo}</div> }}
             foo={foo.value}

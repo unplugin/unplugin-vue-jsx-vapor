@@ -1,14 +1,7 @@
 import { ref } from 'vue'
 
-const Comp = (props) => {
-  const model = {
-    get value() {
-      return props.modelValue
-    },
-    set value(value) {
-      props['onUpdate:modelValue'](value)
-    },
-  }
+const Comp = () => {
+  const model = defineModel<string>()
   return <input v-model={model.value} />
 }
 

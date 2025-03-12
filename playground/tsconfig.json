@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "jsx": "preserve",
-    "jsxImportSource": "vue",
+    "jsxImportSource": "vue-jsx-vapor",
     "lib": ["ESNext", "DOM"],
     "customConditions": ["dev"],
     "module": "ESNext",

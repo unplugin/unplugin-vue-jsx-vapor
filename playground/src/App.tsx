@@ -28,7 +28,7 @@ export default () => {
         <legend>Component</legend>
         <input
           value_prop={count.value}
-          onInput={(e) => (count.value = e.target.value)}
+          onInput={(e) => (count.value = e.currentTarget.value)}
         />
 
         <Count value={count.value} />
