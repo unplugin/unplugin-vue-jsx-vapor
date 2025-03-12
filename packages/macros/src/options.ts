@@ -1,5 +1,4 @@
 import {
-  detectVueVersion,
   REGEX_NODE_MODULES,
   REGEX_SETUP_SFC,
   REGEX_SRC_FILE,

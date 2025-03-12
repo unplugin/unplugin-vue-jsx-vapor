@@ -27,7 +27,6 @@ const globs =
       })
 
 describe('fixtures', async () => {
-  const zmj = './fixtures/**/*.tsx'
   await testFixtures(
     globs,
     (args, id, code) =>
