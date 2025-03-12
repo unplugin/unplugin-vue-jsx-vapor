@@ -76,6 +76,13 @@ export default () => {
 }
 ```
 
+## Typescript
+
+Because of vue-jsx-vapor support all directives and most macros of Vue,
+so we need the VSCode plugin [ts-macro](https://github.com/ts-macro/ts-macro) to use the `vue-jsx-vapor/volar` plugin for Typescript support.
+It works similarly to [@vue/language-tools](https://github.com/vuejs/language-tools) but only used for `ts` or `tsx` files.
+
+
 <details>
 <summary>Vite</summary><br>
 
