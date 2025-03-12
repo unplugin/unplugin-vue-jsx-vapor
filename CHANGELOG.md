@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/vuejs/vue-jsx-vapor/compare/v2.0.0...v2.0.1) (2025-03-12)
+
+
+### Features
+
+* **macros:** add semicolon prefix for defineExpose ([1f7171e](https://github.com/vuejs/vue-jsx-vapor/commit/1f7171e951543a71dc9a51250afcf448e6632e57))
+
+
+
 # [2.0.0](https://github.com/vuejs/vue-jsx-vapor/compare/v1.7.0...v2.0.0) (2025-03-12)
 
 
