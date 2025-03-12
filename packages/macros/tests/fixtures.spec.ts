@@ -33,6 +33,7 @@ describe('fixtures', async () => {
       transformJsxMacros(code, id, new Map(), {
         lib: 'vue',
         include: ['*.tsx'],
+        version: 3.6,
         ...options,
       })?.code,
   )
@@ -45,6 +46,7 @@ describe('vue/vapor fixtures', async () => {
       transformJsxMacros(code, id, new Map(), {
         lib: 'vue/vapor',
         include: ['*.tsx'],
+        version: 3.6,
         ...options,
       })?.code,
   )
