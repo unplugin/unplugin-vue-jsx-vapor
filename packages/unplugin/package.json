@@ -1,5 +1,5 @@
 {
-  "name": "unplugin-vue-jsx-vapor",
+  "name": "vue-jsx-vapor",
   "version": "1.7.0",
   "packageManager": "pnpm@10.4.1",
   "description": "Convert Vue JSX to Vapor",
@@ -15,13 +15,13 @@
     "vapor"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/unplugin/unplugin-vue-jsx-vapor#readme",
+  "homepage": "https://github.com/vuejs/vue-jsx-vapor#readme",
   "bugs": {
-    "url": "https://github.com/unplugin/unplugin-vue-jsx-vapor/issues"
+    "url": "https://github.com/vuejs/vue-jsx-vapor/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/unplugin/unplugin-vue-jsx-vapor.git"
+    "url": "git+https://github.com/vuejs/vue-jsx-vapor.git"
   },
   "files": [
     "dist"

@@ -2,7 +2,7 @@ import unplugin from './unplugin'
 import type { Options } from './options'
 
 export default (options: Options) => ({
-  name: 'unplugin-vue-jsx-vapor',
+  name: 'vue-jsx-vapor',
   hooks: {
     'astro:config:setup': (astro: any) => {
       astro.config.vite.plugins ||= []

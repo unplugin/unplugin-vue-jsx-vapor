@@ -101,7 +101,7 @@ export default (): {
           })
           if (helpers.length) {
             statements.unshift(
-              `import { ${helpers.map((i) => `${i} as _${i}`).join(', ')} } from 'unplugin-vue-jsx-vapor/helper.js';\n`,
+              `import { ${helpers.map((i) => `${i} as _${i}`).join(', ')} } from 'vue-jsx-vapor/helper.js';\n`,
             )
           }
 

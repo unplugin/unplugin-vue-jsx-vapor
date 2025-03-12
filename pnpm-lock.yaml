@@ -278,7 +278,7 @@ importers:
       '@vitejs/plugin-vue-jsx':
         specifier: ^4.1.1
         version: 4.1.1(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0))(vue@https://pkg.pr.new/vue@ce35a8c(typescript@5.8.2))
-      unplugin-vue-jsx-vapor:
+      vue-jsx-vapor:
         specifier: workspace:*
         version: link:../packages/unplugin
       vite:

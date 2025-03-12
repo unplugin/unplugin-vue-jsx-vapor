@@ -8,7 +8,7 @@ export interface ModuleOptions extends Options {}
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'nuxt-unplugin-vue-jsx-vapor',
+    name: 'nuxt-vue-jsx-vapor',
     configKey: 'unpluginStarter',
   },
   setup(options) {

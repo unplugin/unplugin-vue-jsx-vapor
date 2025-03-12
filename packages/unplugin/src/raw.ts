@@ -16,7 +16,7 @@ const plugin = (options: Options = {}): UnpluginOptions[] => {
   )
   return [
     {
-      name: 'unplugin-vue-jsx-vapor',
+      name: 'vue-jsx-vapor',
       vite: {
         config(config) {
           return {

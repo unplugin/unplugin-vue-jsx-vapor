@@ -8,10 +8,10 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue-jsx": "^4.1.1",
-    "unplugin-vue-jsx-vapor": "workspace:*",
     "vite": "catalog:",
     "vite-hyper-config": "^0.5.0",
     "vite-plugin-inspect": "^0.8.9",
-    "vue": "catalog:"
+    "vue": "catalog:",
+    "vue-jsx-vapor": "workspace:*"
   }
 }

@@ -1,6 +1,6 @@
-# unplugin-vue-jsx-vapor
+# vue-jsx-vapor
 
-[![NPM version](https://img.shields.io/npm/v/unplugin-vue-jsx-vapor?color=a1b858&label=)](https://www.npmjs.com/package/unplugin-vue-jsx-vapor)
+[![NPM version](https://img.shields.io/npm/v/vue-jsx-vapor?color=a1b858&label=)](https://www.npmjs.com/package/vue-jsx-vapor)
 
 Vue JSX Vapor.
 
@@ -9,7 +9,7 @@ Vue JSX Vapor.
 ## Install
 
 ```bash
-npm i unplugin-vue-jsx-vapor
+npm i vue-jsx-vapor
 ```
 
 > [!CAUTION]
@@ -41,7 +41,25 @@ export default () => {
 }
 ```
 
-2. ✅ Use the `defineComponent` macro from [@vue-macros/jsx-macros](https://github.com/vue-macros/vue-macros/pull/794) to wrapping.
+2. ✅ Set the macros option to true, then use the `defineComponent` macro for wrapping.
+
+Setup
+
+```ts
+// vite.config.ts
+import VueJsxVapor from 'vue-jsx-vapor/vite'
+
+export default defineConfig({
+  plugins: [
+    vueJsxVapor({
+      macros: true
+    })    
+  ]
+})
+
+```
+
+Usage
 
 ```tsx
 const Comp = defineComponent(({ foo }) => {
@@ -63,7 +81,7 @@ export default () => {
 
 ```ts
 // vite.config.ts
-import VueJsxVapor from 'unplugin-vue-jsx-vapor/vite'
+import VueJsxVapor from 'vue-jsx-vapor/vite'
 
 export default defineConfig({
   plugins: [VueJsxVapor()],
@@ -79,7 +97,7 @@ Example: [`playground/`](./playground/)
 
 ```ts
 // rollup.config.js
-import VueJsxVapor from 'unplugin-vue-jsx-vapor/rollup'
+import VueJsxVapor from 'vue-jsx-vapor/rollup'
 
 export default {
   plugins: [VueJsxVapor()],
@@ -95,7 +113,7 @@ export default {
 // webpack.config.js
 module.exports = {
   /* ... */
-  plugins: [require('unplugin-vue-jsx-vapor/webpack')()],
+  plugins: [require('vue-jsx-vapor/webpack')()],
 }
 ```
 
@@ -107,7 +125,7 @@ module.exports = {
 ```ts
 // nuxt.config.js
 export default defineNuxtConfig({
-  modules: ['unplugin-vue-jsx-vapor/nuxt'],
+  modules: ['vue-jsx-vapor/nuxt'],
 })
 ```
 
@@ -122,7 +140,7 @@ export default defineNuxtConfig({
 // vue.config.js
 module.exports = {
   configureWebpack: {
-    plugins: [require('unplugin-vue-jsx-vapor/webpack')()],
+    plugins: [require('vue-jsx-vapor/webpack')()],
   },
 }
 ```
@@ -135,7 +153,7 @@ module.exports = {
 ```ts
 // esbuild.config.js
 import { build } from 'esbuild'
-import VueJsxVapor from 'unplugin-vue-jsx-vapor/esbuild'
+import VueJsxVapor from 'vue-jsx-vapor/esbuild'
 
 build({
   plugins: [VueJsxVapor()],
