@@ -1,3 +1,4 @@
+import process from 'node:process'
 import { testFixtures } from '@vue-macros/test-utils'
 import { describe } from 'vitest'
 import { transformJsxMacros } from '../src/core'
@@ -10,17 +11,29 @@ const options = {
   defineComponent: { alias: ['defineComponent', 'defineVaporComponent'] },
 }
 
+// TODO: hash-sum's result is different on Windows and Linux
+const globs =
+  process.platform === 'win32'
+    ? import.meta.glob(
+        ['./fixtures/**/*.tsx', '!./fixtures/**/define-style.tsx'],
+        {
+          eager: true,
+          as: 'raw',
+        },
+      )
+    : import.meta.glob('./fixtures/**/*.tsx', {
+        eager: true,
+        as: 'raw',
+      })
+
 describe('fixtures', async () => {
+  const zmj = './fixtures/**/*.tsx'
   await testFixtures(
-    import.meta.glob('./fixtures/**/*.tsx', {
-      eager: true,
-      as: 'raw',
-    }),
+    globs,
     (args, id, code) =>
       transformJsxMacros(code, id, new Map(), {
         lib: 'vue',
         include: ['*.tsx'],
-        version: 3.5,
         ...options,
       })?.code,
   )
@@ -28,15 +41,11 @@ describe('fixtures', async () => {
 
 describe('vue/vapor fixtures', async () => {
   await testFixtures(
-    import.meta.glob('./fixtures/**/*.tsx', {
-      eager: true,
-      as: 'raw',
-    }),
+    globs,
     (args, id, code) =>
       transformJsxMacros(code, id, new Map(), {
         lib: 'vue/vapor',
         include: ['*.tsx'],
-        version: 3.5,
         ...options,
       })?.code,
   )
