@@ -54,21 +54,21 @@ let __temp, __restore
 exports[`fixtures > ./fixtures/define-expose.tsx 1`] = `
 "
 import { getCurrentInstance as __MACROS_getCurrentInstance } from "vue";export function Comp(__MACROS_props) {
-  (__MACROS_getCurrentInstance().exposed = {
+  ;(__MACROS_getCurrentInstance().exposed = {
     foo: 1,
   })
   return <div />
 }
 
 export const Comp1 = function (props: any) {
-  (__MACROS_getCurrentInstance().exposed = {
+  ;(__MACROS_getCurrentInstance().exposed = {
     foo: props.foo,
   })
   return <div />
 }
 
 export const Comp2 = ({ foo, ...__MACROS_props }: any) => {
-  (__MACROS_getCurrentInstance().exposed = {
+  ;(__MACROS_getCurrentInstance().exposed = {
     foo,
   })
   return <div />
@@ -192,21 +192,21 @@ let __temp, __restore
 exports[`vue/vapor fixtures > ./fixtures/define-expose.tsx 1`] = `
 "
 import { currentInstance as __MACROS_currentInstance } from "vue";export function Comp(__MACROS_props) {
-  (__MACROS_currentInstance.exposed = {
+  ;(__MACROS_currentInstance.exposed = {
     foo: 1,
   })
   return <div />
 }
 
 export const Comp1 = function (props: any) {
-  (__MACROS_currentInstance.exposed = {
+  ;(__MACROS_currentInstance.exposed = {
     foo: props.foo,
   })
   return <div />
 }
 
 export const Comp2 = ({ foo, ...__MACROS_props }: any) => {
-  (__MACROS_currentInstance.exposed = {
+  ;(__MACROS_currentInstance.exposed = {
     foo,
   })
   return <div />

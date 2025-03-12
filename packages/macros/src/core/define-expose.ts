@@ -6,7 +6,7 @@ export function transformDefineExpose(
   s: MagicStringAST,
   lib: string,
 ): void {
-  s.overwriteNode(node.callee, '')
+  s.overwriteNode(node.callee, ';')
   s.appendRight(
     node.arguments[0]?.start || node.end! - 1,
     lib.includes('vapor')
