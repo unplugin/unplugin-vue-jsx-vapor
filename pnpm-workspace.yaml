@@ -13,7 +13,7 @@ catalog:
   '@vue/compiler-sfc': https://pkg.pr.new/@vue/compiler-sfc@ce35a8c
   '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@ce35a8c
   '@vue/shared': https://pkg.pr.new/@vue/shared@ce35a8c
-  ts-macro: 0.1.21
+  ts-macro: ^0.1.25
   unplugin: ^1.16.1
   vite: ^6.2.1
   vitest: ^3.0.8

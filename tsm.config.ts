@@ -1,4 +1,4 @@
-import vueJsxVapor from './packages/unplugin/src/volar'
+import vueJsxVapor from './packages/vue-jsx-vapor/src/volar'
 
 export default {
   plugins: [
