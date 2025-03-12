@@ -47,7 +47,7 @@ Setup
 
 ```ts
 // vite.config.ts
-import VueJsxVapor from 'vue-jsx-vapor/vite'
+import vueJsxVapor from 'vue-jsx-vapor/vite'
 
 export default defineConfig({
   plugins: [
@@ -78,9 +78,27 @@ export default () => {
 
 ## Typescript
 
-Because of vue-jsx-vapor support all directives and most macros of Vue,
-so we need the VSCode plugin [ts-macro](https://github.com/ts-macro/ts-macro) to use the `vue-jsx-vapor/volar` plugin for Typescript support.
+Because of vue-jsx-vapor support all directives and most macros of Vue,\
+so we need the VSCode plugin [ts-macro](https://github.com/ts-macro/ts-macro) to use the `vue-jsx-vapor/volar` plugin for Typescript support.\
 It works similarly to [@vue/language-tools](https://github.com/vuejs/language-tools) but only used for `ts` or `tsx` files.
+
+By default, after installing the `ts-macro` VSCode plugin,\
+`ts-macro` will automatically load `vue-jsx-vapor/volar` by analyzing `vite.config.ts` and shared vueJsxVapor's options,\
+so you don't need to config `tsm.config.ts`. But if you want, you can also configure it manually:
+
+```ts
+// tsm.config.ts
+import vueJsxVapor from 'vue-jsx-vapor/volar'
+
+export default {
+  plugins: [
+    vueJsxVapor({
+      macros: true
+    })
+  ],
+}
+
+```
 
 
 <details>
