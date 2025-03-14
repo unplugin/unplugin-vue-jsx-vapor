@@ -13,4 +13,14 @@ export default sxzz()
         'unused-imports/no-unused-vars': 'warn',
       },
     },
+    {
+      name: 'docs',
+      files: ['**/*.md/*.tsx'],
+      rules: {
+        'no-var': 'off',
+        'no-mutable-exports': 'off',
+        'no-duplicate-imports': 'off',
+        'import/first': 'off',
+      },
+    },
   ])

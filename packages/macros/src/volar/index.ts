@@ -3,7 +3,6 @@ import {
   type MarkRequired,
   type Overwrite,
 } from '@vue-macros/common'
-import { toValidAssetId } from '@vue/compiler-dom'
 import { replaceRange, type TsmVirtualCode } from 'ts-macro'
 import type { Options } from '../options'
 import { transformDefineComponent } from './define-component'
@@ -212,7 +211,7 @@ export function getRootMap(options: TransformOptions): RootMap {
         )
       }
 
-      const id = toValidAssetId(modelName, `${HELPER_PREFIX}model` as any)
+      const id = toValidAssetId(modelName, `${HELPER_PREFIX}model`)
       const typeString = `import('vue').UnwrapRef<typeof ${id}>`
       ;(rootMap.get(root)!.defineModel ??= [])!.push(
         `${modelName.includes('-') ? `'${modelName}'` : modelName}${isRequired ? ':' : '?:'} ${typeString}`,
@@ -245,4 +244,10 @@ export function getRootMap(options: TransformOptions): RootMap {
 
   ts.forEachChild(ast, (node) => walk(node, []))
   return rootMap
+}
+
+function toValidAssetId(name: string, type: string): string {
+  return `_${type}_${name.replaceAll(/\W/g, (searchValue, replaceValue) => {
+    return searchValue === '-' ? '_' : name.charCodeAt(replaceValue).toString()
+  })}`
 }

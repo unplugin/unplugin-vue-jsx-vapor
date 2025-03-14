@@ -95,6 +95,11 @@
       "require": "./dist/jsx-runtime.cjs",
       "default": "./dist/jsx-runtime.js"
     },
+    "./jsx-dev-runtime": {
+      "dev": "./src/jsx-runtime.ts",
+      "require": "./dist/jsx-runtime.cjs",
+      "default": "./dist/jsx-runtime.js"
+    },
     "./volar": {
       "dev": "./src/volar.ts",
       "require": "./dist/volar.cjs",
@@ -163,6 +168,10 @@
       "require": "./dist/jsx-runtime.cjs",
       "default": "./dist/jsx-runtime.js"
     },
+    "./jsx-dev-runtime": {
+      "require": "./dist/jsx-runtime.cjs",
+      "default": "./dist/jsx-runtime.js"
+    },
     "./volar": {
       "require": "./dist/volar.cjs",
       "import": "./dist/volar.js"
@@ -211,7 +220,7 @@
     "@vue-jsx-vapor/babel": "workspace:*",
     "@vue-jsx-vapor/compiler": "workspace:*",
     "@vue-jsx-vapor/macros": "workspace:*",
-    "@vue-macros/volar": "3.0.0-beta.4",
+    "@vue-macros/volar": "^3.0.0-beta.5",
     "magic-string-stack": "^0.1.2",
     "ts-macro": "catalog:",
     "unplugin": "catalog:",

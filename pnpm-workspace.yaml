@@ -1,6 +1,7 @@
 packages:
   - packages/*
   - playground
+  - docs
 
 catalog:
   '@babel/core': ^7.26.8

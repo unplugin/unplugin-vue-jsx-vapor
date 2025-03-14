@@ -1,0 +1,17 @@
+{
+  "name": "docs",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "@shikijs/vitepress-twoslash": "^3.2.1",
+    "@ts-macro/twoslash": "^0.0.3",
+    "vitepress": "^2.0.0-alpha.4",
+    "vue": "catalog:",
+    "vue-jsx-vapor": "workspace:*"
+  }
+}

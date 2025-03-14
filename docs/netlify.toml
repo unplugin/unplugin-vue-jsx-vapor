@@ -1,0 +1,4 @@
+[[rewrites]]
+  from = "/*"
+  to = "/:path.html"
+  status = 200

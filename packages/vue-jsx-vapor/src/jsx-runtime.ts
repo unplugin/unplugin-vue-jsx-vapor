@@ -30,7 +30,6 @@ declare global {
     interface IntrinsicElements extends NativeElements {
       [name: string]: any
     }
-
     interface IntrinsicAttributes
       extends ReservedProps,
         AllowedComponentProps,

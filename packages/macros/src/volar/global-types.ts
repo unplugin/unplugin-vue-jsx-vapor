@@ -41,8 +41,6 @@ ${defineStyle}
 type ${HELPER_PREFIX}StyleArgs = [style: string, options?: { scoped?: boolean }];
 type ${HELPER_PREFIX}PrettifyLocal<T> = { [K in keyof T]: T[K]; } & {};
 // @ts-ignore
-type __VLS_IsAny<T> = 0 extends 1 & T ? true : false;
-// @ts-ignore
-type __VLS_PickNotAny<A, B> = __VLS_IsAny<A> extends true ? B : A;
+type __VLS_IsAny<T> = 0 extends 1 & T ? true : false; type __VLS_PickNotAny<A, B> = __VLS_IsAny<A> extends true ? B : A;
 `
 }
