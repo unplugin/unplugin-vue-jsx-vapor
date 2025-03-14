@@ -21,9 +21,11 @@ import { defineConfig } from 'vite'
 import vueJsxVapor from 'vue-jsx-vapor/vite'
 
 export default defineConfig({
-  vueJsxVapor({
-    macros: true,
-  }),
+  plugins: [
+    vueJsxVapor({
+      macros: true,
+    }),
+  ],
 })
 ```
 
@@ -31,9 +33,11 @@ export default defineConfig({
 import vueJsxVapor from 'vue-jsx-vapor/volar'
 
 export default {
-  vueJsxVapor({
-    macros: true,
-  }),
+  plugins: [
+    vueJsxVapor({
+      macros: true,
+    }),
+  ],
 }
 ```
 
@@ -208,7 +212,7 @@ export default () => (
   <Comp<1>>
     <template v-slot={{ foo }}>{foo}</template>
     <template v-slot:title={{ bar }}>{bar}</template>
-    //                                ^?
+    // ^?
   </Comp>
 )
 ```
@@ -216,7 +220,6 @@ export default () => (
 ## defineExpose
 
 Just like in Vue SFC.
-
 
 ```tsx
 import { useRef } from 'vue-jsx-vapor'
@@ -233,9 +236,7 @@ export default () => {
   compRef.value?.foo
   //              ^?
 
-  return (
-    <Comp ref={compRef} foo={1 as const} />
-  )
+  return <Comp ref={compRef} foo={1 as const} />
 }
 ```
 
@@ -247,15 +248,14 @@ import { useRef } from 'vue-jsx-vapor'
 import { useExpose } from '/vue-macros/jsx-macros/use-expose'
 
 const Comp = ({ foo }) => {
-  ;(currentInstance.exposed = {
+  currentInstance.exposed = {
     foo,
-  })
+  }
   return <div />
 }
 ```
 
 :::
-
 
 ## defineStyle
 

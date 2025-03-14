@@ -8,12 +8,6 @@ export default sxzz()
   )
   .append([
     {
-      name: 'warn',
-      rules: {
-        'unused-imports/no-unused-vars': 'warn',
-      },
-    },
-    {
       name: 'docs',
       files: ['**/*.md/*.tsx'],
       rules: {
@@ -21,6 +15,7 @@ export default sxzz()
         'no-mutable-exports': 'off',
         'no-duplicate-imports': 'off',
         'import/first': 'off',
+        'unused-imports/no-unused-vars': 'off',
       },
     },
   ])

@@ -31,9 +31,11 @@ import { defineConfig } from 'vite'
 import vueJsxVapor from 'vue-jsx-vapor/vite'
 
 export default defineConfig({
-  vueJsxVapor({
-    macros: true,
-  }),
+  plugins: [
+    vueJsxVapor({
+      macros: true,
+    }),
+  ],
 })
 ```
 
@@ -46,16 +48,17 @@ It works similarly to [@vue/language-tools](https://github.com/vuejs/language-to
 
 By default, after installing the `ts-macro` VSCode plugin, `ts-macro` will automatically load `vue-jsx-vapor/volar` by analyzing `vite.config.ts` and shared vueJsxVapor's options. so you don't need to config `tsm.config.ts`. But if you want, you can also configure it manually:
 
-
 ::: code-group
 
 ```ts [tsm.config.ts]
 import vueJsxVapor from 'vue-jsx-vapor/volar'
 
 export default {
-  vueJsxVapor({
-    macros: true,
-  }),
+  plugins: [
+    vueJsxVapor({
+      macros: true,
+    }),
+  ],
 }
 ```
 

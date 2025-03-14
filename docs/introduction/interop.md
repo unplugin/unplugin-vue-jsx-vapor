@@ -9,16 +9,18 @@
 ::: code-group
 
 ```ts [vite.config.ts]
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import { defineConfig } from 'vite'
 import vueJsxVapor from 'vue-jsx-vapor/vite'
-import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
-  vueJsxVapor({
-    macros: true,
-    interop: true,
-  }),
-  vueJsx()
+  plugins: [
+    vueJsxVapor({
+      macros: true,
+      interop: true,
+    }),
+    vueJsx(),
+  ],
 })
 ```
 
@@ -29,11 +31,17 @@ createApp(App).use(vaporInteropPlugin).mount('#app')
 ```
 
 ```tsx [App.tsx] twoslash1
-import {computed, defineComponent, defineVaporComponent, ref, ref as useRef } from 'vue'
+import {
+  computed,
+  defineComponent,
+  defineVaporComponent,
+  ref,
+  ref as useRef,
+} from 'vue'
 
 const Comp = defineVaporComponent(({ count = 0 }) => {
   defineExpose({
-    double: computed(() => count * 2)
+    double: computed(() => count * 2),
   })
   return <span> x 2 = </span>
 })
@@ -43,21 +51,19 @@ export default defineComponent(() => {
   const compRef = useRef()
   return () => (
     <>
-      <input 
-        value={count.value} 
-        onInput={e => count.value = +e.currentTarget.value}
-      /> 
+      <input
+        value={count.value}
+        onInput={(e) => (count.value = +e.currentTarget.value)}
+      />
 
       <Comp count={count.value} ref={compRef}></Comp>
       {compRef.value?.double}
     </>
   )
 })
-
 ```
 
 :::
-
 
 ## Virtual DOM in Vapor
 
@@ -66,16 +72,18 @@ export default defineComponent(() => {
 ::: code-group
 
 ```ts [vite.config.ts]
+import vueJsx from '@vitejs/plugin-vue-jsx'
 import { defineConfig } from 'vite'
 import vueJsxVapor from 'vue-jsx-vapor/vite'
-import vueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
-  vueJsxVapor({
-    macros: true,
-    interop: true,
-  }),
-  vueJsx()
+  plugins: [
+    vueJsxVapor({
+      macros: true,
+      interop: true,
+    }),
+    vueJsx(),
+  ],
 })
 ```
 
@@ -86,11 +94,17 @@ createVaporApp(App).use(vaporInteropPlugin).mount('#app')
 ```
 
 ```tsx [App.tsx] twoslash1
-import {computed, defineComponent, defineVaporComponent, ref, ref as useRef } from 'vue'
+import {
+  computed,
+  defineComponent,
+  defineVaporComponent,
+  ref,
+  ref as useRef,
+} from 'vue'
 
 const Comp = defineVaporComponent(({ count = 0 }) => {
   defineExpose({
-    double: computed(() => count * 2)
+    double: computed(() => count * 2),
   })
   return <span> x 2 = </span>
 })
@@ -100,17 +114,16 @@ export default defineComponent(() => {
   const compRef = useRef()
   return () => (
     <>
-      <input 
-        value={count.value} 
-        onInput={e => count.value = +e.currentTarget.value}
-      /> 
+      <input
+        value={count.value}
+        onInput={(e) => (count.value = +e.currentTarget.value)}
+      />
 
       <Comp count={count.value} ref={compRef}></Comp>
       {compRef.value?.double}
     </>
   )
 })
-
 ```
 
 :::
