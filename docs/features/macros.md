@@ -145,7 +145,7 @@ defineComponent(
 - Will be inferred as a required prop when the expression ends with `!`.
 - The modified model's value can be read synchronously, without needing to `await nextTick()`. [Related issue](https://github.com/vuejs/core/issues/11080)
 
-```tsx twoslash
+```tsx
 import { ref } from 'vue'
 
 function Comp() {
