@@ -4,13 +4,13 @@
 
 A collection of macros. They are need to muanually enabled by set `macros` to `true`.
 
-|     Directive     |        Vue         |       Vapor        |       Volar        |
-| :---------------: | :----------------: | :----------------: | :----------------: |
-| `defineComponent` | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-|   `defineModel`   | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-|   `defineSlots`   | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-|  `defineExpose`   | :white_check_mark: | :white_check_mark: | :white_check_mark: |
-|   `defineStyle`   | :white_check_mark: | :white_check_mark: | :white_check_mark: |
+|     Directive     |        Vue         |       Volar        |
+| :---------------: | :----------------: | :----------------: |
+| `defineComponent` | :white_check_mark: | :white_check_mark: |
+|   `defineModel`   | :white_check_mark: | :white_check_mark: |
+|   `defineSlots`   | :white_check_mark: | :white_check_mark: |
+|  `defineExpose`   | :white_check_mark: | :white_check_mark: |
+|   `defineStyle`   | :white_check_mark: | :white_check_mark: |
 
 ## Setup
 
