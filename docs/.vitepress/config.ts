@@ -57,6 +57,7 @@ export default defineConfig({
     ],
   },
   markdown: {
+    languages: ['js', 'ts'],
     codeTransformers: [
       transformerTwoslash({
         twoslasher: createTwoslasher({

@@ -1,7 +1,5 @@
 # Macros
 
-<StabilityLevel level="experimental" />
-
 A collection of macros. They are need to muanually enabled by set `macros` to `true`.
 
 |     Directive     |        Vue         |       Volar        |
@@ -16,7 +14,7 @@ A collection of macros. They are need to muanually enabled by set `macros` to `t
 
 ::: code-group
 
-```ts {6} [vite.config.ts]
+```ts {7} [vite.config.ts]
 import { defineConfig } from 'vite'
 import vueJsxVapor from 'vue-jsx-vapor/vite'
 
@@ -29,7 +27,7 @@ export default defineConfig({
 })
 ```
 
-```ts {5} [tsm.config.ts]
+```ts {6} [tsm.config.ts]
 import vueJsxVapor from 'vue-jsx-vapor/volar'
 
 export default {
@@ -145,18 +143,19 @@ defineComponent(
 - Will be inferred as a required prop when the expression ends with `!`.
 - The modified model's value can be read synchronously, without needing to `await nextTick()`. [Related issue](https://github.com/vuejs/core/issues/11080)
 
-```tsx
+```tsx twoslash
 import { ref } from 'vue'
 
 function Comp() {
   const modelValue = defineModel<string>()!
   modelValue.value = 'foo'
   return <div>{modelValue.value}</div>
+  //                      ^?
 }
 
 export default () => {
   const foo = ref('')
-  return <Comp v-model={foo.value} />
+  return <input value={foo.value} />
 }
 ```
 
@@ -208,11 +207,14 @@ function Comp<const T>() {
   )
 }
 
+// ---cut-start---
+// prettier-ignore
+// ---cut-end---
 export default () => (
   <Comp<1>>
     <template v-slot={{ foo }}>{foo}</template>
     <template v-slot:title={{ bar }}>{bar}</template>
-    // ^?
+    //                        ^?
   </Comp>
 )
 ```
@@ -221,7 +223,7 @@ export default () => (
 
 Just like in Vue SFC.
 
-```tsx
+```tsx twoslash
 import { useRef } from 'vue-jsx-vapor'
 
 const Comp = <T,>({ foo = undefined as T }) => {
@@ -234,7 +236,7 @@ const Comp = <T,>({ foo = undefined as T }) => {
 export default () => {
   const compRef = useRef()
   compRef.value?.foo
-  //              ^?
+  //             ^?
 
   return <Comp ref={compRef} foo={1 as const} />
 }
@@ -313,6 +315,7 @@ export default () => {
       }
     }
   `)
+
   return <div class={styles.bar} />
   //                         ^?
 }

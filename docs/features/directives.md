@@ -11,6 +11,22 @@ Vue built-in directives for JSX.
 |           `v-html`            | :white_check_mark: |         /          |
 |           `v-once`            | :white_check_mark: |         /          |
 
+## Dynamic Arguments
+
+It is also possible to use a variable in a directive argument.
+Because JSX doesn't support `[]` keyword, use `$` instead.
+
+## Modifiers
+
+Modifiers are special postfixes denoted by a `_`, which indicate that a directive should be bound in some special way.
+Because JSX doesn't support `.` keyword, we use `_` instead.
+
+```tsx
+<form onSubmit_prevent>
+  <input v-model_number={value} />
+</form>
+```
+
 ## `v-if`, `v-else-if`, `v-else`
 
 ```tsx twoslash
@@ -80,27 +96,21 @@ const Comp = () => {
   return <div />
 }
 
-// ---cut-start---
-// prettier-ignore
-// ---cut-end---
 export default () => (
-  <Comp v-slots={{
-    default: () => <>default slot</>,
-    slot: ({ bar }) => <>{bar}</>
-  }} />
+  <Comp
+    v-slots={{
+      default: () => <>default slot</>,
+      slot: ({ bar }) => <>{bar}</>,
+    }}
+  />
 )
 ```
 
 :::
 
-## Dynamic Arguments
+## `v-model`
 
-It is also possible to use a variable in a directive argument.
-Because JSX doesn't support `[]` keyword, use `$` instead.
-
-### `v-model`
-
-```tsx
+```tsx twoslash
 import { ref } from 'vue'
 
 const Comp = () => {
@@ -122,7 +132,7 @@ export default () => {
 }
 ```
 
-### `v-slot`
+## `v-slot`
 
 ```tsx twoslash
 export const Comp = () => {
@@ -149,15 +159,4 @@ export default () => (
     </template>
   </Comp>
 )
-```
-
-## Modifiers
-
-Modifiers are special postfixes denoted by a `_`, which indicate that a directive should be bound in some special way. 
-Because JSX doesn't support `.` keyword, we use `_` instead.
-
-```tsx
-<form onSubmit_prevent>
-  <input v-model_number={value} />
-</form>
 ```
