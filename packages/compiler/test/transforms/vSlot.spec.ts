@@ -11,7 +11,6 @@ import {
   transformVIf,
   transformVOn,
   transformVSlot,
-  type IRSlotsStatic,
 } from '../../src'
 import { makeCompile } from './_utils'
 
