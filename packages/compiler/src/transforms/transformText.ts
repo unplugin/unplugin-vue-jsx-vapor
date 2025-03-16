@@ -17,12 +17,8 @@ import {
   processConditionalExpression,
   processLogicalExpression,
 } from './expression'
-import type {
-  JSXElement,
-  JSXExpressionContainer,
-  JSXText,
-  Node,
-} from '@babel/types'
+import { isFragmentNode } from './utils'
+import type { JSXExpressionContainer, JSXText, Node } from '@babel/types'
 
 type TextLike = JSXText | JSXExpressionContainer
 const seen = new WeakMap<
@@ -37,23 +33,52 @@ export const transformText: NodeTransform = (node, context) => {
     return
   }
 
+  const isFragment = isFragmentNode(node)
   if (
-    node.type === 'JSXElement' &&
-    !isTemplate(node) &&
-    !(isJSXComponent(node) as boolean) &&
-    isAllTextLike(node.children)
+    ((node.type === 'JSXElement' &&
+      !isTemplate(node) &&
+      !isJSXComponent(node)) ||
+      isFragment) &&
+    node.children.length
   ) {
-    processTextLikeContainer(
-      node.children,
-      context as TransformContext<JSXElement>,
-    )
+    let hasInterp = false
+    let isAllTextLike = true
+    for (const c of node.children) {
+      if (
+        c.type === 'JSXExpressionContainer' &&
+        c.expression.type !== 'ConditionalExpression' &&
+        c.expression.type !== 'LogicalExpression'
+      ) {
+        hasInterp = true
+      } else if (c.type !== 'JSXText') {
+        isAllTextLike = false
+      }
+    }
+    // all text like with interpolation
+    if (!isFragment && isAllTextLike && hasInterp) {
+      processTextContainer((node as any).children, context)
+    } else if (hasInterp) {
+      // check if there's any text before interpolation, it needs to be merged
+      for (let i = 0; i < node.children.length; i++) {
+        const c = node.children[i]
+        const prev = node.children[i - 1]
+        if (
+          c.type === 'JSXExpressionContainer' &&
+          prev &&
+          prev.type === 'JSXText'
+        ) {
+          // mark leading text node for skipping
+          seen.get(context.root)!.add(prev)
+        }
+      }
+    }
   } else if (node.type === 'JSXExpressionContainer') {
     if (node.expression.type === 'ConditionalExpression') {
       return processConditionalExpression(node.expression, context)
     } else if (node.expression.type === 'LogicalExpression') {
       return processLogicalExpression(node.expression, context)
     } else {
-      processTextLike(context as TransformContext<JSXExpressionContainer>)
+      processInterpolation(context)
     }
   } else if (node.type === 'JSXText') {
     const value = resolveJSXText(node)
@@ -65,10 +90,18 @@ export const transformText: NodeTransform = (node, context) => {
   }
 }
 
-function processTextLike(context: TransformContext<JSXExpressionContainer>) {
-  const nexts = context.parent!.node.children?.slice(context.index)
+function processInterpolation(context: TransformContext) {
+  const parent = context.parent!.node
+  const children = parent.children
+  const nexts = children.slice(context.index)
   const idx = nexts.findIndex((n) => !isTextLike(n))
   const nodes = (idx !== -1 ? nexts.slice(0, idx) : nexts) as Array<TextLike>
+
+  // merge leading text
+  const prev = children[context.index - 1]
+  if (prev && prev.type === 'JSXText') {
+    nodes.unshift(prev)
+  }
 
   const values = createTextLikeExpressions(nodes, context)
   if (!values.length) {
@@ -77,30 +110,41 @@ function processTextLike(context: TransformContext<JSXExpressionContainer>) {
   }
 
   const id = context.reference()
-  context.dynamic.flags |= DynamicFlag.INSERT | DynamicFlag.NON_TEMPLATE
 
-  context.registerOperation({
-    type: IRNodeTypes.CREATE_TEXT_NODE,
-    id,
-    values,
-    jsx: true,
-  })
+  if (isFragmentNode(parent)) {
+    context.dynamic.flags |= DynamicFlag.INSERT | DynamicFlag.NON_TEMPLATE
+    context.registerOperation({
+      type: IRNodeTypes.CREATE_NODES,
+      id,
+      values,
+    })
+  } else {
+    context.template += ' '
+    context.registerOperation({
+      type: IRNodeTypes.SET_NODES,
+      element: id,
+      values,
+    })
+  }
 }
 
-function processTextLikeContainer(
-  children: TextLike[],
-  context: TransformContext<JSXElement>,
-) {
+function processTextContainer(children: TextLike[], context: TransformContext) {
   const values = createTextLikeExpressions(children, context)
   const literals = values.map(getLiteralExpressionValue)
   if (literals.every((l) => l != null)) {
     context.childrenTemplate = literals.map((l) => String(l))
   } else {
+    context.childrenTemplate = [' ']
     context.registerOperation({
-      type: IRNodeTypes.SET_TEXT,
+      type: IRNodeTypes.GET_TEXT_CHILD,
+      parent: context.reference(),
+    })
+    context.registerOperation({
+      type: IRNodeTypes.SET_NODES,
       element: context.reference(),
       values,
-      jsx: true,
+      // indicates this node is generated, so prefix should be "x" instead of "n"
+      generated: true,
     })
   }
 }
@@ -116,15 +160,6 @@ function createTextLikeExpressions(
     values.push(resolveExpression(node, context, !context.inVOnce))
   }
   return values
-}
-
-function isAllTextLike(children: Node[]): children is TextLike[] {
-  return (
-    !!children.length &&
-    children.every(isTextLike) &&
-    // at least one an interpolation
-    children.some((n) => n.type === 'JSXExpressionContainer')
-  )
 }
 
 function isTextLike(node: Node): node is TextLike {

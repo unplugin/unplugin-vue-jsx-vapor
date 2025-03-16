@@ -53,7 +53,7 @@ describe('compile', () => {
     const { code } = compile(`<>{ 1 }{ 2 }</>`)
     expect(code).toMatchInlineSnapshot(`
       "
-        const n0 = _createTextNode(1, 2)
+        const n0 = _createNodes(1, 2)
         return n0
       "
     `)
@@ -64,7 +64,8 @@ describe('compile', () => {
     expect(code).toMatchInlineSnapshot(`
       "
         const n0 = t0()
-        _setText(n0, () => (a +b +       c))
+        const x0 = _child(n0)
+        _setNodes(x0, () => (a +b +       c))
         return n0
       "
     `)
@@ -77,7 +78,7 @@ describe('compile', () => {
       })
       expect(code).toMatchInlineSnapshot(`
         "
-          const n0 = _createTextNode(() => (a + b))
+          const n0 = _createNodes(() => (a + b))
           return n0
         "
       `)

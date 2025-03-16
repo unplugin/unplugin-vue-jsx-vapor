@@ -26,7 +26,7 @@ export function processConditionalExpression(
   return [
     () => {
       onExit()
-      context.registerOperation(operation)
+      context.dynamic.operation = operation
     },
     () => {
       const [branch, onExit] = createBranch(alternate, context)
@@ -63,7 +63,7 @@ export function processLogicalExpression(
   return [
     () => {
       onExit()
-      context.registerOperation(operation)
+      context.dynamic.operation = operation
     },
     () => {
       const [branch, onExit] = createBranch(

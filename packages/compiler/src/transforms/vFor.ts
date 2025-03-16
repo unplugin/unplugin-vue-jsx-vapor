@@ -60,7 +60,7 @@ export function processFor(
       parent.block.node !== parent.node &&
       parent.node.children.length === 1
 
-    context.registerOperation({
+    context.dynamic.operation = {
       type: IRNodeTypes.FOR,
       id,
       source,
@@ -72,7 +72,7 @@ export function processFor(
       once: context.inVOnce || !!(source.ast && isConstantNode(source.ast, {})),
       component: isComponent,
       onlyChild: !!isOnlyChild,
-    })
+    }
   }
 }
 

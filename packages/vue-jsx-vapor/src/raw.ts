@@ -1,11 +1,6 @@
 import Macros from '@vue-jsx-vapor/macros/raw'
-import { createFilter, normalizePath } from 'unplugin-utils'
-import {
-  helperCode,
-  helperId,
-  helperPrefix,
-  transformVueJsxVapor,
-} from './core'
+import { createFilter } from 'unplugin-utils'
+import { transformVueJsxVapor } from './core'
 import type { Options } from './options'
 import type { UnpluginOptions } from 'unplugin'
 
@@ -34,15 +29,6 @@ const plugin = (options: Options = {}): UnpluginOptions[] => {
             },
           }
         },
-      },
-      resolveId(id) {
-        if (normalizePath(id).startsWith(helperPrefix)) return id
-      },
-      loadInclude(id) {
-        return normalizePath(id).startsWith(helperPrefix)
-      },
-      load(id) {
-        if (normalizePath(id) === helperId) return helperCode
       },
       transformInclude,
       transform(code, id) {

@@ -11,6 +11,7 @@ import {
   transformVIf,
   transformVOn,
   transformVSlot,
+  type IRSlotsStatic,
 } from '../../src'
 import { makeCompile } from './_utils'
 
@@ -35,27 +36,26 @@ describe('compiler: transform slot', () => {
     expect(code).toMatchSnapshot()
 
     expect(ir.template).toEqual(['<div></div>'])
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        id: 1,
-        tag: 'Comp',
-        props: [[]],
-        slots: [
-          {
-            slotType: IRSlotType.STATIC,
-            slots: {
-              default: {
-                type: IRNodeTypes.BLOCK,
-                dynamic: {
-                  children: [{ template: 0 }],
-                },
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      id: 1,
+      tag: 'Comp',
+      props: [[]],
+      slots: [
+        {
+          slotType: IRSlotType.STATIC,
+          slots: {
+            default: {
+              type: IRNodeTypes.BLOCK,
+              dynamic: {
+                children: [{ template: 0 }],
               },
             },
           },
-        ],
-      },
-    ])
+        },
+      ],
+    })
     expect(ir.block.returns).toEqual([1])
     expect(ir.block.dynamic).toMatchObject({
       children: [{ id: 1 }],
@@ -71,31 +71,30 @@ describe('compiler: transform slot', () => {
     expect(code).contains(`"default": (_slotProps0) =>`)
     expect(code).contains(`_slotProps0["foo"] + bar`)
 
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        tag: 'Comp',
-        props: [[]],
-        slots: [
-          {
-            slotType: IRSlotType.STATIC,
-            slots: {
-              default: {
-                type: IRNodeTypes.BLOCK,
-                props: {
-                  type: NodeTypes.SIMPLE_EXPRESSION,
-                  content: '{ foo }',
-                  ast: {
-                    type: 'ArrowFunctionExpression',
-                    params: [{ type: 'ObjectPattern' }],
-                  },
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      tag: 'Comp',
+      props: [[]],
+      slots: [
+        {
+          slotType: IRSlotType.STATIC,
+          slots: {
+            default: {
+              type: IRNodeTypes.BLOCK,
+              props: {
+                type: NodeTypes.SIMPLE_EXPRESSION,
+                content: '{ foo }',
+                ast: {
+                  type: 'ArrowFunctionExpression',
+                  params: [{ type: 'ObjectPattern' }],
                 },
               },
             },
           },
-        ],
-      },
-    ])
+        },
+      ],
+    })
   })
 
   test('on component named slot', () => {
@@ -107,26 +106,25 @@ describe('compiler: transform slot', () => {
     expect(code).contains(`"named": (_slotProps0) =>`)
     expect(code).contains(`_slotProps0["foo"] + bar`)
 
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        tag: 'Comp',
-        slots: [
-          {
-            slotType: IRSlotType.STATIC,
-            slots: {
-              named: {
-                type: IRNodeTypes.BLOCK,
-                props: {
-                  type: NodeTypes.SIMPLE_EXPRESSION,
-                  content: '{ foo }',
-                },
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      tag: 'Comp',
+      slots: [
+        {
+          slotType: IRSlotType.STATIC,
+          slots: {
+            named: {
+              type: IRNodeTypes.BLOCK,
+              props: {
+                type: NodeTypes.SIMPLE_EXPRESSION,
+                content: '{ foo }',
               },
             },
           },
-        ],
-      },
-    ])
+        },
+      ],
+    })
   })
 
   test('on component dynamically named slot', () => {
@@ -138,28 +136,27 @@ describe('compiler: transform slot', () => {
     expect(code).contains(`fn: (_slotProps0) =>`)
     expect(code).contains(`_slotProps0["foo"] + bar`)
 
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        tag: 'Comp',
-        slots: [
-          {
-            name: {
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      tag: 'Comp',
+      slots: [
+        {
+          name: {
+            type: NodeTypes.SIMPLE_EXPRESSION,
+            content: 'named',
+            isStatic: false,
+          },
+          fn: {
+            type: IRNodeTypes.BLOCK,
+            props: {
               type: NodeTypes.SIMPLE_EXPRESSION,
-              content: 'named',
-              isStatic: false,
-            },
-            fn: {
-              type: IRNodeTypes.BLOCK,
-              props: {
-                type: NodeTypes.SIMPLE_EXPRESSION,
-                content: '{ foo }',
-              },
+              content: '{ foo }',
             },
           },
-        ],
-      },
-    ])
+        },
+      ],
+    })
   })
 
   test('named slots w/ implicit default slot', () => {
@@ -169,34 +166,49 @@ describe('compiler: transform slot', () => {
       </Comp>`,
     )
     expect(code).toMatchSnapshot()
+    expect(code).toMatchInlineSnapshot(`
+      "
+        const n6 = _createComponent(Comp, null, {
+          "one": () => {
+            const n1 = t0()
+            return n1
+          }, 
+          "default": () => {
+            const n3 = t1()
+            const n4 = t2()
+            return [n3, n4]
+          }
+        })
+        return n6
+      "
+    `)
     expect(ir.template).toEqual(['foo', 'bar', '<span></span>'])
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        id: 6,
-        tag: 'Comp',
-        props: [[]],
-        slots: [
-          {
-            slotType: IRSlotType.STATIC,
-            slots: {
-              one: {
-                type: IRNodeTypes.BLOCK,
-                dynamic: {
-                  children: [{ template: 0 }],
-                },
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      id: 6,
+      tag: 'Comp',
+      props: [[]],
+      slots: [
+        {
+          slotType: IRSlotType.STATIC,
+          slots: {
+            one: {
+              type: IRNodeTypes.BLOCK,
+              dynamic: {
+                children: [{ template: 0 }],
               },
-              default: {
-                type: IRNodeTypes.BLOCK,
-                dynamic: {
-                  children: [{}, {}, { template: 1 }, { template: 2 }, {}],
-                },
+            },
+            default: {
+              type: IRNodeTypes.BLOCK,
+              dynamic: {
+                children: [{}, {}, { template: 1 }, { template: 2 }, {}],
               },
             },
           },
-        ],
-      },
-    ])
+        },
+      ],
+    })
   })
 
   test('named slots w/ comment', () => {
@@ -207,7 +219,8 @@ describe('compiler: transform slot', () => {
       </Comp>`,
     )
     expect(code).toMatchSnapshot()
-    expect(ir.block.operation[0].slots.length).toEqual(1)
+    const op = ir.block.dynamic.children[0].operation
+    expect(op.slots.length).toEqual(1)
   })
 
   test('nested slots scoping', () => {
@@ -228,29 +241,29 @@ describe('compiler: transform slot', () => {
     expect(code).contains(`_slotProps0["foo"] + _slotProps1["bar"] + baz`)
     expect(code).contains(`_slotProps0["foo"] + bar + baz`)
 
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        tag: 'Comp',
-        props: [[]],
-        slots: [
-          {
-            slotType: IRSlotType.STATIC,
-            slots: {
-              default: {
-                type: IRNodeTypes.BLOCK,
-                props: {
-                  type: NodeTypes.SIMPLE_EXPRESSION,
-                  content: '{ foo }',
-                },
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      tag: 'Comp',
+      props: [[]],
+      slots: [
+        {
+          slotType: IRSlotType.STATIC,
+          slots: {
+            default: {
+              type: IRNodeTypes.BLOCK,
+              props: {
+                type: NodeTypes.SIMPLE_EXPRESSION,
+                content: '{ foo }',
               },
             },
           },
-        ],
-      },
-    ])
+        },
+      ],
+    })
+
     expect(
-      (ir.block.operation[0] as any).slots[0].slots.default.operation[0],
+      (op as any).slots[0].slots.default.dynamic.children[1].operation,
     ).toMatchObject({
       type: IRNodeTypes.CREATE_COMPONENT_NODE,
       tag: 'Inner',
@@ -278,23 +291,22 @@ describe('compiler: transform slot', () => {
       </Comp>`,
     )
     expect(code).toMatchSnapshot()
-    expect(ir.block.operation[0].type).toBe(IRNodeTypes.CREATE_COMPONENT_NODE)
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        tag: 'Comp',
-        slots: [
-          {
-            name: {
-              type: NodeTypes.SIMPLE_EXPRESSION,
-              content: 'name',
-              isStatic: false,
-            },
-            fn: { type: IRNodeTypes.BLOCK },
+    const op = ir.block.dynamic.children[0].operation
+    expect(op.type).toBe(IRNodeTypes.CREATE_COMPONENT_NODE)
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      tag: 'Comp',
+      slots: [
+        {
+          name: {
+            type: NodeTypes.SIMPLE_EXPRESSION,
+            content: 'name',
+            isStatic: false,
           },
-        ],
-      },
-    ])
+          fn: { type: IRNodeTypes.BLOCK },
+        },
+      ],
+    })
   })
 
   test('dynamic slots name w/ v-for', () => {
@@ -304,31 +316,46 @@ describe('compiler: transform slot', () => {
       </Comp>`,
     )
     expect(code).toMatchSnapshot()
+    expect(code).toMatchInlineSnapshot(`
+      "
+        const n4 = _createComponent(Comp, null, {
+          $: [
+            () => (_createForSlots(list, (item) => ({
+              name: item, 
+              fn: (_slotProps0) => {
+                const n1 = _createNodes(() => (_slotProps0["bar"]))
+                return n1
+              }
+            })))
+          ]
+        })
+        return n4
+      "
+    `)
 
     expect(code).contains(`fn: (_slotProps0) =>`)
-    expect(code).contains(`_createTextNode(() => (_slotProps0["bar"]))`)
-    expect(ir.block.operation[0].type).toBe(IRNodeTypes.CREATE_COMPONENT_NODE)
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        tag: 'Comp',
-        slots: [
-          {
-            name: {
-              type: NodeTypes.SIMPLE_EXPRESSION,
-              content: 'item',
-              isStatic: false,
-            },
-            fn: { type: IRNodeTypes.BLOCK },
-            loop: {
-              source: { content: 'list' },
-              value: { content: 'item' },
-              index: undefined,
-            },
+    expect(code).contains(`_createNodes(() => (_slotProps0["bar"]))`)
+    const op = ir.block.dynamic.children[0].operation
+    expect(op.type).toBe(IRNodeTypes.CREATE_COMPONENT_NODE)
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      tag: 'Comp',
+      slots: [
+        {
+          name: {
+            type: NodeTypes.SIMPLE_EXPRESSION,
+            content: 'item',
+            isStatic: false,
           },
-        ],
-      },
-    ])
+          fn: { type: IRNodeTypes.BLOCK },
+          loop: {
+            source: { content: 'list' },
+            value: { content: 'item' },
+            index: undefined,
+          },
+        },
+      ],
+    })
   })
 
   test('dynamic slots name w/ v-if / v-else[-if]', () => {
@@ -343,30 +370,29 @@ describe('compiler: transform slot', () => {
 
     expect(code).contains(`fn: (_slotProps0) =>`)
 
-    expect(ir.block.operation[0].type).toBe(IRNodeTypes.CREATE_COMPONENT_NODE)
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        tag: 'Comp',
-        slots: [
-          {
+    const op = ir.block.dynamic.children[0].operation
+    expect(op.type).toBe(IRNodeTypes.CREATE_COMPONENT_NODE)
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      tag: 'Comp',
+      slots: [
+        {
+          slotType: IRSlotType.CONDITIONAL,
+          condition: { content: 'condition' },
+          positive: {
+            slotType: IRSlotType.DYNAMIC,
+          },
+          negative: {
             slotType: IRSlotType.CONDITIONAL,
-            condition: { content: 'condition' },
+            condition: { content: 'anotherCondition' },
             positive: {
               slotType: IRSlotType.DYNAMIC,
             },
-            negative: {
-              slotType: IRSlotType.CONDITIONAL,
-              condition: { content: 'anotherCondition' },
-              positive: {
-                slotType: IRSlotType.DYNAMIC,
-              },
-              negative: { slotType: IRSlotType.DYNAMIC },
-            },
+            negative: { slotType: IRSlotType.DYNAMIC },
           },
-        ],
-      },
-    ])
+        },
+      ],
+    })
   })
 
   test('quote slot name', () => {
@@ -380,29 +406,21 @@ describe('compiler: transform slot', () => {
   test('nested component slot', () => {
     const { ir, code } = compileWithSlots(`<A><B/></A>`)
     expect(code).toMatchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.CREATE_COMPONENT_NODE,
-        tag: 'A',
-        slots: [
-          {
-            slotType: IRSlotType.STATIC,
-            slots: {
-              default: {
-                type: IRNodeTypes.BLOCK,
-                operation: [
-                  {
-                    type: IRNodeTypes.CREATE_COMPONENT_NODE,
-                    tag: 'B',
-                    slots: [],
-                  },
-                ],
-              },
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.CREATE_COMPONENT_NODE,
+      tag: 'A',
+      slots: [
+        {
+          slotType: IRSlotType.STATIC,
+          slots: {
+            default: {
+              type: IRNodeTypes.BLOCK,
             },
           },
-        ],
-      },
-    ])
+        },
+      ],
+    })
   })
 
   describe('errors', () => {

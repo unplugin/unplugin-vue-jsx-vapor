@@ -25,22 +25,43 @@ describe('compiler: children transform', () => {
     expect(code).toMatchInlineSnapshot(`
       "
         const n0 = t0()
-        _setText(n0, () => (foo), " ", () => (bar))
+        const x0 = _child(n0)
+        _setNodes(x0, () => (foo), " ", () => (bar))
         return n0
       "
     `)
-    expect(helpers).contains.all.keys('setText')
+    expect(helpers).contains.all.keys('setNodes')
   })
 
   test('comments', () => {
     const { code } = compileWithElementTransform(
       '<>{/*foo*/}<div>{/*bar*/}</div></>',
+      {
+        inline: false,
+      },
     )
     expect(code).toMatchInlineSnapshot(`
-      "
+      "import { template as _template } from 'vue';
+      const t0 = _template("<div></div>")
+
+      export function render(_ctx) {
         const n1 = t0()
         return n1
-      "
+      }"
+    `)
+  })
+
+  test('fragment', () => {
+    const { code } = compileWithElementTransform('<>{foo}</>', {
+      inline: false,
+    })
+    expect(code).toMatchInlineSnapshot(`
+      "import { createNodes as _createNodes } from 'vue';
+
+      export function render(_ctx) {
+        const n0 = _createNodes(() => (_ctx.foo))
+        return n0
+      }"
     `)
   })
 
@@ -54,21 +75,24 @@ describe('compiler: children transform', () => {
     )
     expect(code).toMatchInlineSnapshot(`
       "
-        const n4 = t0()
-        const n0 = _child(n4)
-        const n3 = _nthChild(n4, 2)
-        const n2 = _next(n3)
-        _setText(n0, () => (first))
-        const n1 = _createTextNode(() => (second), " 456 ", () => (foo))
-        _setText(n2, () => (forth))
-        _insert(n1, n4, n3)
-        _renderEffect(() => _setProp(n4, "id", id))
-        return n4
+        const n3 = t0()
+        const n0 = _child(n3)
+        const n1 = _next(n0)
+        const n2 = _next(n1)
+        const x0 = _child(n0)
+        _setNodes(x0, () => (first))
+        _setNodes(n1, "123 ", () => (second), " 456 ", () => (foo))
+        const x2 = _child(n2)
+        _setNodes(x2, () => (forth))
+        _renderEffect(() => _setProp(n3, "id", id))
+        return n3
       "
     `)
     expect(Array.from(helpers)).containSubset([
-      'createTextNode',
-      'insert',
+      'child',
+      'renderEffect',
+      'next',
+      'setNodes',
       'template',
     ])
   })
@@ -129,7 +153,7 @@ describe('compiler: children transform', () => {
       `<div>
         <div>x</div>
         <div>x</div>
-        <div>{{ msg }}</div>
+        <div>{ msg }</div>
       </div>`,
     )
     expect(code).contains(`const n0 = _nthChild(n1, 2)`)

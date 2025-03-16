@@ -4,13 +4,14 @@ import {
   type VaporCodegenResult as BaseVaporCodegenResult,
 } from '@vue/compiler-vapor'
 import { extend, isString } from '@vue/shared'
+import { customGenOperation } from './generate'
+
 import {
   IRNodeTypes,
   type HackOptions,
   type RootIRNode,
   type RootNode,
 } from './ir'
-
 import {
   transform,
   type DirectiveTransform,
@@ -38,6 +39,7 @@ export { generate }
 export interface VaporCodegenResult
   extends Omit<BaseVaporCodegenResult, 'ast'> {
   ast: RootIRNode
+  customHelpers: Set<string>
 }
 
 // code/AST -> IR (transform) -> JS (generate)
@@ -98,7 +100,10 @@ export function compile(
     }),
   )
 
-  return generate(ir as any, resolvedOptions) as unknown as VaporCodegenResult
+  return generate(ir as any, {
+    ...resolvedOptions,
+    customGenOperation,
+  }) as unknown as VaporCodegenResult
 }
 
 export type CompilerOptions = HackOptions<BaseCompilerOptions> & {

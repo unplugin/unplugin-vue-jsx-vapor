@@ -3,12 +3,8 @@ import { transformSync } from '@babel/core'
 import babelTypescript from '@babel/plugin-transform-typescript'
 import jsx from '@vue-jsx-vapor/babel'
 import type { Options } from '../options'
-import * as helper from './helper'
 
 export type { Options }
-export const helperCode = helper.helperCode
-export const helperId = helper.helperId
-export const helperPrefix = helper.helperPrefix
 
 export function transformVueJsxVapor(
   code: string,

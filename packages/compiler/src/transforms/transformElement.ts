@@ -104,7 +104,7 @@ function transformComponentElement(
 
   context.dynamic.flags |= DynamicFlag.NON_TEMPLATE | DynamicFlag.INSERT
 
-  context.registerOperation({
+  context.dynamic.operation = {
     type: IRNodeTypes.CREATE_COMPONENT_NODE,
     id: context.reference(),
     tag,
@@ -113,7 +113,7 @@ function transformComponentElement(
     root: singleRoot,
     slots: [...context.slots],
     once: context.inVOnce,
-  })
+  }
   context.slots = []
 }
 

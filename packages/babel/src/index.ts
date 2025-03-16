@@ -94,14 +94,14 @@ export default (): {
             statements.unshift(preambleResult)
           }
 
-          const helpers = ['setText', 'createTextNode'].filter((helper) => {
+          const helpers = ['setNodes', 'createNodes'].filter((helper) => {
             const result = importSet.has(helper)
             result && importSet.delete(helper)
             return result
           })
           if (helpers.length) {
             statements.unshift(
-              `import { ${helpers.map((i) => `${i} as _${i}`).join(', ')} } from 'vue-jsx-vapor/helper.js';\n`,
+              `import { ${helpers.map((i) => `${i} as _${i}`).join(', ')} } from 'vue-jsx-vapor';\n`,
             )
           }
 

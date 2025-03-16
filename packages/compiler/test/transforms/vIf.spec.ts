@@ -30,35 +30,25 @@ describe('compiler: v-if', () => {
     const { code, helpers, ir } = compileWithVIf(`<div v-if={ok}>{msg}</div>`)
 
     expect(helpers).contains('createIf')
-    expect(code).toMatchInlineSnapshot(`
-      "
-        const n0 = _createIf(() => (ok), () => {
-          const n2 = t0()
-          _setText(n2, () => (msg))
-          return n2
-        })
-        return n0
-      "
-    `)
+    expect(code).toMatchSnapshot()
 
-    expect(ir.template).toEqual(['<div></div>'])
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.IF,
-        id: 0,
-        condition: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'ok',
-          isStatic: false,
-        },
-        positive: {
-          type: IRNodeTypes.BLOCK,
-          dynamic: {
-            children: [{ template: 0 }],
-          },
+    expect(ir.template).toEqual(['<div> </div>'])
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.IF,
+      id: 0,
+      condition: {
+        type: NodeTypes.SIMPLE_EXPRESSION,
+        content: 'ok',
+        isStatic: false,
+      },
+      positive: {
+        type: IRNodeTypes.BLOCK,
+        dynamic: {
+          children: [{ template: 0 }],
         },
       },
-    ])
+    })
     expect(ir.block.returns).toEqual([0])
     expect(ir.block.dynamic).toMatchObject({
       children: [{ id: 0 }],
@@ -74,7 +64,8 @@ describe('compiler: v-if', () => {
     expect(code).matchSnapshot()
 
     expect(ir.template).toEqual(['<div></div>', 'hello', '<p> </p>'])
-    expect((ir.block.operation[0] as IfIRNode).positive.effect).toMatchObject([
+    const op = ir.block.dynamic.children[0].operation
+    expect((op as IfIRNode).positive.effect).toMatchObject([
       {
         operations: [
           {
@@ -91,7 +82,7 @@ describe('compiler: v-if', () => {
         ],
       },
     ])
-    expect((ir.block.operation[0] as IfIRNode).positive.dynamic).toMatchObject({
+    expect((op as IfIRNode).positive.dynamic).toMatchObject({
       id: 1,
       children: {
         2: {
@@ -121,29 +112,28 @@ describe('compiler: v-if', () => {
 
     expect(helpers).contains('createIf')
     expect(ir.block.effect).lengthOf(0)
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.IF,
-        id: 0,
-        condition: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'ok',
-          isStatic: false,
-        },
-        positive: {
-          type: IRNodeTypes.BLOCK,
-          dynamic: {
-            children: [{ template: 0 }],
-          },
-        },
-        negative: {
-          type: IRNodeTypes.BLOCK,
-          dynamic: {
-            children: [{ template: 1 }],
-          },
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.IF,
+      id: 0,
+      condition: {
+        type: NodeTypes.SIMPLE_EXPRESSION,
+        content: 'ok',
+        isStatic: false,
+      },
+      positive: {
+        type: IRNodeTypes.BLOCK,
+        dynamic: {
+          children: [{ template: 0 }],
         },
       },
-    ])
+      negative: {
+        type: IRNodeTypes.BLOCK,
+        dynamic: {
+          children: [{ template: 1 }],
+        },
+      },
+    })
     expect(ir.block.returns).toEqual([0])
   })
 
@@ -154,37 +144,36 @@ describe('compiler: v-if', () => {
     expect(code).matchSnapshot()
     expect(ir.template).toEqual(['<div></div>', '<p></p>'])
 
-    expect(ir.block.operation).toMatchObject([
-      {
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.IF,
+      id: 0,
+      condition: {
+        type: NodeTypes.SIMPLE_EXPRESSION,
+        content: 'ok',
+        isStatic: false,
+      },
+      positive: {
+        type: IRNodeTypes.BLOCK,
+        dynamic: {
+          children: [{ template: 0 }],
+        },
+      },
+      negative: {
         type: IRNodeTypes.IF,
-        id: 0,
         condition: {
           type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'ok',
+          content: 'orNot',
           isStatic: false,
         },
         positive: {
           type: IRNodeTypes.BLOCK,
           dynamic: {
-            children: [{ template: 0 }],
-          },
-        },
-        negative: {
-          type: IRNodeTypes.IF,
-          condition: {
-            type: NodeTypes.SIMPLE_EXPRESSION,
-            content: 'orNot',
-            isStatic: false,
-          },
-          positive: {
-            type: IRNodeTypes.BLOCK,
-            dynamic: {
-              children: [{ template: 1 }],
-            },
+            children: [{ template: 1 }],
           },
         },
       },
-    ])
+    })
     expect(ir.block.returns).toEqual([0])
   })
 
@@ -196,33 +185,32 @@ describe('compiler: v-if', () => {
     expect(ir.template).toEqual(['<div></div>', '<p></p>', 'fine'])
 
     expect(ir.block.returns).toEqual([0])
-    expect(ir.block.operation).toMatchObject([
-      {
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.IF,
+      id: 0,
+      positive: {
+        type: IRNodeTypes.BLOCK,
+        dynamic: {
+          children: [{ template: 0 }],
+        },
+      },
+      negative: {
         type: IRNodeTypes.IF,
-        id: 0,
         positive: {
           type: IRNodeTypes.BLOCK,
           dynamic: {
-            children: [{ template: 0 }],
+            children: [{ template: 1 }],
           },
         },
         negative: {
-          type: IRNodeTypes.IF,
-          positive: {
-            type: IRNodeTypes.BLOCK,
-            dynamic: {
-              children: [{ template: 1 }],
-            },
-          },
-          negative: {
-            type: IRNodeTypes.BLOCK,
-            dynamic: {
-              children: [{ template: 2 }],
-            },
+          type: IRNodeTypes.BLOCK,
+          dynamic: {
+            children: [{ template: 2 }],
           },
         },
       },
-    ])
+    })
   })
 
   test('comment between branches', () => {

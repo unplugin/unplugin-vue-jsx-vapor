@@ -6,13 +6,15 @@ import {
   type Expression,
   type JSXElement,
   type JSXFragment,
+  type Node,
 } from '@babel/types'
 import { createSimpleExpression } from '@vue/compiler-dom'
 import {
   DynamicFlag,
+  IRNodeTypes,
   type BlockIRNode,
   type IRDynamicInfo,
-  type IRNodeTypes,
+  type RootNode,
 } from '../ir/index'
 import { isTemplate } from '../utils'
 import type { TransformContext } from '../transform'
@@ -60,3 +62,10 @@ export function wrapFragment(node: JSXElement | JSXFragment | Expression) {
 }
 
 export const EMPTY_EXPRESSION = createSimpleExpression('', true)
+
+export const isFragmentNode = (
+  node: Node | RootNode,
+): node is JSXElement | JSXFragment | RootNode =>
+  node.type === IRNodeTypes.ROOT ||
+  node.type === 'JSXFragment' ||
+  (node.type === 'JSXElement' && !!isTemplate(node))

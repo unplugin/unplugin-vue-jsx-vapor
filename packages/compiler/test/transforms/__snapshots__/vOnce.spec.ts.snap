@@ -11,10 +11,10 @@ exports[`compiler: v-once > as root node 1`] = `
 exports[`compiler: v-once > basic 1`] = `
 "
   const n2 = t0()
-  const n1 = _child(n2)
-  const n0 = _createTextNode(msg.value)
-  _setClass(n1, clz.value)
-  _prepend(n2, n0)
+  const n0 = _child(n2)
+  const n1 = _next(n0)
+  _setNodes(n0, msg)
+  _setClass(n1, clz)
   return n2
 "
 `;

@@ -25,7 +25,6 @@ export enum IRNodeTypes {
 
   INSERT_NODE,
   PREPEND_NODE,
-  CREATE_TEXT_NODE,
   CREATE_COMPONENT_NODE,
   SLOT_OUTLET_NODE,
 
@@ -36,6 +35,9 @@ export enum IRNodeTypes {
   FOR,
 
   GET_TEXT_CHILD,
+
+  CREATE_NODES,
+  SET_NODES,
 }
 
 export interface BaseIRNode {
@@ -78,6 +80,8 @@ export interface IfIRNode extends BaseIRNode {
   positive: BlockIRNode
   negative?: BlockIRNode | IfIRNode
   once?: boolean
+  parent?: number
+  anchor?: number
 }
 
 export interface IRFor {
@@ -95,6 +99,8 @@ export interface ForIRNode extends BaseIRNode, IRFor {
   once: boolean
   component: boolean
   onlyChild: boolean
+  parent?: number
+  anchor?: number
 }
 
 export interface SetPropIRNode extends BaseIRNode {
@@ -118,12 +124,11 @@ export interface SetDynamicEventsIRNode extends BaseIRNode {
   event: SimpleExpressionNode
 }
 
-export interface SetTextIRNode extends BaseIRNode {
-  type: IRNodeTypes.SET_TEXT
+export interface SetNodesIRNode extends BaseIRNode {
+  type: IRNodeTypes.SET_NODES
   element: number
   values: SimpleExpressionNode[]
   generated?: boolean // whether this is a generated empty text node by `processTextLikeContainer`
-  jsx?: boolean
 }
 
 export type KeyOverride = [find: string, replacement: string]
@@ -160,11 +165,10 @@ export interface SetTemplateRefIRNode extends BaseIRNode {
   effect: boolean
 }
 
-export interface CreateTextNodeIRNode extends BaseIRNode {
-  type: IRNodeTypes.CREATE_TEXT_NODE
+export interface CreateNodesIRNode extends BaseIRNode {
+  type: IRNodeTypes.CREATE_NODES
   id: number
   values?: SimpleExpressionNode[]
-  jsx?: boolean
 }
 
 export interface InsertNodeIRNode extends BaseIRNode {
@@ -200,6 +204,8 @@ export interface CreateComponentIRNode extends BaseIRNode {
   root: boolean
   once: boolean
   dynamic?: SimpleExpressionNode
+  parent?: number
+  anchor?: number
 }
 
 export interface DeclareOldRefIRNode extends BaseIRNode {
@@ -213,6 +219,8 @@ export interface SlotOutletIRNode extends BaseIRNode {
   name: SimpleExpressionNode
   props: IRProps[]
   fallback?: BlockIRNode
+  parent?: number
+  anchor?: number
 }
 
 export interface GetTextChildIRNode extends BaseIRNode {
@@ -224,12 +232,12 @@ export type IRNode = OperationNode | RootIRNode
 export type OperationNode =
   | SetPropIRNode
   | SetDynamicPropsIRNode
-  | SetTextIRNode
+  | SetNodesIRNode
   | SetEventIRNode
   | SetDynamicEventsIRNode
   | SetHtmlIRNode
   | SetTemplateRefIRNode
-  | CreateTextNodeIRNode
+  | CreateNodesIRNode
   | InsertNodeIRNode
   | PrependNodeIRNode
   | DirectiveIRNode
@@ -263,6 +271,7 @@ export interface IRDynamicInfo {
   children: IRDynamicInfo[]
   template?: number
   hasDynamicChild?: boolean
+  operation?: OperationNode
 }
 
 export interface IREffect {
@@ -290,3 +299,19 @@ export type VaporDirectiveNode = Overwrite<
     arg: Exclude<DirectiveNode['arg'], CompoundExpressionNode>
   }
 >
+
+export type InsertionStateTypes =
+  | IfIRNode
+  | ForIRNode
+  | SlotOutletIRNode
+  | CreateComponentIRNode
+
+export function isBlockOperation(op: OperationNode): op is InsertionStateTypes {
+  const type = op.type
+  return (
+    type === IRNodeTypes.CREATE_COMPONENT_NODE ||
+    type === IRNodeTypes.SLOT_OUTLET_NODE ||
+    type === IRNodeTypes.IF ||
+    type === IRNodeTypes.FOR
+  )
+}

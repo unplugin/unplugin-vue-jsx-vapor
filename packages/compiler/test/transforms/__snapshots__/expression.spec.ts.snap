@@ -1,0 +1,83 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compiler: expression > conditional expression 1`] = `
+"import { child as _child, setNodes as _setNodes, createNodes as _createNodes, createIf as _createIf, template as _template } from 'vue';
+const t0 = _template("<span> </span>")
+const t1 = _template("<div>fail</div>")
+
+export function render(_ctx) {
+  const n0 = _createIf(() => (_ctx.ok), () => {
+    const n2 = t0()
+    const x2 = _child(n2)
+    _setNodes(x2, () => (_ctx.msg))
+    return n2
+  }, () => {
+    const n4 = _createIf(() => (_ctx.fail), () => {
+      const n6 = t1()
+      return n6
+    }, () => {
+      const n8 = _createNodes(null)
+      return n8
+    })
+    return n4
+  })
+  return n0
+}"
+`;
+
+exports[`compiler: expression > conditional expression 2`] = `
+"import { child as _child, setNodes as _setNodes, createNodes as _createNodes, createIf as _createIf, template as _template } from 'vue';
+const t0 = _template("<span> </span>")
+const t1 = _template("<div>fail</div>")
+
+export function render(_ctx) {
+  const n0 = _createIf(() => (_ctx.ok), () => {
+    const n2 = t0()
+    const x2 = _child(n2)
+    _setNodes(x2, () => (_ctx.msg))
+    return n2
+  }, () => {
+    const n4 = _createIf(() => (_ctx.fail), () => {
+      const n6 = t1()
+      return n6
+    }, () => {
+      const n8 = _createNodes(null)
+      return n8
+    })
+    return n4
+  })
+  return n0
+}"
+`;
+
+exports[`compiler: expression > conditional expression with v-once 1`] = `
+"
+  const n5 = t2()
+  const n0 = _createIf(() => (ok), () => {
+    const n2 = t0()
+    const x2 = _child(n2)
+    _setNodes(x2, () => (msg))
+    return n2
+  }, () => {
+    const n4 = t1()
+    return n4
+  })
+  _insert(n0, n5)
+  return n5
+"
+`;
+
+exports[`compiler: expression > logical expression 1`] = `
+"
+  const n0 = _createIf(() => (ok), () => {
+    const n2 = t0()
+    const x2 = _child(n2)
+    _setNodes(x2, () => (msg))
+    return n2
+  }, () => {
+    const n4 = _createNodes(() => (ok))
+    return n4
+  })
+  return n0
+"
+`;

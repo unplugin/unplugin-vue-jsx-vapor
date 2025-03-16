@@ -1,5 +1,6 @@
 import { parse } from '@babel/parser'
 import { generate, transform, type CompilerOptions } from '../../src'
+import { customGenOperation } from '../../src/generate'
 import { IRNodeTypes, type RootNode } from '../../src/ir'
 import type { JSXElement, JSXFragment } from '@babel/types'
 
@@ -37,6 +38,7 @@ export function makeCompile(options: CompilerOptions = {}) {
       prefixIdentifiers: false,
       ...options,
       ...overrideOptions,
+      customGenOperation,
     })
     return { ast, ir, code, helpers, preamble }
   }

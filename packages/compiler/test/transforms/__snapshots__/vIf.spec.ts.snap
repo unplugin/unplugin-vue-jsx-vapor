@@ -1,8 +1,19 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`compiler: v-if > basic v-if 1`] = `
+"
+  const n0 = _createIf(() => (ok), () => {
+    const n2 = t0()
+    const x2 = _child(n2)
+    _setNodes(x2, () => (msg))
+    return n2
+  })
+  return n0
+"
+`;
+
 exports[`compiler: v-if > comment between branches 1`] = `
 "
-  const n17 = t3()
   const n1 = _createIf(() => ("ok"), () => {
     const n3 = t0()
     return n3
@@ -13,6 +24,7 @@ exports[`compiler: v-if > comment between branches 1`] = `
     const n14 = t2()
     return n14
   }), true)
+  const n17 = t3()
   return [n1, n17]
 "
 `;

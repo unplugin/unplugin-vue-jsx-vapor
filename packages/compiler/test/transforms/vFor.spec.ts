@@ -8,6 +8,7 @@ import {
   transformVBind,
   transformVFor,
   transformVOn,
+  type ForIRNode,
 } from '../../src'
 import { makeCompile } from './_utils'
 
@@ -33,33 +34,32 @@ describe('compiler: v-for', () => {
     expect(code).toMatchSnapshot()
 
     expect(helpers).contains('createFor')
-    expect(ir.template).toEqual(['<div></div>'])
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.FOR,
-        id: 0,
-        source: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'items',
-        },
-        value: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'item',
-        },
-        key: undefined,
-        index: undefined,
-        render: {
-          type: IRNodeTypes.BLOCK,
-          dynamic: {
-            children: [{ template: 0 }],
-          },
-        },
-        keyProp: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'item.id',
+    expect(ir.template).toEqual(['<div> </div>'])
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.FOR,
+      id: 0,
+      source: {
+        type: NodeTypes.SIMPLE_EXPRESSION,
+        content: 'items',
+      },
+      value: {
+        type: NodeTypes.SIMPLE_EXPRESSION,
+        content: 'item',
+      },
+      key: undefined,
+      index: undefined,
+      render: {
+        type: IRNodeTypes.BLOCK,
+        dynamic: {
+          children: [{ template: 0 }],
         },
       },
-    ])
+      keyProp: {
+        type: NodeTypes.SIMPLE_EXPRESSION,
+        content: 'item.id',
+      },
+    })
     expect(ir.block.returns).toEqual([0])
     expect(ir.block.dynamic).toMatchObject({
       children: [{ id: 0 }],
@@ -84,22 +84,23 @@ describe('compiler: v-for', () => {
       `_createFor(() => (_for_item0.value), (_for_item1) => {`,
     )
     expect(code).contains(`_for_item1.value+_for_item0.value`)
-    expect(ir.template).toEqual(['<span></span>', '<div></div>'])
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.FOR,
-        id: 0,
-        source: { content: 'list' },
-        value: { content: 'i' },
-        render: {
-          type: IRNodeTypes.BLOCK,
-          dynamic: {
-            children: [{ template: 1 }],
-          },
+    expect(ir.template).toEqual(['<span> </span>', '<div></div>'])
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
+      type: IRNodeTypes.FOR,
+      id: 0,
+      source: { content: 'list' },
+      value: { content: 'i' },
+      render: {
+        type: IRNodeTypes.BLOCK,
+        dynamic: {
+          children: [{ template: 1 }],
         },
       },
-    ])
-    expect((ir.block.operation[0] as any).render.operation[0]).toMatchObject({
+    })
+    expect(
+      (op as ForIRNode).render.dynamic.children[0].children[0].operation,
+    ).toMatchObject({
       type: IRNodeTypes.FOR,
       id: 2,
       source: { content: 'i' },
@@ -118,7 +119,8 @@ describe('compiler: v-for', () => {
       '<span v-for={(value, key, index) in items} key={id}>{ id }{ value }{ index }</span>',
     )
     expect(code).matchSnapshot()
-    expect(ir.block.operation[0]).toMatchObject({
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
       type: IRNodeTypes.FOR,
       source: {
         type: NodeTypes.SIMPLE_EXPRESSION,
@@ -144,7 +146,8 @@ describe('compiler: v-for', () => {
       '<span v-for={({ id, value }) in items} key={id}>{ id }{ value }</span>',
     )
     expect(code).matchSnapshot()
-    expect(ir.block.operation[0]).toMatchObject({
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
       type: IRNodeTypes.FOR,
       source: {
         type: NodeTypes.SIMPLE_EXPRESSION,
@@ -173,7 +176,8 @@ describe('compiler: v-for', () => {
     )
     expect(code).matchSnapshot()
     expect(code).toContain('_getRestElement(_for_item0.value, ["id"])')
-    expect(ir.block.operation[0]).toMatchObject({
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
       type: IRNodeTypes.FOR,
       source: {
         type: NodeTypes.SIMPLE_EXPRESSION,
@@ -204,7 +208,8 @@ describe('compiler: v-for', () => {
       `<div v-for={([id, other], index) in list} key={id}>{ id + other + index }</div>`,
     )
     expect(code).matchSnapshot()
-    expect(ir.block.operation[0]).toMatchObject({
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
       type: IRNodeTypes.FOR,
       source: {
         type: NodeTypes.SIMPLE_EXPRESSION,
@@ -236,7 +241,8 @@ describe('compiler: v-for', () => {
     )
     expect(code).matchSnapshot()
     expect(code).toContain('_for_item0.value.slice(1)')
-    expect(ir.block.operation[0]).toMatchObject({
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
       type: IRNodeTypes.FOR,
       source: {
         type: NodeTypes.SIMPLE_EXPRESSION,
@@ -269,7 +275,8 @@ describe('compiler: v-for', () => {
       </div>`,
     )
     expect(code).matchSnapshot()
-    expect(ir.block.operation[0]).toMatchObject({
+    const op = ir.block.dynamic.children[0].operation
+    expect(op).toMatchObject({
       type: IRNodeTypes.FOR,
       source: {
         type: NodeTypes.SIMPLE_EXPRESSION,

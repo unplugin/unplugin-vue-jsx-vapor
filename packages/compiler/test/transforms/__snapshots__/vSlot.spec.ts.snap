@@ -7,7 +7,7 @@ exports[`compiler: transform slot > dynamic slots name 1`] = `
       () => ({
         name: name, 
         fn: () => {
-          const n1 = _createTextNode(() => (foo))
+          const n1 = _createNodes(() => (foo))
           return n1
         }
       })
@@ -24,7 +24,7 @@ exports[`compiler: transform slot > dynamic slots name w/ v-for 1`] = `
       () => (_createForSlots(list, (item) => ({
         name: item, 
         fn: (_slotProps0) => {
-          const n1 = _createTextNode(() => (_slotProps0["bar"]))
+          const n1 = _createNodes(() => (_slotProps0["bar"]))
           return n1
         }
       })))
@@ -126,11 +126,12 @@ exports[`compiler: transform slot > nested slots scoping 1`] = `
     "default": (_slotProps0) => {
       const n5 = _createComponent(Inner, null, {
         "default": (_slotProps1) => {
-          const n3 = _createTextNode(() => (_slotProps0["foo"] + _slotProps1["bar"] + baz))
+          const n3 = t0()
+          _setNodes(n3, () => (_slotProps0["foo"] + _slotProps1["bar"] + baz))
           return n3
         }
       })
-      const n7 = _createTextNode(() => (_slotProps0["foo"] + bar + baz))
+      const n7 = _createNodes(() => (_slotProps0["foo"] + bar + baz))
       return [n5, n7]
     }
   })
@@ -145,7 +146,8 @@ exports[`compiler: transform slot > on component dynamically named slot 1`] = `
       () => ({
         name: named, 
         fn: (_slotProps0) => {
-          const n0 = _createTextNode(() => (_slotProps0["foo"] + bar))
+          const n0 = t0()
+          _setNodes(n0, () => (_slotProps0["foo"] + bar))
           return n0
         }
       })
@@ -159,7 +161,8 @@ exports[`compiler: transform slot > on component named slot 1`] = `
 "
   const n1 = _createComponent(Comp, null, {
     "named": (_slotProps0) => {
-      const n0 = _createTextNode(() => (_slotProps0["foo"] + bar))
+      const n0 = t0()
+      _setNodes(n0, () => (_slotProps0["foo"] + bar))
       return n0
     }
   })
@@ -171,7 +174,8 @@ exports[`compiler: transform slot > on-component default slot 1`] = `
 "
   const n1 = _createComponent(Comp, null, {
     "default": (_slotProps0) => {
-      const n0 = _createTextNode(() => (_slotProps0["foo"] + bar))
+      const n0 = t0()
+      _setNodes(n0, () => (_slotProps0["foo"] + bar))
       return n0
     }
   })

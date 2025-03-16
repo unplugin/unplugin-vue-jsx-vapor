@@ -1,4 +1,4 @@
-import { BindingTypes, NodeTypes } from '@vue/compiler-dom'
+import { NodeTypes } from '@vue/compiler-dom'
 import { describe, expect, test } from 'vitest'
 import {
   IRNodeTypes,
@@ -22,11 +22,6 @@ describe('v-on', () => {
   test('simple expression', () => {
     const { code, ir, helpers } = compileWithVOn(
       `<div onClick={handleClick}></div>`,
-      {
-        bindingMetadata: {
-          handleClick: BindingTypes.SETUP_CONST,
-        },
-      },
     )
 
     expect(code).toMatchInlineSnapshot(`
@@ -59,40 +54,37 @@ describe('v-on', () => {
     ])
   })
 
-  /*
   test('event modifier', () => {
     const { code } = compileWithVOn(
-      `<a @click.stop="handleEvent"></a>
-        <form @submit.prevent="handleEvent"></form>
-        <a @click.stop.prevent="handleEvent"></a>
-        <div @click.self="handleEvent"></div>
-        <div @click.capture="handleEvent"></div>
-        <a @click.once="handleEvent"></a>
-        <div @scroll.passive="handleEvent"></div>
-        <input @click.right="handleEvent" />
-        <input @click.left="handleEvent" />
-        <input @click.middle="handleEvent" />
-        <input @click.enter.right="handleEvent" />
-        <input @keyup.enter="handleEvent" />
-        <input @keyup.tab="handleEvent" />
-        <input @keyup.delete="handleEvent" />
-        <input @keyup.esc="handleEvent" />
-        <input @keyup.space="handleEvent" />
-        <input @keyup.up="handleEvent" />
-        <input @keyup.down="handleEvent" />
-        <input @keyup.left="handleEvent" />
-        <input @keyup.middle="submit" />
-        <input @keyup.middle.self="submit" />
-        <input @keyup.self.enter="handleEvent" />`,
-      {
-        bindingMetadata: {
-          handleEvent: BindingTypes.SETUP_CONST,
-        },
-      },
+      `<>
+        <a onClick_stop={handleEvent}></a>
+        <form onSubmit_prevent={handleEvent}></form>
+        <a onClick_stop_prevent={handleEvent}></a>
+        <div onClick_self={handleEvent}></div>
+        <div onClick_capture={handleEvent}></div>
+        <a onClick_once={handleEvent}></a>
+        <div onScroll_passive={handleEvent}></div>
+        <input onClick_right={handleEvent} />
+        <input onClick_left={handleEvent} />
+        <input onClick_middle={handleEvent} />
+        <input onClick_enter_right={handleEvent} />
+        <input onKeyup_enter={handleEvent} />
+        <input onKeyup_tab={handleEvent} />
+        <input onKeyup_delete={handleEvent} />
+        <input onKeyup_esc={handleEvent} />
+        <input onKeyup_space={handleEvent} />
+        <input onKeyup_up={handleEvent} />
+        <input onKeyup_down={handleEvent} />
+        <input onKeyup_left={handleEvent} />
+        <input onKeyup_middle={submit} />
+        <input onKeyup_middle_self={submit} />
+        <input onKeyup_self_enter={handleEvent} />
+      </>`,
     )
     expect(code).matchSnapshot()
   })
 
+  /*
   test('dynamic arg', () => {
     const { code, ir, helpers, vaporHelpers } = compileWithVOn(
       `<div v-on:[event]="handler"/>`,

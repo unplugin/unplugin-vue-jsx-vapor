@@ -13,15 +13,16 @@ describe('transform', () => {
       },
     )!
     expect(code).toMatchInlineSnapshot(`
-      "import { delegateEvents as _delegateEvents, template as _template, createIf as _createIf } from 'vue';
-      import { setText as _setText } from 'vue-jsx-vapor/helper.js';
-      const _t00 = _template("<div></div>", true);
+      "import { child as _child, delegateEvents as _delegateEvents, template as _template, createIf as _createIf } from 'vue';
+      import { setNodes as _setNodes } from 'vue-jsx-vapor';
+      const _t00 = _template("<div> </div>", true);
       const _t10 = _template("<div>Hello</div>");
       const _t11 = _template("<div>World</div>");
       _delegateEvents("click", "dblclick");
       const a = (() => {
         const n0 = _t00();
-        _setText(n0, () => Hello);
+        const x0 = _child(n0);
+        _setNodes(x0, () => Hello);
         n0.$evtclick = e => onClick(e);
         return n0;
       })();
