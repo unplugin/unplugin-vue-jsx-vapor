@@ -1,3 +1,17 @@
+# [2.1.0](https://github.com/vuejs/vue-jsx-vapor/compare/v2.0.1...v2.1.0) (2025-03-16)
+
+
+### Bug Fixes
+
+* lint ([9b7737d](https://github.com/vuejs/vue-jsx-vapor/commit/9b7737db48030f03a1816b162f3899e683ed8c27))
+
+
+### Features
+
+* **vue-jsx-vapor:** add jsxImportSource support ([b5e051d](https://github.com/vuejs/vue-jsx-vapor/commit/b5e051d14062b62f4e46e10b164997d443db08e2))
+
+
+
 ## [2.0.1](https://github.com/vuejs/vue-jsx-vapor/compare/v2.0.0...v2.0.1) (2025-03-12)
 
 
