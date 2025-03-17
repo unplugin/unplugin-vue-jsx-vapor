@@ -253,17 +253,27 @@ export function resolveNode(
   const props = node.openingElement.attributes.reduce(
     (result, attr) => {
       if (attr.type === 'JSXAttribute') {
-        if (tagType === ElementTypes.COMPONENT) {
-          result.push(resolveDirectiveNode(attr, context))
-        } else {
-          result.push({
-            type: NodeTypes.ATTRIBUTE,
-            name: String(attr.name.name),
-            nameLoc: resolveLocation(attr.name.loc, context),
-            value: resolveValue(attr.value, context),
-            loc: resolveLocation(attr.loc, context),
-          })
-        }
+        result.push(
+          attr.value?.type === 'StringLiteral'
+            ? {
+                type: NodeTypes.ATTRIBUTE,
+                name: String(attr.name.name),
+                nameLoc: resolveLocation(attr.name.loc, context),
+                value: resolveValue(attr.value, context),
+                loc: resolveLocation(attr.loc, context),
+              }
+            : resolveDirectiveNode(attr, context),
+        )
+      } else if (attr.type === 'JSXSpreadAttribute') {
+        result.push({
+          type: NodeTypes.DIRECTIVE,
+          name: 'bind',
+          rawName: getText(attr, context),
+          exp: resolveExpression(attr.argument, context),
+          arg: undefined,
+          loc: resolveLocation(node.loc, context),
+          modifiers: [],
+        })
       }
       return result
     },
@@ -296,33 +306,34 @@ export function resolveDirectiveNode(
       : name.type === 'JSXIdentifier'
         ? name.name
         : ''
-  let argString = name.type === 'JSXNamespacedName' ? name.name.name : ''
-  if (name.type !== 'JSXNamespacedName' && !argString) {
-    const [newName, modifiers] = nameString.split('_')
-    nameString = newName
-    modifiers && (argString = `_${modifiers}`)
-  }
-
+  const isDirective = nameString.startsWith('v-')
   let modifiers: string[] = []
   let isStatic = true
-  const result = argString.match(namespaceRE)
-  if (result) {
-    let modifierString = ''
-    ;[, argString, modifierString] = result
-    if (argString) {
-      argString = argString.replaceAll('_', '.')
-      isStatic = false
-      if (modifierString && modifierString.startsWith('_'))
-        modifiers = modifierString.slice(1).split('_')
-    } else if (modifierString) {
-      ;[argString, ...modifiers] = modifierString.split('_')
+  let argString = name.type === 'JSXNamespacedName' ? name.name.name : ''
+  if (name.type !== 'JSXNamespacedName' && !argString) {
+    ;[nameString, ...modifiers] = nameString.split('_')
+  } else {
+    const result = argString.match(namespaceRE)
+    if (result) {
+      let modifierString = ''
+      ;[, argString, modifierString] = result
+      if (argString) {
+        argString = argString.replaceAll('_', '.')
+        isStatic = false
+        if (modifierString && modifierString.startsWith('_'))
+          modifiers = modifierString.slice(1).split('_')
+      } else if (modifierString) {
+        ;[argString, ...modifiers] = modifierString.split('_')
+      }
     }
   }
 
-  const arg =
-    argString && name.type === 'JSXNamespacedName'
+  const arg = isDirective
+    ? argString && name.type === 'JSXNamespacedName'
       ? resolveSimpleExpression(argString, isStatic, name.name.loc)
       : undefined
+    : resolveSimpleExpression(nameString, true, name.loc)
+
   const exp = value
     ? withFn && value.type === 'JSXExpressionContainer'
       ? resolveExpressionWithFn(value.expression, context)
@@ -331,8 +342,8 @@ export function resolveDirectiveNode(
 
   return {
     type: NodeTypes.DIRECTIVE,
-    name: nameString.slice(2),
-    rawName: `${nameString}:${argString}`,
+    name: isDirective ? nameString.slice(2) : 'bind',
+    rawName: getText(name, context),
     exp,
     arg,
     loc: resolveLocation(node.loc, context),

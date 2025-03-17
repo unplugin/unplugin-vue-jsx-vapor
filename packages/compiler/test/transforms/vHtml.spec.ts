@@ -18,12 +18,7 @@ const compileWithVHtml = makeCompile({
 describe('v-html', () => {
   test('should convert v-html to innerHTML', () => {
     const { code, ir, helpers } = compileWithVHtml(
-      `<div v-html={code}></div>`,
-      {
-        bindingMetadata: {
-          code: BindingTypes.SETUP_REF,
-        },
-      },
+      `<div v-html={code.value}></div>`,
     )
 
     expect(helpers).contains('setHtml')
@@ -34,7 +29,7 @@ describe('v-html', () => {
         expressions: [
           {
             type: NodeTypes.SIMPLE_EXPRESSION,
-            content: 'code',
+            content: 'code.value',
             isStatic: false,
           },
         ],
@@ -44,7 +39,7 @@ describe('v-html', () => {
             element: 0,
             value: {
               type: NodeTypes.SIMPLE_EXPRESSION,
-              content: 'code',
+              content: 'code.value',
               isStatic: false,
             },
           },
@@ -58,7 +53,7 @@ describe('v-html', () => {
   test('should raise error and ignore children when v-html is present', () => {
     const onError = vi.fn()
     const { ir, helpers, preamble } = compileWithVHtml(
-      `<div v-html={test}>hello</div>`,
+      `<div v-html={test.value}>hello</div>`,
       {
         onError,
       },
@@ -75,7 +70,7 @@ describe('v-html', () => {
         expressions: [
           {
             type: NodeTypes.SIMPLE_EXPRESSION,
-            content: 'test',
+            content: 'test.value',
             isStatic: false,
           },
         ],
@@ -85,7 +80,7 @@ describe('v-html', () => {
             element: 0,
             value: {
               type: NodeTypes.SIMPLE_EXPRESSION,
-              content: 'test',
+              content: 'test.value',
               isStatic: false,
             },
           },

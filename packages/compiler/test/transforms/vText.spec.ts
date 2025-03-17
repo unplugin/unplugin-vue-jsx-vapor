@@ -17,11 +17,9 @@ const compileWithVText = makeCompile({
 
 describe('v-text', () => {
   test('should convert v-text to setText', () => {
-    const { code, ir, helpers } = compileWithVText(`<div v-text={str}></div>`, {
-      bindingMetadata: {
-        str: BindingTypes.SETUP_REF,
-      },
-    })
+    const { code, ir, helpers } = compileWithVText(
+      `<div v-text={str.value}></div>`,
+    )
 
     expect(helpers).contains('setText')
     expect(ir.block.operation).toMatchObject([
@@ -36,7 +34,7 @@ describe('v-text', () => {
         expressions: [
           {
             type: NodeTypes.SIMPLE_EXPRESSION,
-            content: 'str',
+            content: 'str.value',
             isStatic: false,
           },
         ],
@@ -47,7 +45,7 @@ describe('v-text', () => {
             values: [
               {
                 type: NodeTypes.SIMPLE_EXPRESSION,
-                content: 'str',
+                content: 'str.value',
                 isStatic: false,
               },
             ],
