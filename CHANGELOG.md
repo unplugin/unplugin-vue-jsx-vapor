@@ -1,3 +1,12 @@
+## [2.1.2](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.1...v2.1.2) (2025-03-17)
+
+
+### Bug Fixes
+
+* **compiler:** remove log ([a1b9df0](https://github.com/vuejs/vue-jsx-vapor/commit/a1b9df07bc735ecaf45859af9477d9c9c05f653a))
+
+
+
 ## [2.1.1](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.0...v2.1.1) (2025-03-17)
 
 
