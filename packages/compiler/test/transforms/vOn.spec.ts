@@ -1,5 +1,5 @@
-import { NodeTypes } from '@vue/compiler-dom'
-import { describe, expect, test } from 'vitest'
+import { ErrorCodes, NodeTypes } from '@vue/compiler-dom'
+import { describe, expect, test, vi } from 'vitest'
 import {
   IRNodeTypes,
   transformChildren,
@@ -84,309 +84,9 @@ describe('v-on', () => {
     expect(code).matchSnapshot()
   })
 
-  /*
-  test('dynamic arg', () => {
-    const { code, ir, helpers, vaporHelpers } = compileWithVOn(
-      `<div v-on:[event]="handler"/>`,
-    )
-
-    expect(vaporHelpers).contains('on')
-    expect(vaporHelpers).contains('renderEffect')
-    expect(helpers.size).toBe(0)
-    expect(ir.block.operation).toEqual([])
-
-    expect(ir.block.effect[0].operations[0]).toMatchObject({
-      type: IRNodeTypes.SET_EVENT,
-      element: 0,
-      key: {
-        type: NodeTypes.SIMPLE_EXPRESSION,
-        content: 'event',
-        isStatic: false,
-      },
-      value: {
-        type: NodeTypes.SIMPLE_EXPRESSION,
-        content: 'handler',
-        isStatic: false,
-      },
-    })
-
-    expect(code).matchSnapshot()
-  })
-
-  test('dynamic arg with prefixing', () => {
-    const { code } = compileWithVOn(`<div v-on:[event]="handler"/>`, {
-      prefixIdentifiers: true,
-    })
-
-    expect(code).matchSnapshot()
-  })
-
-  test('dynamic arg with complex exp prefixing', () => {
-    const { ir, code, helpers, vaporHelpers } = compileWithVOn(
-      `<div v-on:[event(foo)]="handler"/>`,
-      {
-        prefixIdentifiers: true,
-      },
-    )
-
-    expect(vaporHelpers).contains('on')
-    expect(vaporHelpers).contains('renderEffect')
-    expect(helpers.size).toBe(0)
-    expect(ir.block.operation).toEqual([])
-
-    expect(ir.block.effect[0].operations[0]).toMatchObject({
-      type: IRNodeTypes.SET_EVENT,
-      element: 0,
-      key: {
-        type: NodeTypes.SIMPLE_EXPRESSION,
-        content: 'event(foo)',
-        isStatic: false,
-      },
-      value: {
-        type: NodeTypes.SIMPLE_EXPRESSION,
-        content: 'handler',
-        isStatic: false,
-      },
-    })
-
-    expect(code).matchSnapshot()
-  })
-
-  test('should wrap as function if expression is inline statement', () => {
-    const { code, ir, helpers, vaporHelpers } =
-      compileWithVOn(`<div @click="i++"/>`)
-
-    expect(code).matchSnapshot()
-    expect(vaporHelpers).contains('delegate')
-    expect(helpers.size).toBe(0)
-    expect(ir.block.effect).toEqual([])
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        element: 0,
-        value: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'i++',
-          isStatic: false,
-        },
-        delegate: true,
-      },
-    ])
-    expect(code).contains(`_delegate(n0, "click", () => $event => (_ctx.i++))`)
-  })
-
-  test('should wrap in unref if identifier is setup-maybe-ref w/ inline: true', () => {
-    const { code, helpers, vaporHelpers } = compileWithVOn(
-      `<div @click="x=y"/><div @click="x++"/><div @click="{ x } = y"/>`,
-      {
-        mode: 'module',
-        inline: true,
-        bindingMetadata: {
-          x: BindingTypes.SETUP_MAYBE_REF,
-          y: BindingTypes.SETUP_MAYBE_REF,
-        },
-      },
-    )
-    expect(code).matchSnapshot()
-    expect(vaporHelpers).contains('unref')
-    expect(helpers.size).toBe(0)
-    expect(code).contains(
-      `_delegate(n0, "click", () => $event => (x.value=_unref(y)))`,
-    )
-    expect(code).contains(`_delegate(n1, "click", () => $event => (x.value++))`)
-    expect(code).contains(
-      `_delegate(n2, "click", () => $event => ({ x: x.value } = _unref(y)))`,
-    )
-  })
-
-  test('should handle multiple inline statement', () => {
-    const { ir, code } = compileWithVOn(`<div @click="foo();bar()"/>`)
-
-    expect(code).matchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: 'foo();bar()' },
-      },
-    ])
-    // should wrap with `{` for multiple statements
-    // in this case the return value is discarded and the behavior is
-    // consistent with 2.x
-    expect(code).contains(
-      `_delegate(n0, "click", () => $event => {_ctx.foo();_ctx.bar()})`,
-    )
-  })
-
-  test('should handle multi-line statement', () => {
-    const { code, ir } = compileWithVOn(`<div @click="\nfoo();\nbar()\n"/>`)
-
-    expect(code).matchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: '\nfoo();\nbar()\n' },
-      },
-    ])
-    // should wrap with `{` for multiple statements
-    // in this case the return value is discarded and the behavior is
-    // consistent with 2.x
-    expect(code).contains(
-      `_delegate(n0, "click", () => $event => {\n_ctx.foo();\n_ctx.bar()\n})`,
-    )
-  })
-
-  test('inline statement w/ prefixIdentifiers: true', () => {
-    const { code, ir } = compileWithVOn(`<div @click="foo($event)"/>`, {
-      prefixIdentifiers: true,
-    })
-
-    expect(code).matchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: 'foo($event)' },
-      },
-    ])
-    // should NOT prefix $event
-    expect(code).contains(
-      `_delegate(n0, "click", () => $event => (_ctx.foo($event)))`,
-    )
-  })
-
-  test('multiple inline statements w/ prefixIdentifiers: true', () => {
-    const { ir, code } = compileWithVOn(`<div @click="foo($event);bar()"/>`, {
-      prefixIdentifiers: true,
-    })
-
-    expect(code).matchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: 'foo($event);bar()' },
-      },
-    ])
-    // should NOT prefix $event
-    expect(code).contains(
-      `_delegate(n0, "click", () => $event => {_ctx.foo($event);_ctx.bar()})`,
-    )
-  })
-
-  test('should NOT wrap as function if expression is already function expression', () => {
-    const { code, ir } = compileWithVOn(`<div @click="$event => foo($event)"/>`)
-
-    expect(code).matchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: '$event => foo($event)' },
-      },
-    ])
-    expect(code).contains(
-      `_delegate(n0, "click", () => $event => _ctx.foo($event))`,
-    )
-  })
-
-  test('should NOT wrap as function if expression is already function expression (with Typescript)', () => {
-    const { ir, code } = compileWithVOn(
-      `<div @click="(e: any): any => foo(e)"/>`,
-      { expressionPlugins: ['typescript'] },
-    )
-
-    expect(code).matchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: '(e: any): any => foo(e)' },
-      },
-    ])
-    expect(code).contains(
-      `_delegate(n0, "click", () => (e: any): any => _ctx.foo(e))`,
-    )
-  })
-
-  test('should NOT wrap as function if expression is already function expression (with newlines)', () => {
-    const { ir, code } = compileWithVOn(
-      `<div @click="
-      $event => {
-        foo($event)
-      }
-    "/>`,
-    )
-
-    expect(code).matchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: {
-          content: `
-      $event => {
-        foo($event)
-      }
-    `,
-        },
-      },
-    ])
-  })
-
-  test('should NOT add a prefix to $event if the expression is a function expression', () => {
-    const { ir, code } = compileWithVOn(
-      `<div @click="$event => {i++;foo($event)}"></div>`,
-      {
-        prefixIdentifiers: true,
-      },
-    )
-
-    expect(ir.block.operation[0]).toMatchObject({
-      type: IRNodeTypes.SET_EVENT,
-      value: { content: '$event => {i++;foo($event)}' },
-    })
-
-    expect(code).matchSnapshot()
-  })
-
-  test('should NOT wrap as function if expression is complex member expression', () => {
-    const { ir, code } = compileWithVOn(`<div @click="a['b' + c]"/>`)
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: `a['b' + c]` },
-      },
-    ])
-
-    expect(code).matchSnapshot()
-  })
-
-  test('complex member expression w/ prefixIdentifiers: true', () => {
-    const { ir, code } = compileWithVOn(`<div @click="a['b' + c]"/>`)
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: `a['b' + c]` },
-      },
-    ])
-
-    expect(code).matchSnapshot()
-    expect(code).contains(`_delegate(n0, "click", () => _ctx.a['b' + _ctx.c])`)
-  })
-
-  test('function expression w/ prefixIdentifiers: true', () => {
-    const { code, ir } = compileWithVOn(`<div @click="e => foo(e)"/>`, {
-      prefixIdentifiers: true,
-    })
-
-    expect(code).matchSnapshot()
-    expect(ir.block.operation).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        value: { content: `e => foo(e)` },
-      },
-    ])
-    expect(code).contains(`_delegate(n0, "click", () => e => _ctx.foo(e))`)
-  })
-
   test('should error if no expression AND no modifier', () => {
     const onError = vi.fn()
-    compileWithVOn(`<div v-on:click />`, { onError })
+    compileWithVOn(`<div onClick />`, { onError })
     expect(onError.mock.calls[0][0]).toMatchObject({
       code: ErrorCodes.X_V_ON_NO_EXPRESSION,
       loc: {
@@ -396,7 +96,7 @@ describe('v-on', () => {
         },
         end: {
           line: 1,
-          column: 16,
+          column: 13,
         },
       },
     })
@@ -404,20 +104,17 @@ describe('v-on', () => {
 
   test('should NOT error if no expression but has modifier', () => {
     const onError = vi.fn()
-    compileWithVOn(`<div v-on:click.prevent />`, { onError })
+    compileWithVOn(`<div onClick_prevent />`, { onError })
     expect(onError).not.toHaveBeenCalled()
   })
 
   test('should support multiple modifiers and event options w/ prefixIdentifiers: true', () => {
-    const { code, ir, vaporHelpers } = compileWithVOn(
-      `<div @click.stop.prevent.capture.once="test"/>`,
-      {
-        prefixIdentifiers: true,
-      },
+    const { code, ir, helpers } = compileWithVOn(
+      `<div onClick_stop_prevent_capture_once={test}/>`,
     )
 
-    expect(code).matchSnapshot()
-    expect(vaporHelpers).contains('on')
+    expect(code).toMatchSnapshot()
+    expect(helpers).contains('on')
     expect(ir.block.operation).toMatchObject([
       {
         type: IRNodeTypes.SET_EVENT,
@@ -436,8 +133,7 @@ describe('v-on', () => {
       },
     ])
     expect(code).contains(
-      `_on(n0, "click", () => _ctx.test, {
-    modifiers: ["stop", "prevent"], 
+      `_on(n0, "click", _withModifiers(e => test(e), ["stop","prevent"]), {
     capture: true, 
     once: true
   })`,
@@ -446,10 +142,7 @@ describe('v-on', () => {
 
   test('should support multiple events and modifiers options w/ prefixIdentifiers: true', () => {
     const { code, ir } = compileWithVOn(
-      `<div @click.stop="test" @keyup.enter="test" />`,
-      {
-        prefixIdentifiers: true,
-      },
+      `<div onClick_stop={test} onKeyup_enter={test} />`,
     )
 
     expect(ir.block.operation).toMatchObject([
@@ -491,24 +184,23 @@ describe('v-on', () => {
       },
     ])
 
-    expect(code).matchSnapshot()
+    expect(code).toMatchInlineSnapshot(`
+      "
+        const n0 = t0()
+        n0.$evtclick = _withModifiers(e => test(e), ["stop"])
+        n0.$evtkeyup = _withKeys(e => test(e), ["enter"])
+        return n0
+      "
+    `)
     expect(code).contains(
-      `_delegate(n0, "click", () => _ctx.test, {
-    modifiers: ["stop"]
-  })`,
+      `n0.$evtclick = _withModifiers(e => test(e), ["stop"])`,
     )
-
-    expect(code).contains(`_delegate(n0, "keyup", () => _ctx.test, {
-    keys: ["enter"]
-  })`)
+    expect(code).contains(`n0.$evtkeyup = _withKeys(e => test(e), ["enter"])`)
   })
 
   test('should wrap keys guard for keyboard events or dynamic events', () => {
     const { code, ir } = compileWithVOn(
-      `<div @keydown.stop.capture.ctrl.a="test"/>`,
-      {
-        prefixIdentifiers: true,
-      },
+      `<div onKeydown_stop_capture_ctrl_a={test}/>`,
     )
 
     expect(ir.block.operation).toMatchObject([
@@ -537,9 +229,7 @@ describe('v-on', () => {
   })
 
   test('should not wrap keys guard if no key modifier is present', () => {
-    const { code, ir } = compileWithVOn(`<div @keyup.exact="test"/>`, {
-      prefixIdentifiers: true,
-    })
+    const { code, ir } = compileWithVOn(`<div onKeyup_exact={test}/>`)
     expect(ir.block.operation).toMatchObject([
       {
         type: IRNodeTypes.SET_EVENT,
@@ -551,7 +241,7 @@ describe('v-on', () => {
   })
 
   test('should wrap keys guard for static key event w/ left/right modifiers', () => {
-    const { code, ir } = compileWithVOn(`<div @keyup.left="test"/>`, {
+    const { code, ir } = compileWithVOn(`<div onKeyup_left={test}/>`, {
       prefixIdentifiers: true,
     })
 
@@ -569,32 +259,10 @@ describe('v-on', () => {
     expect(code).matchSnapshot()
   })
 
-  test('should wrap both for dynamic key event w/ left/right modifiers', () => {
-    const { code, ir } = compileWithVOn(`<div @[e].left="test"/>`, {
-      prefixIdentifiers: true,
-    })
-
-    expect(ir.block.effect[0].operations).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        key: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'e',
-          isStatic: false,
-        },
-        modifiers: {
-          keys: ['left'],
-          nonKeys: ['left'],
-          options: [],
-        },
-      },
-    ])
-
-    expect(code).matchSnapshot()
-  })
-
   test('should transform click.right', () => {
-    const { code, ir } = compileWithVOn(`<div @click.right="test"/>`)
+    const { code, ir } = compileWithVOn(`<div onClick_right={test}/>`, {
+      inline: false,
+    })
     expect(ir.block.operation).toMatchObject([
       {
         type: IRNodeTypes.SET_EVENT,
@@ -608,34 +276,14 @@ describe('v-on', () => {
       },
     ])
 
-    expect(code).matchSnapshot()
+    expect(code).toMatchSnapshot()
     expect(code).contains('"contextmenu"')
-
-    // dynamic
-    const { code: code2, ir: ir2 } = compileWithVOn(
-      `<div @[event].right="test"/>`,
-    )
-    expect(ir2.block.effect[0].operations).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        key: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'event',
-          isStatic: false,
-        },
-        modifiers: { nonKeys: ['right'] },
-        keyOverride: ['click', 'contextmenu'],
-      },
-    ])
-
-    expect(code2).matchSnapshot()
-    expect(code2).contains(
-      '(_ctx.event) === "click" ? "contextmenu" : (_ctx.event)',
-    )
   })
 
   test('should transform click.middle', () => {
-    const { code, ir } = compileWithVOn(`<div @click.middle="test"/>`)
+    const { code, ir } = compileWithVOn(`<div onClick_middle={test}/>`, {
+      inline: false,
+    })
     expect(ir.block.operation).toMatchObject([
       {
         type: IRNodeTypes.SET_EVENT,
@@ -651,46 +299,16 @@ describe('v-on', () => {
 
     expect(code).matchSnapshot()
     expect(code).contains('"mouseup"')
-
-    // dynamic
-    const { code: code2, ir: ir2 } = compileWithVOn(
-      `<div @[event].middle="test"/>`,
-    )
-
-    expect(ir2.block.effect[0].operations).toMatchObject([
-      {
-        type: IRNodeTypes.SET_EVENT,
-        key: {
-          type: NodeTypes.SIMPLE_EXPRESSION,
-          content: 'event',
-          isStatic: false,
-        },
-        modifiers: { nonKeys: ['middle'] },
-        keyOverride: ['click', 'mouseup'],
-      },
-    ])
-
-    expect(code2).matchSnapshot()
-    expect(code2).contains(
-      '(_ctx.event) === "click" ? "mouseup" : (_ctx.event)',
-    )
-  })
-
-  test('should not prefix member expression', () => {
-    const { code } = compileWithVOn(`<div @click="foo.bar"/>`, {
-      prefixIdentifiers: true,
-    })
-
-    expect(code).matchSnapshot()
-    expect(code).contains(`_delegate(n0, "click", () => _ctx.foo.bar)`)
   })
 
   test('should delegate event', () => {
-    const { code, ir, vaporHelpers } = compileWithVOn(`<div @click="test"/>`)
+    const { code, ir, helpers } = compileWithVOn(`<div onClick={test}/>`, {
+      inline: false,
+    })
 
     expect(code).matchSnapshot()
     expect(code).contains('_delegateEvents("click")')
-    expect(vaporHelpers).contains('delegateEvents')
+    expect(helpers).contains('delegateEvents')
     expect(ir.block.operation).toMatchObject([
       {
         type: IRNodeTypes.SET_EVENT,
@@ -698,5 +316,17 @@ describe('v-on', () => {
       },
     ])
   })
-    */
+
+  test('should use delegate helper when have multiple events of same name', () => {
+    const { code, helpers } = compileWithVOn(
+      `<div onClick={test} onClick_stop={test} />`,
+      { inline: false },
+    )
+    expect(helpers).contains('delegate')
+    expect(code).toMatchSnapshot()
+    expect(code).contains('_delegate(n0, "click", e => _ctx.test(e))')
+    expect(code).contains(
+      '_delegate(n0, "click", _withModifiers(e => _ctx.test(e), ["stop"]))',
+    )
+  })
 })

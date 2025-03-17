@@ -262,6 +262,7 @@ function transformProp(
 
   if (
     !isDirectiveRegex.test(name) &&
+    !isEventRegex.test(name) &&
     (!prop.value || prop.value.type === 'StringLiteral')
   ) {
     if (isReservedProp(name)) return
