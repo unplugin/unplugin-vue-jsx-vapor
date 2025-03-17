@@ -29,8 +29,8 @@ exports[`compiler: v-once > inside v-once 1`] = `
 exports[`compiler: v-once > on component 1`] = `
 "
   const n1 = t0()
+  _setInsertionState(n1)
   const n0 = _createComponent(Comp, { id: () => (foo) }, null, null, true)
-  _insert(n0, n1)
   return n1
 "
 `;

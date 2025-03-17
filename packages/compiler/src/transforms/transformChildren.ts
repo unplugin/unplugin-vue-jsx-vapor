@@ -84,11 +84,7 @@ function processDynamicChildren(context: TransformContext<Node>) {
   }
 
   if (prevDynamics.length) {
-    context.registerOperation({
-      type: IRNodeTypes.INSERT_NODE,
-      elements: prevDynamics.map((child) => child.id!),
-      parent: context.reference(),
-    })
+    registerInsertion(prevDynamics, context)
   }
 }
 
@@ -106,14 +102,10 @@ function registerInsertion(
         parent: context.reference(),
         anchor,
       })
-    } else {
+    } else if (child.operation && isBlockOperation(child.operation)) {
       // block types
-      for (const op of context.block.operation) {
-        if (isBlockOperation(op) && op.id === child.id) {
-          op.parent = context.reference()
-          op.anchor = anchor
-        }
-      }
+      child.operation.parent = context.reference()
+      child.operation.anchor = anchor
     }
   }
 }

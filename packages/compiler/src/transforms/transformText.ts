@@ -112,7 +112,6 @@ function processInterpolation(context: TransformContext) {
   const id = context.reference()
 
   if (isFragmentNode(parent)) {
-    context.dynamic.flags |= DynamicFlag.INSERT | DynamicFlag.NON_TEMPLATE
     context.registerOperation({
       type: IRNodeTypes.CREATE_NODES,
       id,
