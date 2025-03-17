@@ -300,7 +300,7 @@ export function resolveDirectiveNode(
   if (name.type !== 'JSXNamespacedName' && !argString) {
     const [newName, modifiers] = nameString.split('_')
     nameString = newName
-    argString = `_${modifiers}`
+    modifiers && (argString = `_${modifiers}`)
   }
 
   let modifiers: string[] = []

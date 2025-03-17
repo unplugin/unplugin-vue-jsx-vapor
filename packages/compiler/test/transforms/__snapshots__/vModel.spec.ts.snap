@@ -23,3 +23,11 @@ exports[`compiler: vModel transform > modifiers > .trim 1`] = `
   return n0
 "
 `;
+
+exports[`compiler: vModel transform > should support simple expression 1`] = `
+"
+  const n0 = t0()
+  _applyTextModel(n0, () => (model), _value => (model = _value))
+  return n0
+"
+`;

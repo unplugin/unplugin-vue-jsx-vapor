@@ -18,13 +18,7 @@ const compileWithVModel = makeCompile({
 describe('compiler: vModel transform', () => {
   test('should support simple expression', () => {
     const { code, helpers } = compileWithVModel('<input v-model={model} />')
-    expect(code).toMatchInlineSnapshot(`
-      "
-        const n0 = t0()
-        _applyTextModel(n0, () => (model), _value => (model = _value), { undefined: true })
-        return n0
-      "
-    `)
+    expect(code).toMatchSnapshot()
     expect(helpers).toContain('applyTextModel')
   })
 
