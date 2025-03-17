@@ -75,6 +75,7 @@ function processDynamicChildren(context: TransformContext<Node>) {
           const anchor = (prevDynamics[0].anchor = context.increaseId())
           registerInsertion(prevDynamics, context, anchor)
         } else {
+          prevDynamics[0].flags -= DynamicFlag.NON_TEMPLATE
           registerInsertion(prevDynamics, context, -1 /* prepend */)
         }
         prevDynamics = []
@@ -94,6 +95,7 @@ function registerInsertion(
   anchor?: number,
 ) {
   for (const child of dynamics) {
+    console.log(child)
     if (child.template != null) {
       // template node due to invalid nesting - generate actual insertion
       context.registerOperation({

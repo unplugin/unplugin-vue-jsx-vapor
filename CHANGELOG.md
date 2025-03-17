@@ -1,3 +1,19 @@
+## [2.1.1](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.0...v2.1.1) (2025-03-17)
+
+
+### Bug Fixes
+
+* **compiler:** missing modifiers ([32849a7](https://github.com/vuejs/vue-jsx-vapor/commit/32849a73c28f7da97dfc868f11d7a4aa0f45e4fe))
+* **compiler:** remove empty modifiers ([dce2e83](https://github.com/vuejs/vue-jsx-vapor/commit/dce2e83d6892a47ef5a3a6132305bfed6e619269))
+* **compiler:** use setInsertionState instead of insert ([2fae757](https://github.com/vuejs/vue-jsx-vapor/commit/2fae757c4323b93466cf233187b64968659c043c))
+
+
+### Features
+
+* **compiler:** support empty expression for event with modifiers ([187bf8c](https://github.com/vuejs/vue-jsx-vapor/commit/187bf8c1f0dbad4f726d48a10a9d487e46277f33))
+
+
+
 # [2.1.0](https://github.com/vuejs/vue-jsx-vapor/compare/v2.0.1...v2.1.0) (2025-03-16)
 
 

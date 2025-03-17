@@ -1,18 +1,19 @@
 import { ref } from 'vue'
-
 const Comp = () => {
   const model = defineModel<string>()
-  return <input v-model={model.value} />
+  return <div>comp</div>
 }
 
 export default () => {
   const model = ref('model')
 
   return (
-    <>
-      <input v-model={model.value}></input>
-      <Comp v-model={model.value} />
-      {model.value}
-    </>
+    <div>
+      123
+      <Comp />1
+      <div>
+        <button disabled={!!model.value}>123</button>
+      </div>
+    </div>
   )
 }
