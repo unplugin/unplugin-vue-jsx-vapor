@@ -1,4 +1,4 @@
-import { BindingTypes, DOMErrorCodes, NodeTypes } from '@vue/compiler-dom'
+import { DOMErrorCodes, NodeTypes } from '@vue/compiler-dom'
 import { describe, expect, test, vi } from 'vitest'
 import {
   IRNodeTypes,
