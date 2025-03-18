@@ -10,12 +10,12 @@ catalog:
   '@nuxt/kit': ^3.16.0
   '@nuxt/schema': ^3.16.0
   '@types/babel__core': ^7.20.5
-  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@13061
-  '@vue/compiler-sfc': https://pkg.pr.new/@vue/compiler-sfc@13061
-  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@13061
-  '@vue/shared': https://pkg.pr.new/@vue/shared@13061
+  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@eeab9c4
+  '@vue/compiler-sfc': https://pkg.pr.new/@vue/compiler-sfc@eeab9c4
+  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@eeab9c4
+  '@vue/shared': https://pkg.pr.new/@vue/shared@eeab9c4
   ts-macro: ^0.1.25
   unplugin: ^1.16.1
   vite: ^6.2.1
   vitest: ^3.0.8
-  vue: https://pkg.pr.new/vue@13061
+  vue: https://pkg.pr.new/vue@eeab9c4
