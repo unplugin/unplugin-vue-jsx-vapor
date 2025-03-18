@@ -238,6 +238,7 @@ export default () => {
   compRef.value?.foo
   //             ^?
 
+
   return <Comp ref={compRef} foo={1 as const} />
 }
 ```
