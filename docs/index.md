@@ -4,8 +4,11 @@ layout: home
 
 hero:
   name: "Vue JSX Vapor"
-  # text: "Vue JSX Vapor"
+  text: "Type-safe, Improve DX, High Performance"
   tagline: Supports Vapor mode, all build-in directives and most macros of Vue.
+  image:
+    src: /logo.png
+    alt: Vue JSX Vapor
   actions:
     - theme: brand
       text: Get Started
@@ -21,6 +24,9 @@ features:
   - icon: ⚒️ ️
     title: Directives
     details: Support all build-in directives of Vue.
+  - icon: 🦾
+    title: Type Safe
+    details: Provide Volar support by install TS Macro (VSCode plugin).
   - icon: ⚡️
     title: Performance
     details: It has the same performance with Vue Vapor!
