@@ -1,3 +1,12 @@
+## [2.1.3](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.2...v2.1.3) (2025-03-18)
+
+
+### Bug Fixes
+
+* **compiler:** move next, child and nthChild before the setInsertionState ([d12a086](https://github.com/vuejs/vue-jsx-vapor/commit/d12a086739360bd3dafafd663191bc743208eb22))
+
+
+
 ## [2.1.2](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.1...v2.1.2) (2025-03-17)
 
 
