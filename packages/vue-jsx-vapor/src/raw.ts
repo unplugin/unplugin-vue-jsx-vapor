@@ -1,6 +1,7 @@
 import Macros from '@vue-jsx-vapor/macros/raw'
-import { createFilter } from 'unplugin-utils'
+import { createFilter, normalizePath } from 'unplugin-utils'
 import { transformVueJsxVapor } from './core'
+import runtimeCode from './core/runtime?raw'
 import type { Options } from './options'
 import type { UnpluginOptions } from 'unplugin'
 
@@ -29,6 +30,15 @@ const plugin = (options: Options = {}): UnpluginOptions[] => {
             },
           }
         },
+      },
+      resolveId(id) {
+        if (normalizePath(id) === 'vue-jsx-vapor/runtime') return id
+      },
+      loadInclude(id) {
+        return normalizePath(id) === 'vue-jsx-vapor/runtime'
+      },
+      load(id) {
+        if (normalizePath(id) === 'vue-jsx-vapor/runtime') return runtimeCode
       },
       transformInclude,
       transform(code, id) {

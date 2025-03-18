@@ -9,6 +9,8 @@ import {
   type EffectScope,
 } from 'vue'
 
+export { shallowRef as useRef } from 'vue'
+
 function createFragment(
   nodes: Block[],
   anchor: Node | undefined = document.createTextNode(''),
