@@ -17,7 +17,7 @@ We assume you are already familiar with the basic usages of Vue before you conti
 pnpm add vue-jsx-vapor
 
 # runtime
-pnpm add https://pkg.pr.new/vue@ce35a8c
+pnpm add https://pkg.pr.new/vue@13061
 ```
 
 The Vue Vapor runtime is not release, so we use [pkg.pr.new](https://github.com/stackblitz-labs/pkg.pr.new) to install.
@@ -64,6 +64,6 @@ export default {
 
 :::
 
-<!-- ## Templates
+## Templates
 
-- [Vite](https://github.com/vue-macros/vite) -->
+- [Vite](https://github.com/zhiyuanzmj/vitesse-jsx-vapor)

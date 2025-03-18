@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compile > setInsertionState > next, child and nthChild should be above the setInsertionState 1`] = `
+"
+  const n3 = t0()
+  const n2 = _next(_child(n3))
+  const p0 = _nthChild(n3, 4)
+  const n1 = _child(p0)
+  _setInsertionState(n3, n2)
+  const n0 = _createComponent(Comp)
+  _renderEffect(() => _setProp(n1, "disabled", foo))
+  return n3
+"
+`;
