@@ -1,3 +1,12 @@
+## [2.1.4](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.3...v2.1.4) (2025-03-18)
+
+
+### Features
+
+* **vue-jsx-vapor:** use virtual code to support browser environments ([db1660e](https://github.com/vuejs/vue-jsx-vapor/commit/db1660edf5d109c55f2bd045fed5b9d08b436be2))
+
+
+
 ## [2.1.3](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.2...v2.1.3) (2025-03-18)
 
 
