@@ -66,4 +66,4 @@ export default {
 
 ## Templates
 
-- [Vite](https://github.com/zhiyuanzmj/vitesse-jsx-vapor)
+- [vitesse-jsx-vapor](https://github.com/zhiyuanzmj/vitesse-jsx-vapor)
