@@ -18,12 +18,12 @@ hero:
       link: /features/directives
 
 features:
-  - icon: ✨
-    title: Macros
-    details: Support most macros of Vue, Friendly to JSX.
   - icon: ⚒️ ️
     title: Directives
     details: Support all build-in directives of Vue.
+  - icon: ✨
+    title: Macros
+    details: Support most macros of Vue, Friendly to JSX.
   - icon: 🦾
     title: Type Safe
     details: Provide Volar support by install TS Macro (VSCode plugin).
