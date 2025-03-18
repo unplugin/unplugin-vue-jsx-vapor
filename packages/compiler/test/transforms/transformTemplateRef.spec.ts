@@ -5,12 +5,22 @@ import {
   transformChildren,
   transformElement,
   transformTemplateRef,
+  transformVFor,
+  transformVIf,
+  type ForIRNode,
+  type IfIRNode,
 } from '../../src'
 
 import { makeCompile } from './_utils'
 
 const compileWithTransformRef = makeCompile({
-  nodeTransforms: [transformTemplateRef, transformElement, transformChildren],
+  nodeTransforms: [
+    transformVIf,
+    transformVFor,
+    transformTemplateRef,
+    transformElement,
+    transformChildren,
+  ],
 })
 
 describe('compiler: template ref transform', () => {
@@ -72,49 +82,49 @@ describe('compiler: template ref transform', () => {
     expect(code).contains('_setTemplateRef(n0, foo, r0)')
   })
 
-  // test('ref + v-if', () => {
-  //   const { ir, code } = compileWithTransformRef(
-  //     `<div ref="foo" v-if="true" />`,
-  //   )
+  test('ref + v-if', () => {
+    const { ir, code } = compileWithTransformRef(
+      `<div ref={foo} v-if={true} />`,
+    )
+    expect(code).toMatchSnapshot()
 
-  //   expect(ir.block.operation).lengthOf(1)
-  //   expect(ir.block.operation[0].type).toBe(IRNodeTypes.IF)
+    const op = ir.block.dynamic.children[0].operation as IfIRNode
+    expect(op.type).toBe(IRNodeTypes.IF)
 
-  //   const { positive } = ir.block.operation[0] as IfIRNode
-  //   expect(positive.operation).toMatchObject([
-  //     {
-  //       type: IRNodeTypes.SET_TEMPLATE_REF,
-  //       element: 2,
-  //       value: {
-  //         content: 'foo',
-  //         isStatic: true,
-  //       },
-  //       effect: false,
-  //     },
-  //   ])
-  //   expect(code).matchSnapshot()
-  //   expect(code).contains('_setRef(n2, "foo")')
-  // })
+    const { positive } = op
+    expect(positive.effect[0].operations).toMatchObject([
+      {
+        type: IRNodeTypes.SET_TEMPLATE_REF,
+        element: 2,
+        value: {
+          content: 'foo',
+          isStatic: false,
+        },
+        effect: true,
+      },
+    ])
+    expect(code).contains('_setTemplateRef(n2, foo, r2)')
+  })
 
-  // test('ref + v-for', () => {
-  //   const { ir, code } = compileWithTransformRef(
-  //     `<div ref="foo" v-for="item in [1,2,3]" />`,
-  //   )
+  test('ref + v-for', () => {
+    const { ir, code } = compileWithTransformRef(
+      `<div ref={foo} v-for={item in [1,2,3]} />`,
+    )
+    expect(code).toMatchSnapshot()
 
-  //   const { render } = ir.block.operation[0] as ForIRNode
-  //   expect(render.operation).toMatchObject([
-  //     {
-  //       type: IRNodeTypes.SET_TEMPLATE_REF,
-  //       element: 2,
-  //       value: {
-  //         content: 'foo',
-  //         isStatic: true,
-  //       },
-  //       refFor: true,
-  //       effect: false,
-  //     },
-  //   ])
-  //   expect(code).matchSnapshot()
-  //   expect(code).contains('_setRef(n2, "foo", void 0, true)')
-  // })
+    const { render } = ir.block.dynamic.children[0].operation as ForIRNode
+    expect(render.effect[0].operations).toMatchObject([
+      {
+        type: IRNodeTypes.SET_TEMPLATE_REF,
+        element: 2,
+        value: {
+          content: 'foo',
+          isStatic: false,
+        },
+        refFor: true,
+        effect: true,
+      },
+    ])
+    expect(code).contains('_setTemplateRef(n2, foo, r2, true)')
+  })
 })
