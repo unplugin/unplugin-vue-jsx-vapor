@@ -14,7 +14,7 @@ describe('transform', () => {
     )!
     expect(code).toMatchInlineSnapshot(`
       "import { child as _child, delegateEvents as _delegateEvents, template as _template, createIf as _createIf } from 'vue';
-      import { setNodes as _setNodes } from 'vue-jsx-vapor';
+      import { setNodes as _setNodes } from 'vue-jsx-vapor/runtime';
       const _t00 = _template("<div> </div>", true);
       const _t10 = _template("<div>Hello</div>");
       const _t11 = _template("<div>World</div>");
