@@ -15,13 +15,13 @@ const compileWithSlots = makeCompile({
   nodeTransforms: [
     transformText,
     transformElement,
-    transformVSlots,
     transformVSlot,
     transformChildren,
   ],
   directiveTransforms: {
     bind: transformVBind,
     on: transformVOn,
+    slots: transformVSlots,
   },
 })
 

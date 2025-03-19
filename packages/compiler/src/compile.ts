@@ -31,6 +31,7 @@ import { transformVOnce } from './transforms/vOnce'
 import { transformVShow } from './transforms/vShow'
 import { transformVSlot } from './transforms/vSlot'
 import { transformVSlots } from './transforms/vSlots'
+import { transformVText } from './transforms/vText'
 import type { ExpressionStatement, JSXElement, JSXFragment } from '@babel/types'
 import type { CompilerOptions as BaseCompilerOptions } from '@vue/compiler-dom'
 
@@ -123,7 +124,6 @@ export function getBaseTransformPreset(): TransformPreset {
       transformTemplateRef,
       transformText,
       transformElement,
-      transformVSlots,
       transformVSlot,
       transformChildren,
     ],
@@ -133,6 +133,8 @@ export function getBaseTransformPreset(): TransformPreset {
       model: transformVModel,
       show: transformVShow,
       html: transformVHtml,
+      text: transformVText,
+      slots: transformVSlots,
     },
   ]
 }

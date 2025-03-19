@@ -8,7 +8,7 @@ Vue built-in directives for JSX.
 |      `v-slot`, `v-slots`      | :white_check_mark: | :white_check_mark: |
 |            `v-for`            | :white_check_mark: | :white_check_mark: |
 |           `v-model`           | :white_check_mark: | :white_check_mark: |
-|           `v-html`            | :white_check_mark: |         /          |
+|      `v-html`, `v-text`       | :white_check_mark: |         /          |
 |           `v-once`            | :white_check_mark: |         /          |
 
 ## Dynamic Arguments
