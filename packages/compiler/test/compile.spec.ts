@@ -19,7 +19,6 @@ const compile = makeCompile({
     transformTemplateRef,
     transformText,
     transformElement,
-    transformVSlots,
     transformVSlot,
     transformChildren,
   ],
@@ -29,6 +28,7 @@ const compile = makeCompile({
     model: transformVModel,
     show: transformVShow,
     html: transformVHtml,
+    slots: transformVSlots,
   },
 })
 
