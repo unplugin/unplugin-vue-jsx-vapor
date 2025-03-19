@@ -1,3 +1,12 @@
+## [2.1.5](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.4...v2.1.5) (2025-03-19)
+
+
+### Features
+
+* **compiler:** support v-text directive ([98a24d6](https://github.com/vuejs/vue-jsx-vapor/commit/98a24d62b13ecf0e6266939d417ae7ff4915426b))
+
+
+
 ## [2.1.4](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.3...v2.1.4) (2025-03-18)
 
 
