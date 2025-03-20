@@ -3,13 +3,17 @@ packages:
   - playground
   - docs
 
+defines:
+- &babel ^7.26.8
+- &vue-macros ^3.0.0-beta.7
+
 catalog:
-  '@babel/core': ^7.26.8
-  '@babel/parser': ^7.26.8
+  '@babel/core': *babel
+  '@babel/parser': *babel
   '@babel/plugin-syntax-jsx': ^7.25.9
-  '@babel/plugin-transform-typescript': ^7.26.8
-  '@babel/traverse': ^7.26.8
-  '@babel/types': ^7.26.8
+  '@babel/plugin-transform-typescript': *babel
+  '@babel/traverse': *babel
+  '@babel/types': *babel
   '@types/babel__core': ^7.20.5
 
   '@nuxt/kit': ^3.16.0
@@ -20,10 +24,10 @@ catalog:
   '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@3e7464f
   '@vue/shared': https://pkg.pr.new/@vue/shared@3e7464f
 
-  '@vue-macros/common': ^3.0.0-beta.6
-  '@vue-macros/reactivity-transform': ^3.0.0-beta.6
-  '@vue-macros/test-utils': ^3.0.0-beta.6
-  '@vue-macros/volar': ^3.0.0-beta.6
+  '@vue-macros/common': *vue-macros
+  '@vue-macros/reactivity-transform': *vue-macros
+  '@vue-macros/test-utils': *vue-macros
+  '@vue-macros/volar': *vue-macros
 
   ts-macro: ^0.1.25
   unplugin: ^1.16.1
