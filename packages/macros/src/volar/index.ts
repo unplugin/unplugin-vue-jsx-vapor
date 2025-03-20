@@ -213,15 +213,21 @@ export function getRootMap(options: TransformOptions): RootMap {
 
       const id = toValidAssetId(modelName, `${HELPER_PREFIX}model`)
       const typeString = `import('vue').UnwrapRef<typeof ${id}>`
-      ;(rootMap.get(root)!.defineModel ??= [])!.push(
+      const defineModel = (rootMap.get(root)!.defineModel ??= [])
+      defineModel.push(
         `${modelName.includes('-') ? `'${modelName}'` : modelName}${isRequired ? ':' : '?:'} ${typeString}`,
         `'onUpdate:${modelName}'?: ($event: ${typeString}) => any`,
       )
+      if (expression.typeArguments?.[1]) {
+        defineModel.push(
+          `${modelName}Modifiers?: Partial<Record<${expression.typeArguments[1].getText(ast)}, boolean>>`,
+        )
+      }
       replaceRange(
         codes,
         initializer.getStart(ast),
         initializer.getStart(ast),
-        `// @ts-ignore\n${id};\nlet ${id} =`,
+        `// @ts-ignore\n${id};\nlet ${id} = `,
       )
     } else if (options.defineSlots.alias.includes(macroName)) {
       replaceRange(

@@ -10,6 +10,7 @@ import { withAsyncContext as __MACROS_withAsyncContext } from "vue";import { def
 const Comp = defineComponent(
   (__MACROS_props) => {
 const __MACROS_default_props = __MACROS_createPropsDefaultProxy(__MACROS_props, {'.bar': 'bar'!});const attrs = __MACROS_useAttrs();
+    __MACROS_useModel(__MACROS_props, 'modelValue',)
     const foo = $(
       __MACROS_useModel(__MACROS_props, 'foo', {
         validator: (value) => {
@@ -20,7 +21,7 @@ const __MACROS_default_props = __MACROS_createPropsDefaultProxy(__MACROS_props, 
     )
     return <div>{[foo, __MACROS_default_props.bar, attrs.baz]}</div>
   },
-  {props: { 'bar': { required: true }, 'foo': { required: true, validator: (value) => {
+  {props: { 'bar': { required: true }, 'modelValue': null, 'onUpdate:modelValue': null, 'modelModifiers': null, 'foo': { required: true, validator: (value) => {
           return value === 'foo'
         }, type: String }, 'onUpdate:foo': null, 'fooModifiers': null },inheritAttrs: false, name: 'Comp' },
 )
@@ -79,14 +80,14 @@ export const Comp2 = ({ foo, ...__MACROS_props }: any) => {
 exports[`fixtures > ./fixtures/define-model.tsx 1`] = `
 "
 import { useModel as __MACROS_useModel } from "vue-jsx-vapor/macros/use-model";export const Comp = ({ bar, ...__MACROS_props }: { bar: string }) => {
-  const foo = __MACROS_useModel(__MACROS_props, 'foo', { default: bar })
+  const foo = __MACROS_useModel<string, 'm1' | 'm2'>(__MACROS_props, 'foo', { default: bar })
   return <div>{foo.value}</div>
 }
 
 export default function (__MACROS_props) {
   const modelValue = $(__MACROS_useModel<string>(__MACROS_props, 'modelValue',)!)
   return (
-    <Comp v-model:foo={modelValue} bar="bar">
+    <Comp v-model:foo_m1={modelValue} bar="bar">
       {modelValue}
     </Comp>
   )
@@ -148,6 +149,7 @@ import { withAsyncContext as __MACROS_withAsyncContext } from "vue";import { def
 const Comp = defineComponent(
   (__MACROS_props) => {
 const __MACROS_default_props = __MACROS_createPropsDefaultProxy(__MACROS_props, {'.bar': 'bar'!});const attrs = __MACROS_useAttrs();
+    __MACROS_useModel(__MACROS_props, 'modelValue',)
     const foo = $(
       __MACROS_useModel(__MACROS_props, 'foo', {
         validator: (value) => {
@@ -158,7 +160,7 @@ const __MACROS_default_props = __MACROS_createPropsDefaultProxy(__MACROS_props, 
     )
     return <div>{[foo, __MACROS_default_props.bar, attrs.baz]}</div>
   },
-  {props: { 'bar': { required: true }, 'foo': { required: true, validator: (value) => {
+  {props: { 'bar': { required: true }, 'modelValue': null, 'onUpdate:modelValue': null, 'modelModifiers': null, 'foo': { required: true, validator: (value) => {
           return value === 'foo'
         }, type: String }, 'onUpdate:foo': null, 'fooModifiers': null },inheritAttrs: false, name: 'Comp' },
 )
@@ -217,14 +219,14 @@ export const Comp2 = ({ foo, ...__MACROS_props }: any) => {
 exports[`vue/vapor fixtures > ./fixtures/define-model.tsx 1`] = `
 "
 import { useModel as __MACROS_useModel } from "vue-jsx-vapor/macros/use-model";export const Comp = ({ bar, ...__MACROS_props }: { bar: string }) => {
-  const foo = __MACROS_useModel(__MACROS_props, 'foo', { default: bar })
+  const foo = __MACROS_useModel<string, 'm1' | 'm2'>(__MACROS_props, 'foo', { default: bar })
   return <div>{foo.value}</div>
 }
 
 export default function (__MACROS_props) {
   const modelValue = $(__MACROS_useModel<string>(__MACROS_props, 'modelValue',)!)
   return (
-    <Comp v-model:foo={modelValue} bar="bar">
+    <Comp v-model:foo_m1={modelValue} bar="bar">
       {modelValue}
     </Comp>
   )

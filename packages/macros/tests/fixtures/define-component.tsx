@@ -2,6 +2,7 @@ import { defineComponent, nextTick } from 'vue'
 
 const Comp = defineComponent(
   ({ bar = 'bar'!, ...attrs }: { bar: 'bar'; baz: 'baz' }) => {
+    defineModel()
     const foo = $(
       defineModel('foo', {
         validator: (value) => {

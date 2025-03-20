@@ -8,7 +8,15 @@ We assume you are already familiar with the basic usages of Vue before you conti
 
 - Node.js `>= v18.0.0`.
 - Vue `>= v3.6`.
-- VSCode extension [TS Macro](https://marketplace.visualstudio.com/items?itemName=zhiyuanzmj.vscode-ts-macro) and `@ts-macro/tsc`.
+- VSCode extension [TS Macro](https://marketplace.visualstudio.com/items?itemName=zhiyuanzmj.vscode-ts-macro) and install `@ts-macro/tsc` instead of `tsc` to typecheck.
+  ```json
+  {
+    "scripts": {
+      "typecheck": "tsmc --noEmit"
+      // ...
+    }
+  }
+  ```
 
 ### Install
 
@@ -17,7 +25,7 @@ We assume you are already familiar with the basic usages of Vue before you conti
 pnpm add vue-jsx-vapor
 
 # runtime
-pnpm add https://pkg.pr.new/vue@eeab9c4
+pnpm add https://pkg.pr.new/vue@3e7464f
 ```
 
 The Vue Vapor runtime is not release, so we use [pkg.pr.new](https://github.com/stackblitz-labs/pkg.pr.new) to install.

@@ -216,15 +216,14 @@
   },
   "dependencies": {
     "@babel/core": "catalog:",
-    "@babel/plugin-transform-typescript": "^7.26.8",
+    "@babel/plugin-transform-typescript": "catalog:",
     "@vue-jsx-vapor/babel": "workspace:*",
     "@vue-jsx-vapor/compiler": "workspace:*",
     "@vue-jsx-vapor/macros": "workspace:*",
-    "@vue-macros/volar": "^3.0.0-beta.5",
-    "magic-string-stack": "^0.1.2",
+    "@vue-macros/volar": "catalog:",
     "ts-macro": "catalog:",
     "unplugin": "catalog:",
-    "unplugin-utils": "^0.2.4"
+    "unplugin-utils": "catalog:"
   },
   "devDependencies": {
     "@nuxt/kit": "catalog:",

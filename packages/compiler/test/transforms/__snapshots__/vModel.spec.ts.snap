@@ -1,10 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`compiler: vModel transform > component > v-model for component should generate modelModifiers 1`] = `
+exports[`compiler: vModel transform > component > v-model for component should generate modelValueModifiers 1`] = `
 "
   const n0 = _createComponent(Comp, { modelValue: () => (foo),
   "onUpdate:modelValue": () => _value => (foo = _value),
-  modelModifiers: () => ({ trim: true, "bar-baz": true }) })
+  modelValueModifiers: () => ({ trim: true, "bar-baz": true }) })
   return n0
 "
 `;

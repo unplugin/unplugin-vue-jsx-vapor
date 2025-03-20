@@ -47,15 +47,16 @@ export function useModel(
     }
   })
 
-  const modifiers =
-    name === 'modelValue' ? props.modelModifiers : props[`${name}Modifiers`]
   // @ts-expect-error
   res[Symbol.iterator] = () => {
     let i = 0
     return {
       next() {
         if (i < 2) {
-          return { value: i++ ? modifiers || {} : res, done: false }
+          return {
+            value: i++ ? props[`${name}Modifiers`] || {} : res,
+            done: false,
+          }
         } else {
           return { done: true }
         }

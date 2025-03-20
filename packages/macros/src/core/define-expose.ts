@@ -10,7 +10,7 @@ export function transformDefineExpose(
   s.appendRight(
     node.arguments[0]?.start || node.end! - 1,
     lib.includes('vapor')
-      ? `${importHelperFn(s, 0, 'currentInstance', 'vue')}.exposed = `
-      : `${importHelperFn(s, 0, 'getCurrentInstance', 'vue')}().exposed = `,
+      ? `${importHelperFn(s, 0, 'currentInstance')}.exposed = `
+      : `${importHelperFn(s, 0, 'getCurrentInstance')}().exposed = `,
   )
 }

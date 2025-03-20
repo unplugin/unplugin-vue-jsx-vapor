@@ -57,8 +57,8 @@
   "dependencies": {
     "@babel/core": "catalog:",
     "@babel/parser": "catalog:",
-    "@babel/plugin-syntax-jsx": "^7.25.9",
-    "@babel/traverse": "^7.26.9",
+    "@babel/plugin-syntax-jsx": "catalog:",
+    "@babel/traverse": "catalog:",
     "@babel/types": "catalog:",
     "@vue-jsx-vapor/compiler": "workspace:*",
     "source-map-js": "^1.2.1"

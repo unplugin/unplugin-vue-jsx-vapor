@@ -7,15 +7,27 @@ catalog:
   '@babel/core': ^7.26.8
   '@babel/parser': ^7.26.8
   '@babel/types': ^7.26.8
+  '@babel/plugin-transform-typescript': ^7.26.8
+  '@babel/traverse': ^7.26.8
+  '@babel/plugin-syntax-jsx': "^7.25.9"
+  '@types/babel__core': ^7.20.5
+
   '@nuxt/kit': ^3.16.0
   '@nuxt/schema': ^3.16.0
-  '@types/babel__core': ^7.20.5
-  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@eeab9c4
-  '@vue/compiler-sfc': https://pkg.pr.new/@vue/compiler-sfc@eeab9c4
-  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@eeab9c4
-  '@vue/shared': https://pkg.pr.new/@vue/shared@eeab9c4
+
+  vue: https://pkg.pr.new/vue@3e7464f
+  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@3e7464f
+  '@vue/compiler-sfc': https://pkg.pr.new/@vue/compiler-sfc@3e7464f
+  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@3e7464f
+  '@vue/shared': https://pkg.pr.new/@vue/shared@3e7464f
+
+  '@vue-macros/common': ^3.0.0-beta.6
+  '@vue-macros/test-utils': ^3.0.0-beta.6
+  '@vue-macros/volar': ^3.0.0-beta.6
+  '@vue-macros/reactivity-transform': ^3.0.0-beta.6
+
   ts-macro: ^0.1.25
   unplugin: ^1.16.1
+  unplugin-utils: "^0.2.4"
   vite: ^6.2.1
   vitest: ^3.0.8
-  vue: https://pkg.pr.new/vue@eeab9c4

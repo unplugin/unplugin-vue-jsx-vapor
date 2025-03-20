@@ -17,6 +17,7 @@ import {
   type OperationNode,
   type RootIRNode,
   type RootNode,
+  type SetEventIRNode,
 } from './ir'
 import { newBlock, newDynamic } from './transforms/utils'
 import { findProp, getText, isConstantExpression, isTemplate } from './utils'
@@ -39,6 +40,7 @@ export interface DirectiveTransformResult {
   modifier?: '.' | '^'
   runtimeCamelize?: boolean
   handler?: boolean
+  handlerModifiers?: SetEventIRNode['modifiers']
   model?: boolean
   modelModifiers?: string[]
 }
