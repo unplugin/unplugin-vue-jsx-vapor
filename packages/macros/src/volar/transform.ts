@@ -17,13 +17,11 @@ export function transformJsxMacros(
     const asyncModifier = root.modifiers?.find(
       (modifier) => modifier.kind === ts.SyntaxKind.AsyncKeyword,
     )
+    let setup = `typeof ${HELPER_PREFIX}setup`
+    setup = asyncModifier ? `Awaited<${setup}>` : setup
     if (asyncModifier && map.defineComponent)
       replaceRange(codes, asyncModifier.pos, asyncModifier.end)
-    const result = `({}) as __VLS_PickNotAny<Awaited<ReturnType<typeof ${
-      HELPER_PREFIX
-    }setup>>['render'], {}> & { __ctx: Awaited<ReturnType<typeof ${
-      HELPER_PREFIX
-    }setup>> }`
+    const result = `({}) as __VLS_PickNotAny<${setup}['render'], {}> & { __ctx: ${setup} }`
 
     const propsType = root.parameters[0]?.type
       ? String(root.parameters[0].type.getText(ast))
@@ -33,7 +31,7 @@ export function transformJsxMacros(
       root.parameters.pos,
       root.parameters.pos,
       ts.isArrowFunction(root) && root.parameters.pos === root.pos ? '(' : '',
-      `${HELPER_PREFIX}props: Awaited<ReturnType<typeof ${HELPER_PREFIX}setup>>['props'] & ${propsType}, `,
+      `${HELPER_PREFIX}props: ${setup}['props'] & ${propsType}, `,
       `${HELPER_PREFIX}placeholder?: {}, `,
       `${HELPER_PREFIX}setup = (${asyncModifier ? 'async' : ''}(`,
     )
@@ -42,7 +40,7 @@ export function transformJsxMacros(
         codes,
         root.end,
         root.end,
-        `))${root.pos === root.parameters.pos ? ')' : ''} => `,
+        `)())${root.pos === root.parameters.pos ? ')' : ''} => `,
         result,
       )
     } else {
@@ -52,7 +50,7 @@ export function transformJsxMacros(
         root.body.getStart(ast),
         '=>',
       )
-      replaceRange(codes, root.end, root.end, `)){ return `, result, '}')
+      replaceRange(codes, root.end, root.end, `)()){ return `, result, '}')
     }
 
     ts.forEachChild(root.body, (node) => {
