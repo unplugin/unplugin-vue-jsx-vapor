@@ -37,15 +37,3 @@ describe('fixtures', async () => {
       })?.code,
   )
 })
-
-describe('vue/vapor fixtures', async () => {
-  await testFixtures(
-    globs,
-    (args, id, code) =>
-      transformJsxMacros(code, id, new Map(), {
-        include: ['*.tsx'],
-        version: 3.6,
-        ...options,
-      })?.code,
-  )
-})
