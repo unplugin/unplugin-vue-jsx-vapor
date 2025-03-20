@@ -3,9 +3,7 @@ import type { CallExpression } from '@babel/types'
 
 export function transformDefineSlots(
   node: CallExpression,
-  propsName: string,
   s: MagicStringAST,
-  lib: string,
 ): void {
   s.overwrite(
     node.start!,
@@ -14,8 +12,6 @@ export function transformDefineSlots(
       node.callee.end!,
     `Object.assign`,
   )
-  const slots = lib.includes('vue')
-    ? `${importHelperFn(s, 0, 'useSlots')}()`
-    : `${propsName}.vSlots`
+  const slots = `${importHelperFn(s, 0, 'useSlots')}()`
   s.appendLeft(node.end! - 1, `${node.arguments[0] ? ',' : '{}, '}${slots}`)
 }

@@ -1,5 +1,5 @@
 import {
-  detectVueVersion,
+  // detectVueVersion,
   REGEX_NODE_MODULES,
   REGEX_SETUP_SFC,
   REGEX_SRC_FILE,
@@ -8,7 +8,6 @@ import {
 } from '@vue-macros/common'
 
 export type Options = BaseOptions & {
-  lib?: 'vue' | 'vue/vapor' | (string & {})
   defineComponent?: { alias: string[] }
   defineModel?: { alias: string[] }
   defineExpose?: { alias: string[] }
@@ -19,7 +18,6 @@ export type OptionsResolved = MarkRequired<
   Options,
   | 'include'
   | 'version'
-  | 'lib'
   | 'defineComponent'
   | 'defineModel'
   | 'defineExpose'
@@ -28,14 +26,14 @@ export type OptionsResolved = MarkRequired<
 >
 
 export function resolveOptions(options: Options): OptionsResolved {
-  const version = options.version || detectVueVersion()
-  const lib = options.lib || 'vue/vapor'
+  // waiting for vue@3.6 release
+  // const version = options.version || detectVueVersion()
+  const version = options.version || 3.6
   return {
     include: [REGEX_SRC_FILE],
     exclude: [REGEX_SETUP_SFC, REGEX_NODE_MODULES],
     ...options,
     version,
-    lib,
     defineComponent: {
       alias: options?.defineComponent?.alias ?? [
         'defineComponent',

@@ -103,10 +103,10 @@ export function transformJsxMacros(
       })
     }
     if (map.defineSlots) {
-      transformDefineSlots(map.defineSlots, propsName, s, options.lib)
+      transformDefineSlots(map.defineSlots, s)
     }
     if (map.defineExpose) {
-      transformDefineExpose(map.defineExpose, s, options.lib)
+      transformDefineExpose(map.defineExpose, s, options.version)
     }
   }
 

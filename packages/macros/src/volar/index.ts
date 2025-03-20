@@ -12,7 +12,6 @@ export { getGlobalTypes } from './global-types'
 
 type UserOptions = MarkRequired<
   Exclude<Options, false>,
-  | 'lib'
   | 'defineModel'
   | 'defineSlots'
   | 'defineStyle'
@@ -23,7 +22,6 @@ export type TransformOptions = Overwrite<
   TsmVirtualCode,
   {
     ts: typeof import('typescript')
-    lib: UserOptions['lib']
     defineModel: UserOptions['defineModel']
     defineSlots: UserOptions['defineSlots']
     defineStyle: UserOptions['defineStyle']

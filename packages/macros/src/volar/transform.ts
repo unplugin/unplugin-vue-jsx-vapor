@@ -86,11 +86,7 @@ export function transformJsxMacros(
           node.expression.getStart(ast),
           `return {\nprops: {} as { ${props.join(', ')} }`,
           `,\nslots: {} as ${map.defineSlots ?? '{}'}`,
-          `,\nexpose: (exposed: ${
-            options.lib === 'vue'
-              ? `import('vue').ShallowUnwrapRef`
-              : 'NonNullable'
-          }<${map.defineExpose ?? '{}'}>) => {}`,
+          `,\nexpose: (exposed: import('vue').ShallowUnwrapRef<${map.defineExpose ?? '{}'}>) => {}`,
           `,\nrender: `,
           shouldWrapByCall ? '(' : '',
         )
