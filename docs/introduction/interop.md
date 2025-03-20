@@ -30,7 +30,7 @@ import App from './App.tsx'
 createApp(App).use(vaporInteropPlugin).mount('#app')
 ```
 
-```tsx [App.tsx] twoslash1
+```tsx [App.tsx] twoslash
 import {
   computed,
   defineComponent,
@@ -51,11 +51,7 @@ export default defineComponent(() => {
   const compRef = useRef()
   return () => (
     <>
-      <input
-        value={count.value}
-        onInput={(e) => (count.value = +e.currentTarget.value)}
-      />
-
+      <input v-model={count.value} />
       <Comp count={count.value} ref={compRef}></Comp>
       {compRef.value?.double}
     </>
@@ -93,7 +89,7 @@ import App from './App.tsx'
 createVaporApp(App).use(vaporInteropPlugin).mount('#app')
 ```
 
-```tsx [App.tsx] twoslash1
+```tsx [App.tsx] twoslash
 import {
   computed,
   defineComponent,
@@ -114,11 +110,7 @@ export default defineComponent(() => {
   const compRef = useRef()
   return () => (
     <>
-      <input
-        value={count.value}
-        onInput={(e) => (count.value = +e.currentTarget.value)}
-      />
-
+      <input v-model={count.value}/>
       <Comp count={count.value} ref={compRef}></Comp>
       {compRef.value?.double}
     </>
