@@ -1,3 +1,13 @@
+## [2.1.6](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.5...v2.1.6) (2025-03-20)
+
+
+### Bug Fixes
+
+* **compiler:** use modelValueModifiers instead of modelModifiers ([563b2f0](https://github.com/vuejs/vue-jsx-vapor/commit/563b2f05437f72eb6cbf6a615c5def24ce95e3a6))
+* **macros:** remove lib option ([9548729](https://github.com/vuejs/vue-jsx-vapor/commit/95487294b8e1953ad07ea29f22909cebdc626cf3))
+
+
+
 ## [2.1.5](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.4...v2.1.5) (2025-03-19)
 
 
