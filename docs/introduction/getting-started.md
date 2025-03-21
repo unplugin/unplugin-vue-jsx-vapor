@@ -19,7 +19,7 @@ We assume you are already familiar with the basic usages of Vue before you conti
   }
   ```
 
-### Install
+## Install
 
 ```bash [pnpm]
 # plugin
