@@ -7,9 +7,10 @@ import vueJsxVapor from 'vue-jsx-vapor/volar'
 export default defineConfig({
   title: 'Vue JSX Vapor',
   description: 'Vue JSX Vapor',
+  head: [['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: '/logo.png',
+    logo: '/logo.svg',
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Features', link: '/features/directives' },

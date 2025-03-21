@@ -7,7 +7,7 @@ hero:
   text: "Type-safe, Improve DX, High Performance"
   tagline: Supports Vapor mode, all build-in directives and most macros of Vue.
   image:
-    src: /logo.png
+    src: /logo.svg
     alt: Vue JSX Vapor
   actions:
     - theme: brand
