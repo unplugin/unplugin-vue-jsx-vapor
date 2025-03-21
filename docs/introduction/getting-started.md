@@ -10,6 +10,7 @@ We assume you are already familiar with the basic usages of Vue before you conti
 - Vue `>= v3.6`.
 - VSCode extension [TS Macro](https://marketplace.visualstudio.com/items?itemName=zhiyuanzmj.vscode-ts-macro) and install `@ts-macro/tsc` instead of `tsc` to typecheck.
   ```json
+  // package.json
   {
     "scripts": {
       "typecheck": "tsmc --noEmit"

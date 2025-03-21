@@ -4,8 +4,8 @@ packages:
   - docs
 
 defines:
-- &babel ^7.26.8
-- &vue-macros ^3.0.0-beta.7
+  - &babel ^7.26.8
+  - &vue-macros ^3.0.0-beta.7
 
 catalog:
   '@babel/core': *babel
