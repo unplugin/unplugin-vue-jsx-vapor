@@ -1,5 +1,5 @@
+import { isFunctionalNode } from '@vue-jsx-vapor/macros/api'
 import getHash from 'hash-sum'
-import { normalizePath } from 'unplugin-utils'
 import type { BabelFileResult, types } from '@babel/core'
 
 interface HotComponent {
@@ -11,19 +11,19 @@ interface HotComponent {
 export function registerHMR(
   result: BabelFileResult,
   id: string,
-  defineComponentName = ['defineComponent', 'defineVaporComponent'],
+  defineComponentNames = ['defineComponent', 'defineVaporComponent'],
 ) {
   const { ast } = result
 
   // check for hmr injection
   const declaredComponents: string[] = []
   const hotComponents: HotComponent[] = []
-  let defaultName = ''
+  let hasDefaultExport = false
   const ssr = false
 
   for (const node of ast!.program.body) {
     if (node.type === 'VariableDeclaration') {
-      const names = parseComponentDecls(node, defineComponentName)
+      const names = parseComponentDecls(node, defineComponentNames)
       if (names.length) {
         declaredComponents.push(...names)
       }
@@ -32,7 +32,7 @@ export function registerHMR(
     if (node.type === 'ExportNamedDeclaration') {
       if (node.declaration && node.declaration.type === 'VariableDeclaration') {
         hotComponents.push(
-          ...parseComponentDecls(node.declaration, defineComponentName).map(
+          ...parseComponentDecls(node.declaration, defineComponentNames).map(
             (name) => ({
               local: name,
               exported: name,
@@ -72,8 +72,11 @@ export function registerHMR(
             id: getHash(`${id}default`),
           })
         }
-      } else if (isDefineComponentCall(node.declaration, defineComponentName)) {
-        defaultName = (node.declaration.callee as any).name
+      } else if (
+        isDefineComponentCall(node.declaration, defineComponentNames) ||
+        isFunctionalNode(node.declaration)
+      ) {
+        hasDefaultExport = true
         hotComponents.push({
           local: '__default__',
           exported: 'default',
@@ -84,10 +87,10 @@ export function registerHMR(
   }
 
   if (hotComponents.length) {
-    if (defaultName || ssr) {
+    if (hasDefaultExport || ssr) {
       result.code = `${result.code!.replaceAll(
-        `export default ${defaultName}`,
-        `const __default__ = ${defaultName}`,
+        `export default `,
+        `const __default__ = `,
       )}\nexport default __default__`
     }
 
@@ -99,19 +102,12 @@ export function registerHMR(
           `\n${local}.__hmrId = "${id}"` +
           `\n__VUE_HMR_RUNTIME__.createRecord("${id}", ${local})`
         callbackCode += `
-    if (mod._rerender_only) {
-      __VUE_HMR_RUNTIME__.rerender(mod['${exported}'].__hmrId, mod['${exported}'].setup)
-    } else {
-      __VUE_HMR_RUNTIME__.reload(mod['${exported}'].__hmrId, mod['${exported}'])
-    }`
+      __VUE_HMR_RUNTIME__.rerender(mod['${exported}'].__hmrId, mod['${exported}'].setup || mod['${exported}'])
+      `
       }
 
-      code += `\nexport const _rerender_only = __VUE_HMR_RUNTIME__.CHANGED_FILE === ${JSON.stringify(normalizePath(id))}`
       code += `
 if (import.meta.hot) {
-  import.meta.hot.on('file-changed', ({ file }) => {
-    __VUE_HMR_RUNTIME__.CHANGED_FILE = file
-  })
   import.meta.hot.accept((mod) => {${callbackCode}\n})
 }`
       result.code = code
@@ -138,10 +134,9 @@ function parseComponentDecls(
   for (const decl of node.declarations) {
     if (
       decl.id.type === 'Identifier' &&
-      isDefineComponentCall(decl.init, fnNames)
-    ) {
+      (isDefineComponentCall(decl.init, fnNames) || isFunctionalNode(decl.init))
+    )
       names.push(decl.id.name)
-    }
   }
   return names
 }

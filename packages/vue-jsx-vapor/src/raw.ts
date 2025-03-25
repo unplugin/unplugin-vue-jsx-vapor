@@ -30,13 +30,6 @@ const plugin = (options: Options = {}): UnpluginOptions[] => {
             },
           }
         },
-        handleHotUpdate(ctx) {
-          ctx.server.ws.send({
-            type: 'custom',
-            event: 'file-changed',
-            data: { file: normalizePath(ctx.file) },
-          })
-        },
       },
       resolveId(id) {
         if (normalizePath(id) === 'vue-jsx-vapor/runtime') return id
