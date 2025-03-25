@@ -19,10 +19,10 @@ catalog:
   '@nuxt/kit': ^3.16.0
   '@nuxt/schema': ^3.16.0
 
-  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@3e7464f
-  '@vue/compiler-sfc': https://pkg.pr.new/@vue/compiler-sfc@3e7464f
-  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@3e7464f
-  '@vue/shared': https://pkg.pr.new/@vue/shared@3e7464f
+  '@vue/compiler-dom': https://pkg.pr.new/@vue/compiler-dom@b43f4f5
+  '@vue/compiler-sfc': https://pkg.pr.new/@vue/compiler-sfc@b43f4f5
+  '@vue/compiler-vapor': https://pkg.pr.new/@vue/compiler-vapor@b43f4f5
+  '@vue/shared': https://pkg.pr.new/@vue/shared@b43f4f5
 
   '@vue-macros/common': *vue-macros
   '@vue-macros/reactivity-transform': *vue-macros

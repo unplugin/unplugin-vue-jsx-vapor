@@ -102,8 +102,7 @@ export function registerHMR(
           `\n${local}.__hmrId = "${id}"` +
           `\n__VUE_HMR_RUNTIME__.createRecord("${id}", ${local})`
         callbackCode += `
-      __VUE_HMR_RUNTIME__.rerender(mod['${exported}'].__hmrId, mod['${exported}'].setup || mod['${exported}'])
-      `
+      __VUE_HMR_RUNTIME__.rerender(mod['${exported}'].__hmrId, mod['${exported}'].setup || mod['${exported}'])`
       }
 
       code += `
