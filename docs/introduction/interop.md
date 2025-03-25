@@ -36,8 +36,8 @@ import {
   defineComponent,
   defineVaporComponent,
   ref,
-  ref as useRef,
 } from 'vue'
+import { useRef } from 'vue-jsx-vapor'
 
 const Comp = defineVaporComponent(({ count = 0 }) => {
   defineExpose({
@@ -95,8 +95,8 @@ import {
   defineComponent,
   defineVaporComponent,
   ref,
-  ref as useRef,
 } from 'vue'
+import { useRef } from 'vue-jsx-vapor'
 
 const Comp = defineVaporComponent(({ count = 0 }) => {
   defineExpose({

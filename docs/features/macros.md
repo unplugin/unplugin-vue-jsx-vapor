@@ -294,7 +294,7 @@ function Comp({ color = 'red' }) {
       }
     }
   `)
-  return <Comp color="red" class="foo bar" />
+  return <div color="red" class="foo bar">foo</div>
 }
 
 defineStyle(`

@@ -127,6 +127,13 @@ importers:
         version: 3.0.8(@types/debug@4.1.12)(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0)
 
   docs:
+    dependencies:
+      vue:
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/vue@b43f4f5(typescript@5.8.2)
+      vue-jsx-vapor:
+        specifier: workspace:*
+        version: link:../packages/vue-jsx-vapor
     devDependencies:
       '@shikijs/vitepress-twoslash':
         specifier: ^3.2.1
@@ -137,12 +144,6 @@ importers:
       vitepress:
         specifier: ^2.0.0-alpha.4
         version: 2.0.0-alpha.4(@algolia/client-search@5.21.0)(@types/node@22.13.10)(jiti@2.4.2)(postcss@8.5.3)(search-insights@2.17.3)(terser@5.39.0)(tsx@4.19.2)(typescript@5.8.2)(yaml@2.7.0)
-      vue:
-        specifier: 'catalog:'
-        version: https://pkg.pr.new/vue@b43f4f5(typescript@5.8.2)
-      vue-jsx-vapor:
-        specifier: workspace:*
-        version: link:../packages/vue-jsx-vapor
 
   packages/babel:
     dependencies:
