@@ -1,3 +1,23 @@
+## [2.1.7](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.6...v2.1.7) (2025-03-25)
+
+
+### Bug Fixes
+
+* **macros/volar:** use __MACROS_ctx to infer type ([0a5b315](https://github.com/vuejs/vue-jsx-vapor/commit/0a5b31559a909dc13197ec8d538f91bbfff5238c))
+
+
+### Features
+
+* **vue-jsx-vapor:** support hmr ([c1091da](https://github.com/vuejs/vue-jsx-vapor/commit/c1091dab41240b4b4d89d11d90eea284bc9bd414))
+* **vue-jsx-vapor:** support hmr for functional components ([faed7fa](https://github.com/vuejs/vue-jsx-vapor/commit/faed7fa4b72e3a52bd28e03d945d90c44a450fa5))
+
+
+### Performance Improvements
+
+* **macors/volar:** optimize infer type performance ([bebec2b](https://github.com/vuejs/vue-jsx-vapor/commit/bebec2bea59f2f24a1772cb2a83964a7524d3acc))
+
+
+
 ## [2.1.6](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.5...v2.1.6) (2025-03-20)
 
 
