@@ -1,4 +1,4 @@
-import { ref, type Ref } from 'vue'
+import { defineVaporComponent, ref, type Ref } from 'vue'
 import { useRef } from 'vue-jsx-vapor'
 import Count2 from './count'
 import For from './for'
@@ -9,7 +9,7 @@ import Once from './once'
 import Show from './show'
 import Slot from './slot'
 
-export default () => {
+export default defineVaporComponent(() => {
   const count = ref('1')
 
   const Count = (props: { value: string }) => {
@@ -73,4 +73,4 @@ export default () => {
       </fieldset>
     </>
   )
-}
+})

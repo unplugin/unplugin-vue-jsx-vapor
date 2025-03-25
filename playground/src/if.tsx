@@ -1,6 +1,6 @@
-import { ref } from 'vue'
+import { defineVaporComponent, ref } from 'vue'
 
-export default () => {
+export default defineVaporComponent(() => {
   const count = ref(1)
 
   const Foo = () => <div style="color: red">2</div>
@@ -38,4 +38,4 @@ export default () => {
       </div>
     </div>
   )
-}
+})
