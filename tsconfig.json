@@ -3,7 +3,7 @@
     "target": "ESNext",
     "jsx": "preserve",
     "jsxFactory": "h",
-    "jsxImportSource": "vue",
+    "jsxImportSource": "vue-jsx-vapor",
     "lib": ["esnext", "DOM"],
     "useDefineForClassFields": false,
     "customConditions": ["dev"],
