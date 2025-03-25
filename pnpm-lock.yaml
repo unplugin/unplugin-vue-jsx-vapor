@@ -125,6 +125,9 @@ importers:
       vitest:
         specifier: 'catalog:'
         version: 3.0.8(@types/debug@4.1.12)(@types/node@22.13.10)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.2)(yaml@2.7.0)
+      vue-jsx-vapor:
+        specifier: workspace:*
+        version: link:packages/vue-jsx-vapor
 
   docs:
     dependencies:

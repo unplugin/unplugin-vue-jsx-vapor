@@ -49,7 +49,8 @@
     "typescript": "^5.8.2",
     "unplugin-raw": "^0.4.4",
     "vite": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
+    "vue-jsx-vapor": "workspace:*"
   },
   "pnpm": {
     "overrides": {
