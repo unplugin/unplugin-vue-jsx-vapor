@@ -1,3 +1,12 @@
+## [2.1.8](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.7...v2.1.8) (2025-03-28)
+
+
+### Bug Fixes
+
+* **vue-jsx-vapor:** prevent register HMR in production environment ([cab7de4](https://github.com/vuejs/vue-jsx-vapor/commit/cab7de4f3a9582ab8cb2a4d2d563563d7d8d053f))
+
+
+
 ## [2.1.7](https://github.com/vuejs/vue-jsx-vapor/compare/v2.1.6...v2.1.7) (2025-03-25)
 
 
