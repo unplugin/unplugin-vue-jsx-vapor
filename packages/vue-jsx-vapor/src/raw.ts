@@ -1,6 +1,7 @@
 import Macros from '@vue-jsx-vapor/macros/raw'
 import { createFilter, normalizePath } from 'unplugin-utils'
 import { transformVueJsxVapor } from './core'
+import { registerHMR } from './core/hmr'
 import runtimeCode from './core/runtime?raw'
 import type { Options } from './options'
 import type { UnpluginOptions } from 'unplugin'
@@ -10,6 +11,7 @@ const plugin = (options: Options = {}): UnpluginOptions[] => {
     options?.include || /\.[cm]?[jt]sx?$/,
     options?.exclude,
   )
+  let needHMR = false
   return [
     {
       name: 'vue-jsx-vapor',
@@ -30,6 +32,9 @@ const plugin = (options: Options = {}): UnpluginOptions[] => {
             },
           }
         },
+        configResolved(config) {
+          needHMR = config.command === 'serve'
+        },
       },
       resolveId(id) {
         if (normalizePath(id) === 'vue-jsx-vapor/runtime') return id
@@ -42,7 +47,14 @@ const plugin = (options: Options = {}): UnpluginOptions[] => {
       },
       transformInclude,
       transform(code, id) {
-        return transformVueJsxVapor(code, id, options)
+        const result = transformVueJsxVapor(code, id, options)
+        if (result?.code) {
+          needHMR && registerHMR(result, id)
+          return {
+            code: result.code,
+            map: result.map,
+          }
+        }
       },
     },
     ...(options.macros === false

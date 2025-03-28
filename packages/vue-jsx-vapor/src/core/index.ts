@@ -3,7 +3,6 @@ import { transformSync } from '@babel/core'
 import babelTypescript from '@babel/plugin-transform-typescript'
 import jsx from '@vue-jsx-vapor/babel'
 import type { Options } from '../options'
-import { registerHMR } from './hmr'
 
 export type { Options }
 
@@ -12,7 +11,7 @@ export function transformVueJsxVapor(
   id: string,
   options?: Options,
 ) {
-  const result = transformSync(code, {
+  return transformSync(code, {
     plugins: [
       [jsx, { compile: options?.compile, interop: options?.interop }],
       id.endsWith('.tsx')
@@ -26,12 +25,4 @@ export function transformVueJsxVapor(
     configFile: false,
     ast: true,
   })
-
-  if (result) registerHMR(result, id)
-
-  if (result?.code)
-    return {
-      code: result.code,
-      map: result.map,
-    }
 }
